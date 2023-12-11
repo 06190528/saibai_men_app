@@ -1,6 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:rush_time_app/common/provider.dart';
+import 'package:rush_time_app/provider/langage_provider.dart';
+import 'package:rush_time_app/provider/time_provider.dart';
 import 'package:rush_time_app/view/select.view.dart';
 import 'package:provider/provider.dart';
 
@@ -8,9 +10,16 @@ void main() {
   // WidgetsFlutterBinding.ensureInitialized();
   // MobileAds.instance.initialize();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => SetTime(),
-      child: Main(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LanguageProvider>(
+          create: (context) => LanguageProvider(),
+        ),
+        ChangeNotifierProvider<SetTime>(
+          create: (context) => SetTime(),
+        ),
+      ],
+      child: Main(), // あなたのメインウィジェット
     ),
   );
   //アプリ全体で広告表示したいならこっち
@@ -28,8 +37,9 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MainView(title: 'rush hour'),
+    return const MaterialApp(
+      home: MainView(title: 'rush hour'),
+      debugShowCheckedModeBanner: false, // この行を追加
     );
   }
 }

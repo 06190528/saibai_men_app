@@ -4,10 +4,8 @@ class TimeProvider {
   late DateTime firstTime;
 
   TimeProvider(DateTime now) {
-    // 現在の時間に1分加算します
+    // 現在の時間に1分加算
     firstTime = now.add(Duration(minutes: 1));
-    // 初期化の確認のためのログ出力
-    print('TimeProviderのやつ $firstTime');
   }
 
   DateTime getAddedTime(int minutes) {
