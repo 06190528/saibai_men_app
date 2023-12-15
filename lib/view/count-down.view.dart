@@ -7,12 +7,14 @@ import 'package:rush_time_app/logic/%20alarm.dart';
 import 'package:rush_time_app/logic/time.dart';
 import 'package:rush_time_app/common/ad_helper.dart';
 import 'package:rush_time_app/provider/langage_provider.dart';
+import 'package:rush_time_app/provider/reviewCountProvider.dart';
 import 'package:rush_time_app/view/widget/alarm_finished_dialog.dart';
 import 'package:rush_time_app/view/widget/banner.view.dart';
 import 'package:rush_time_app/common/full_screen_ads_view.dart';
 import 'package:rush_time_app/provider/time_provider.dart';
 import 'package:rush_time_app/main.dart';
 import 'package:provider/provider.dart';
+import 'package:rush_time_app/view/widget/requestReview.dart';
 
 class CountDownPage extends StatefulWidget {
   @override
@@ -27,6 +29,13 @@ class _CountDownPageState extends State<CountDownPage> {
   Duration remainingTime = Duration.zero;
   Timer? timer;
   AdInterstitial adInterstitial = AdInterstitial();
+  late ReviewProvider reviewProvider;
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    reviewProvider = Provider.of<ReviewProvider>(context);
+    // ここでタイマーの設定など、依存するオブジェクトに基づく初期化を行います
+  }
 
   @override
   void initState() {
@@ -39,7 +48,6 @@ class _CountDownPageState extends State<CountDownPage> {
     // 1秒ごとに残り時間を更新するタイマーを開始します
     timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       // ここにタイマーの処理を記述
-      print(remainingTimeNotifier.value); //これが更新されてない
 
       remainingTime = targetTime.difference(DateTime.now());
       remainingTimeNotifier.value = remainingTime;
@@ -61,12 +69,40 @@ class _CountDownPageState extends State<CountDownPage> {
         finished = true;
         showAlarmFinishedDialog(context).then((_) {
           // ダイアログが閉じられたら新しい画面に遷移
-          adInterstitial.showAd().then((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const Main()),
-            );
-          });
+          if (reviewProvider.reviewFlag) {
+            print('レビューしてくれた');
+            //レビューしてくれたから広告出す
+            adInterstitial.showAd().then((_) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Main()),
+              );
+            });
+          } else {
+            print('reviewProvider.reviewCount: ${reviewProvider.reviewCount}');
+            //レビューしてくれない
+            if (reviewProvider.reviewCount % 100 == 3) {
+              print('レビューしてくれない');
+              showDialog(
+                context: context,
+                builder: (_) => ReviewDialog(),
+              ).then((_) {
+                // ダイアログが閉じられた後に実行する処理
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Main()),
+                );
+              });
+            } else {
+              adInterstitial.showAd().then((_) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Main()),
+                );
+              });
+            }
+            reviewProvider.setReviewCount(reviewProvider.reviewCount + 1);
+          }
         });
       }
     });

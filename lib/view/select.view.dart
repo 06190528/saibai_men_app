@@ -50,19 +50,6 @@ class _MainViewState extends State<MainView> {
             adUnitId: AdHelper.bannerAdUnitId,
             width: MediaQuery.of(context).size.width, // バナー広告用の広告ユニットIDを指定
           ),
-          // ドロワーメニューを開くためのボタン
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end, // これにより子ウィジェットは右側に寄ります
-          //   children: [
-          //     IconButton(
-          //       icon: Icon(Icons.menu, color: Colors.white),
-          //       onPressed: () {
-          //         // ドロワーを開く
-          //         Scaffold.of(context).openDrawer();
-          //       },
-          //     ),
-          //   ],
-          // ),
           Expanded(
             child: Stack(
               children: <Widget>[

@@ -3,7 +3,7 @@ import 'dart:io';
 class AdHelper {
   // Debug or test mode flags
   static bool _isTestMode =
-      true; // This could be set based on some condition or environment variable
+      false; // This could beR set based on some condition or environment variable
 
   static String get bannerAdUnitId {
     if (_isTestMode) {
@@ -15,7 +15,7 @@ class AdHelper {
 
     return Platform.isAndroid
         ? 'ca-app-pub-2847746899486154/6353017056'
-        : 'ca-app-pub-2847746899486154/5694966841';
+        : 'ca-app-pub-2847746899486154/8704129716';
   }
 
   static String get interstitialAdUnitId {

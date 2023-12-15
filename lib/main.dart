@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:rush_time_app/provider/langage_provider.dart';
+import 'package:rush_time_app/provider/reviewCountProvider.dart';
 import 'package:rush_time_app/provider/time_provider.dart';
 import 'package:rush_time_app/view/select.view.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ReviewProvider()),
         ChangeNotifierProvider<LanguageProvider>(
           create: (context) => LanguageProvider(),
         ),

@@ -13,19 +13,12 @@ Future<void> showAlarmFinishedDialog(BuildContext context) async {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(languageProvider.timeOutText(),
-            style:
-                TextStyle(fontSize: MediaQuery.of(context).size.width / 22.5)),
+            style: TextStyle(fontSize: MediaQuery.of(context).size.width / 30)),
         actions: <Widget>[
-          Text(
-            languageProvider.requestForReview(),
-            style: TextStyle(
-              fontSize: MediaQuery.of(context).size.width / 20, // ここで文字サイズを設定
-            ),
-          ),
           TextButton(
             child: Text(languageProvider.stopAram(),
                 style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width / 22.5)),
+                    fontSize: MediaQuery.of(context).size.width / 30)),
             onPressed: () {
               stopAlarm();
               Navigator.pushReplacement(

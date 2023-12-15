@@ -129,4 +129,34 @@ class LanguageProvider with ChangeNotifier {
         return "Please give me 5 stars review!!";
     }
   }
+
+  String okText() {
+    switch (_selectedCountry) {
+      case Country.SouthKorea:
+        return "예"; // 韓国語で「はい」
+      case Country.Japan:
+        return "はい";
+      case Country.USA:
+        return "OK";
+      case Country.China:
+        return "好的"; // 中国語で「OK」
+      default:
+        return "OK";
+    }
+  }
+
+  String laterText() {
+    switch (_selectedCountry) {
+      case Country.SouthKorea:
+        return "나중에 리뷰하기";
+      case Country.Japan:
+        return "後でレビューする";
+      case Country.USA:
+        return "Review later";
+      case Country.China:
+        return "稍后评论";
+      default:
+        return "Review later";
+    }
+  }
 }
