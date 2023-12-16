@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rush_time_app/logic/time.dart';
 
-class MyButton extends StatelessWidget {
+class TimeButton extends StatelessWidget {
   final int index;
   final VoidCallback onPressed;
   final DateTime time; // timeのデータ型をStringとして指定
 
-  MyButton({
+  const TimeButton({super.key, 
     required this.index,
     required this.onPressed,
     required this.time, // colorを初期化
@@ -22,7 +22,10 @@ class MyButton extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10.0),
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Container(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(185, 254, 165, 0),
+        ),
+        child: SizedBox(
             height: MediaQuery.of(context).size.width / 6,
             width: buttonWidth,
             child: Center(
@@ -35,9 +38,6 @@ class MyButton extends StatelessWidget {
                 ),
               ),
             )),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(185, 254, 165, 0),
-        ),
       ),
     );
   }

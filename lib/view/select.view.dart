@@ -1,15 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:rush_time_app/logic/select.code.dart';
 import 'package:rush_time_app/common/ad_helper.dart';
-import 'package:rush_time_app/provider/langage_provider.dart';
 import 'package:rush_time_app/view/widget/banner.view.dart';
-import 'package:rush_time_app/view/widget/button.view.dart';
+import 'package:rush_time_app/view/widget/Butoon/timeButton.view.dart';
 import 'package:rush_time_app/provider/time_provider.dart';
 import 'package:rush_time_app/view/count-down.view.dart';
 import 'package:provider/provider.dart';
-import 'package:rush_time_app/view/widget/setting_menu.dart';
+import 'package:rush_time_app/view/widget/settingView.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key, required this.title}) : super(key: key);
@@ -21,32 +18,35 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   TimeProvider timeProvider = TimeProvider(DateTime.now());
-  List<int> items = List.generate(30, (index) => index);
+  List<int> items = List.generate(40, (index) => index);
   final ScrollController _scrollController = ScrollController();
+
+  double lastScrollPosition = 0; // 追加：最後のスクロール位置を追跡する変数
 
   @override
   void initState() {
     super.initState();
-    //_scrollController = ScrollController(initialScrollOffset: 65.0);
     _scrollController.addListener(() {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels != 0) {
-          addMoreItems(items);
-          setState(() {});
-        }
+      final currentScrollPosition = _scrollController.position.pixels;
+      final scrollThreshold = (MediaQuery.of(context).size.width / 6) * 10;
+
+      if ((currentScrollPosition - lastScrollPosition).abs() >
+          scrollThreshold) {
+        lastScrollPosition = currentScrollPosition;
+        // スクロール位置が指定した閾値を超えた場合の処理
+        addMoreItems(items);
+        setState(() {});
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final languageProvider =
-        Provider.of<LanguageProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          MyAdWidget(
+          BannerAdWidget(
             adUnitId: AdHelper.bannerAdUnitId,
             width: MediaQuery.of(context).size.width, // バナー広告用の広告ユニットIDを指定
           ),
@@ -64,7 +64,7 @@ class _MainViewState extends State<MainView> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        MyButton(
+                        TimeButton(
                           index: first,
                           time: timeProvider.getAddedTime(first),
                           onPressed: () {
@@ -75,13 +75,13 @@ class _MainViewState extends State<MainView> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CountDownPage(),
+                                builder: (context) => const CountDownPage(),
                               ),
                             );
                           },
                         ),
                         if (second < items.length)
-                          MyButton(
+                          TimeButton(
                             index: second,
                             time: timeProvider.getAddedTime(second),
                             onPressed: () {
@@ -92,7 +92,7 @@ class _MainViewState extends State<MainView> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CountDownPage(),
+                                  builder: (context) => const CountDownPage(),
                                 ),
                               );
                             },
@@ -102,46 +102,11 @@ class _MainViewState extends State<MainView> {
                   },
                 ),
                 // 左上に固定された設定アイコン
-                Positioned(
-                  right: MediaQuery.of(context).size.width / 2000,
-                  child: SizedBox(
-                    // SizedBoxを使用してサイズを指定
-                    width: MediaQuery.of(context).size.width / 10,
-                    height: MediaQuery.of(context).size.width / 10,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                        size: MediaQuery.of(context).size.width /
-                            12, // ここではIconButtonのサイズを直接指定しない
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(languageProvider.settingText(),
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              22.5)),
-                              content: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height / 3),
-                                child: SettingMenu(),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                const SettingMenuView(),
               ],
             ),
           ),
-          MyAdWidget(
+          BannerAdWidget(
             adUnitId: AdHelper.bannerAdUnitId,
             width: MediaQuery.of(context).size.width, // バナー広告用の広告ユニットIDを指定
           ),

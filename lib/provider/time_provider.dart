@@ -5,7 +5,7 @@ class TimeProvider {
 
   TimeProvider(DateTime now) {
     // 現在の時間に1分加算
-    firstTime = now.add(Duration(minutes: 1));
+    firstTime = now.add(const Duration(minutes: 1));
   }
 
   DateTime getAddedTime(int minutes) {
@@ -24,10 +24,23 @@ class SetTime with ChangeNotifier {
   // 時間をセットするメソッド
   void setTime(DateTime setTime) {
     _setedTime = setTime;
-    notifyListeners(); // これが重要
-    //     "${setedTime.hour.toString().padLeft(2, '0')}:${setedTime.minute.toString().padLeft(2, '0')}";
-    // print(formattedTime);
-    //print(setedTime); //いけてる
+    notifyListeners(); // これを呼ぶことで、変更を通知する
+  }
+
+  void add1min() {
+    if (_setedTime == null) {
+      throw Exception("Time is not set yet");
+    }
+    _setedTime = _setedTime!.add(const Duration(minutes: 1));
+    notifyListeners();
+  }
+
+  void minus1min() {
+    if (_setedTime == null) {
+      throw Exception("Time is not set yet");
+    }
+    _setedTime = _setedTime!.subtract(const Duration(minutes: 1));
+    notifyListeners();
   }
 
   DateTime getTime() {

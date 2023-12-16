@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rush_time_app/provider/langage_provider.dart';
 
-class SettingMenu extends StatelessWidget {
+class LanguageSettingMenu extends StatelessWidget {
+  const LanguageSettingMenu({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<LanguageProvider>(context);
-
+    final languageProvider =
+        Provider.of<LanguageProvider>(context, listen: true);
     return Column(
       // RowからColumnへ変更
       mainAxisAlignment: MainAxisAlignment.center,

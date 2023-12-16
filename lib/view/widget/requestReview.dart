@@ -5,36 +5,35 @@ import 'package:rush_time_app/provider/reviewCountProvider.dart';
 import 'package:flutter/services.dart';
 
 class ReviewDialog extends StatelessWidget {
+  const ReviewDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final languageProvider =
         Provider.of<LanguageProvider>(context, listen: false);
     final reviewProvider = Provider.of<ReviewProvider>(context);
 
     return SizedBox(
       height: MediaQuery.of(context).size.height / 3,
-      width: MediaQuery.of(context).size.width / 2,
+      width: width / 2,
       child: AlertDialog(
         title: Text(languageProvider.requestForReview(),
-            style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width / 22.5)), // 動的なタイトル
+            style: TextStyle(fontSize: width / 22.5)), // 動的なタイトル
         actions: <Widget>[
           TextButton(
             child: Text(languageProvider.okText(),
-                style: TextStyle(
-                    fontSize:
-                        MediaQuery.of(context).size.width / 30)), // 動的なテキスト
+                style: TextStyle(fontSize: width / 30)), // 動的なテキスト
             onPressed: () {
               reviewProvider.setReviewFlag(true);
               ReviewRequest.requestReview(); // 理解してない
               Navigator.of(context).pop();
             },
           ),
+          SizedBox(width: width / 30), // ここに空白を追加
           TextButton(
             child: Text(languageProvider.laterText(),
-                style: TextStyle(
-                    fontSize:
-                        MediaQuery.of(context).size.width / 30)), // 動的なテキスト
+                style: TextStyle(fontSize: width / 30)), // 動的なテキスト
             onPressed: () {
               // レビューページへのリダイレクトなどの処理をここに書く
               Navigator.of(context).pop();

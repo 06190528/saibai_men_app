@@ -24,7 +24,7 @@ Future<void> showAlarmFinishedDialog(BuildContext context) async {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Main(),
+                  builder: (context) => const Main(),
                 ),
               );
               Navigator.of(context).pop(); // ダイアログを閉じる

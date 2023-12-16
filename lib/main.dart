@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:rush_time_app/provider/langage_provider.dart';
@@ -21,7 +20,7 @@ void main() {
           create: (context) => SetTime(),
         ),
       ],
-      child: Main(), // あなたのメインウィジェット
+      child: const Main(), // あなたのメインウィジェット
     ),
   );
   //アプリ全体で広告表示したいならこっち
