@@ -1,0 +1,120 @@
+import 'package:flame/game.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/logic/directions.dart';
+import 'package:saibai_men_app/ui/attackEnemyUi.dart';
+import 'package:saibai_men_app/ui/deathblowUi.dart';
+import 'package:saibai_men_app/ui/enemyUi.dart';
+import 'playerUi.dart';
+import 'worldUi.dart';
+
+class DinoGameNotifier extends StateNotifier<DinoGame> {
+  DinoGameNotifier() : super(DinoGame(speed: null));
+
+  void reset() {
+    state = DinoGame(speed: null);
+  }
+}
+
+class DinoGame extends FlameGame {
+  Function(int id)? onGameOver;
+  Function(int id)? EnemyCount;
+  Function()? activateSpecialMove;
+  double? speed;
+  List<Enemy> enemies = [];
+  List<Deathblow> deathblows = [];
+  double _timer = 0;
+  bool isGameActive = false;
+  final DinoPlayer dinoPlayer = DinoPlayer();
+  final DinoWorld _dinoWorld = DinoWorld();
+
+  double time = 1;
+
+  DinoGame(
+      {required this.speed,
+      this.onGameOver,
+      this.EnemyCount,
+      this.activateSpecialMove});
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+    await add(_dinoWorld);
+    await add(dinoPlayer);
+    dinoPlayer.position = _dinoWorld.size * 0.5; // 初期位置を設定
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (!isGameActive) {
+      return;
+    }
+    _timer += dt;
+    if (_timer >= time) {
+      _timer = 0;
+      addEnemy();
+    }
+  }
+
+  void onArrowKeyChanged(Direction direction) {
+    dinoPlayer.direction = direction;
+  }
+
+  Future<void> addEnemy() async {
+    Enemy enemy = Enemy(speed!, dinoPlayer,
+        onGameOver: onGameOver, EnemyCount: EnemyCount);
+    enemy.position = initialPosition(_dinoWorld.size, 'enemy');
+    enemy.direction = enemyInitialDirection(enemy.position, _dinoWorld.size);
+    add(enemy);
+    enemies.add(enemy);
+  }
+
+  void startGame() {
+    isGameActive = true;
+  }
+
+  void stopGame() {
+    isGameActive = false;
+  }
+
+  void removeEnemys() {
+    for (var enemy in enemies) {
+      enemy.removeEnemy();
+    }
+    enemies.clear();
+  }
+
+  void attackEnemy() {
+    for (var enemy in enemies) {
+      enemy.removeEnemy();
+      AttackEnemy attackEnemy = AttackEnemy(enemy.position, _dinoWorld.speed);
+      add(attackEnemy);
+    }
+    enemies.clear();
+  }
+
+  void updateSpeed(double newSpeed) {
+    dinoPlayer.updateSpeed(newSpeed);
+    _dinoWorld.updateSpeed(newSpeed * 0.5);
+    for (var enemy in enemies) {
+      enemy.updateSpeed(newSpeed);
+    }
+    for (var deathblow in deathblows) {
+      deathblow.updateSpeed(newSpeed * 0.5);
+    }
+  }
+
+  void updateTime(double newTime) {
+    time = newTime;
+  }
+
+  void addDeathblow() {
+    Deathblow deathblow =
+        Deathblow(speed!, dinoPlayer, activateSpecialMove: activateSpecialMove);
+    deathblow.position = initialPosition(_dinoWorld.size, 'deathblow');
+    deathblow.direction = Direction.down;
+    deathblow.updateSpeed(_dinoWorld.speed);
+    add(deathblow);
+    deathblows.add(deathblow);
+  }
+}

@@ -1,4 +1,4 @@
-package com.example.rush_time_app
+package com.example.saibai_men_app
 
 import io.flutter.embedding.android.FlutterActivity
 

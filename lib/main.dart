@@ -1,46 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:rush_time_app/provider/langage_provider.dart';
-import 'package:rush_time_app/provider/reviewCountProvider.dart';
-import 'package:rush_time_app/provider/time_provider.dart';
-import 'package:rush_time_app/view/select.view.dart';
-import 'package:provider/provider.dart';
+import 'package:saibai_men_app/common/firebase/firebaseSave.dart';
+import 'package:saibai_men_app/mainWidget/gameScene.dart';
 
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // MobileAds.instance.initialize();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  MobileAds.instance.initialize();
+  await saveUserData();
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ReviewProvider()),
-        ChangeNotifierProvider<LanguageProvider>(
-          create: (context) => LanguageProvider(),
-        ),
-        ChangeNotifierProvider<SetTime>(
-          create: (context) => SetTime(),
-        ),
-      ],
-      child: const Main(), // あなたのメインウィジェット
+    ProviderScope(
+      child: MaterialApp(
+        home: GameScene(),
+      ),
     ),
   );
-  //アプリ全体で広告表示したいならこっち
-  MobileAds.instance.initialize();
-}
-
-class Main extends StatelessWidget {
-  const Main({super.key});
-
-  //アプリの一部の画面で広告を表示したいならこっち
-  // Future<InitializationStatus> _initGoogleMobileAds() {
-  //   // TODO: Initialize Google Mobile Ads SDK
-  //   return MobileAds.instance.initialize();
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MainView(title: 'rush hour'),
-      debugShowCheckedModeBanner: false, // この行を追加
-    );
-  }
 }
