@@ -27,7 +27,7 @@ class Deathblow extends SpriteAnimationComponent with HasGameRef {
     // スプライトシートからスプライトアニメーションを作成
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
-      srcSize: Vector2(274.3333, 270),
+      srcSize: Vector2(274.3, 270),
     );
 
     animation = spriteSheet.createAnimation(

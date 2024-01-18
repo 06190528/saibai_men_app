@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/sprite.dart';
 import 'package:saibai_men_app/logic/directions.dart';
 
-class DinoPlayer extends SpriteComponent with HasGameRef {
+class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
   DinoPlayer() : super(size: Vector2.all(0));
   double speed = 0;
   void updateSpeed(double newSpeed) {
@@ -11,11 +15,21 @@ class DinoPlayer extends SpriteComponent with HasGameRef {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    sprite = await gameRef.loadSprite('idle.png');
 
-    //size = Vector2(64.0, 64.0); // アニメーションのサイズ
+    Image spriteSheetImage = await Flame.images.load('yamucha_sprit.png');
+    final spriteSheet = SpriteSheet(
+      image: spriteSheetImage,
+      srcSize: Vector2(359.5, 607), // 各フレームのサイズ
+    );
+
+    animation = spriteSheet.createAnimation(
+      row: 0, // 使用する行
+      stepTime: 0.08, // 各フレームの表示時間（秒）
+      from: 0, // 開始フレーム
+      to: 7, // 終了フレーム
+    );
     anchor = Anchor.center;
-    double squareSideLength = gameRef.size.x / 8; // または任意のサイズを設定
+    double squareSideLength = gameRef.size.x / 6;
     size = Vector2.all(squareSideLength);
   }
 

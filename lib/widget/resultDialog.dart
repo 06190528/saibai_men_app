@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/firebase/firebaseSave.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
@@ -53,7 +54,8 @@ class Result extends ConsumerWidget {
                       text: 'ベストスコア',
                       width: screenWidth,
                       fontSize: 20,
-                      score: '${ref.watch(enemyCounterProvider)}',
+                      score: "0",
+                      // score: '${sortScoreList(ref.watch(userDataProvider))[1]}',
                       color: const Color.fromARGB(255, 162, 160, 160),
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(5),
@@ -80,6 +82,7 @@ class Result extends ConsumerWidget {
                     ref.read(pauseProvider.state).state = false;
                     ref.read(bgmAudioProvider).stop();
                     ref.read(usedContinueProvider.state).state = false;
+                    ref.read(bgmSpeedProvider.state).state = 1.0;
                   },
                   width: screenWidth * 0.6,
                   icon: Icons.replay,

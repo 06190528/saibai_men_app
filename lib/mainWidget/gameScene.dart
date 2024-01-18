@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
+import 'package:saibai_men_app/common/firebase/firebaseSave.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
@@ -14,6 +15,7 @@ class GameScene extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    initialize(ref);
     final size = MediaQuery.of(context).size;
     GameWidgetLogic gameWidgetLogic = GameWidgetLogic(context, ref);
     return Scaffold(

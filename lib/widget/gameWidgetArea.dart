@@ -26,6 +26,7 @@ class GameWidgetArea extends ConsumerWidget {
     };
     game.activateSpecialMove = () async {
       ref.read(deathblowCountProvider.state).state++;
+      ref.read(getItemBgmProvider).play('sounds/getItemSound.mp3');
     };
     return Stack(
       children: [

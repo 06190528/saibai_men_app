@@ -23,6 +23,7 @@ dependencies:
   cloud_firestore: ^4.14.0
   intl: ^0.19.0
   shared_preferences: ^2.0.6
+  firebase_auth: ^4.16.0
 
 dev_dependencies:
   flutter_test:
@@ -33,15 +34,19 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/background.png
-    - assets/images/idle.png
-    - assets/images/explosion.png
-    - assets/images/enemy_transparent.png
+    - assets/images/enemy_transparent_right.png
+    - assets/images/enemy_transparent_left.png
+    - assets/images/enemy_transparent_down.png
+    - assets/images/enemy_transparent_up.png
     - assets/images/energy bullet.png
     - assets/images/energy icon.png
+    - assets/images/yamucha_sprit.png
+    - assets/images/explosion_sprite.png
     - assets/sounds/explosion.mp3
     - assets/sounds/bgm.mp3
     - assets/sounds/specialMove.mp3
-    - assets/images/explosion_sprite.png
+    - assets/sounds/getItemSound.mp3
+    - assets/sounds/sub_bgm.mp3
 flutter_launcher_icons:
   image_path: "assets/images/icon.png" # このアイコンをアプリのランチャーアイコンとして使用
   android: true

@@ -25,7 +25,7 @@ class AttackEnemy extends SpriteAnimationComponent with HasGameRef<DinoGame> {
     animation = spriteSheet.createAnimation(
       row: 0, // 使用する行
       stepTime: 0.08, // 各フレームの表示時間（秒）
-      from: 0, // 開始フレーム
+      from: 1, // 開始フレーム
       to: 16, // 終了フレーム
       loop: false,
     );

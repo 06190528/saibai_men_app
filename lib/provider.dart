@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/langage.dart';
 import 'package:saibai_men_app/common/userData.dart';
@@ -19,6 +20,7 @@ final usedContinueProvider = StateProvider<bool>((ref) => false);
 final bgmAudioProvider = Provider<Audio>((ref) => Audio());
 final explosionAudioProvider = Provider<Audio>((ref) => Audio());
 final attackBgmProvider = Provider<Audio>((ref) => Audio());
+final getItemBgmProvider = Provider<Audio>((ref) => Audio());
 
 final enemyCounterProvider = StateProvider<int>((ref) => 0);
 final speedProvider = StateProvider<double>((ref) => 600);

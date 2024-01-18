@@ -69,6 +69,7 @@ class PauseWidget extends ConsumerWidget {
                       ref.read(pauseProvider.state).state = false;
                       ref.read(bgmAudioProvider).stop();
                       ref.read(usedContinueProvider.state).state = false;
+                      ref.read(bgmSpeedProvider.state).state = 1.0;
                     },
                     width: screenWidth * 0.7,
                     icon: Icons.replay,

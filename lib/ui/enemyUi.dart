@@ -27,20 +27,22 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   Future<void> onLoad() async {
     super.onLoad();
 
-    Image spriteSheetImage = await Flame.images.load('enemy_transparent.png');
+    Image spriteSheetImage = await Flame.images
+        .load('enemy_transparent_${enemyDirection(direction)}.png');
+
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
-      srcSize: Vector2(164, 316.66), // 各フレームのサイズ
+      srcSize: enemySpriteSize(direction),
     );
 
     animation = spriteSheet.createAnimation(
       row: 0, // 使用する行
       stepTime: 0.1, // 各フレームの表示時間（秒）
       from: 0, // 開始フレーム
-      to: 17, // 終了フレーム
+      to: 7, // 終了フレーム
     );
     anchor = Anchor.center;
-    double squareSideLength = gameRef.size.x / 8;
+    double squareSideLength = gameRef.size.x / 6;
     size = Vector2.all(squareSideLength);
   }
 
@@ -74,5 +76,35 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
 
   void removeEnemy() {
     removeFromParent();
+  }
+}
+
+String enemyDirection(Direction direction) {
+  switch (direction) {
+    case Direction.left:
+      return 'left';
+    case Direction.right:
+      return 'right';
+    case Direction.up:
+      return 'up';
+    case Direction.down:
+      return 'down';
+    default:
+      return 'left';
+  }
+}
+
+Vector2 enemySpriteSize(Direction direction) {
+  switch (direction) {
+    case Direction.left:
+      return Vector2(556.5, 670);
+    case Direction.right:
+      return Vector2(557, 665);
+    case Direction.up:
+      return Vector2(557, 656);
+    case Direction.down:
+      return Vector2(556.5, 652);
+    default:
+      return Vector2(372, 432);
   }
 }

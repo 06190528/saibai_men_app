@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/firebase/firebaseSave.dart';
 import 'package:saibai_men_app/logic/audio.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/explosionUi.dart';
@@ -25,6 +26,13 @@ class GameWidgetLogic {
     explosionAudio.play('sounds/explosion.mp3');
     ref.read(isGameActiveProvider.state).state = false;
     game.removeEnemys();
+    ref
+        .read(userDataProvider.state)
+        .state
+        .scoreList
+        .add(ref.read(enemyCounterProvider));
+    setUserData(ref.read(userDataProvider.state).state);
+    print(ref.read(userDataProvider.state).state.scoreList);
   }
 
   Future<void> enemyCount(int id) async {
@@ -53,7 +61,7 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = true;
     game.resumeEngine();
     ref.read(bgmAudioProvider).setLoop(true);
-    await ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
+    await ref.read(bgmAudioProvider).play('sounds/sub_bgm.mp3');
     ref.read(pauseProvider.state).state = false;
   }
 
@@ -62,7 +70,7 @@ class GameWidgetLogic {
     final dinoGame = game;
     dinoGame.startGame();
     ref.read(createStartButtonFlag.state).state = false;
-    ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
+    ref.read(bgmAudioProvider).play('sounds/sub_bgm.mp3');
     ref.read(bgmAudioProvider).setLoop(true);
     game.updateSpeed(ref.read(speedProvider.state).state =
         min(screenSize.height, screenSize.width) / 2);
@@ -84,7 +92,7 @@ class GameWidgetLogic {
     ref.read(showResultDialog.state).state = false;
     game.updateSpeed(ref.read(speedProvider));
     ref.read(bgmAudioProvider).setLoop(true);
-    await ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
+    await ref.read(bgmAudioProvider).play('sounds/sub_bgm.mp3');
     ref.read(pauseProvider.state).state = false;
   }
 }
