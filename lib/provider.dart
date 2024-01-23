@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/langage.dart';
 import 'package:saibai_men_app/common/userData.dart';
@@ -28,8 +27,21 @@ final timeProvider = StateProvider<double>((ref) => 1);
 final bgmSpeedProvider = StateProvider<double>((ref) => 1);
 final deathblowCountProvider = StateProvider<int>((ref) => 0);
 
-final userDataProvider = StateProvider<UserData>((ref) => UserData(
-      name: '',
-      scoreList: [],
-      langage: LangageList.Japan,
-    ));
+class UserDataNotifier extends StateNotifier<UserData> {
+  UserDataNotifier()
+      : super(UserData(name: '', scoreList: [], langage: LangageList.USA));
+
+  // ユーザーデータを更新するメソッド
+  void updateUserData(UserData newUserData) {
+    state = newUserData;
+  }
+
+  LangageList get name => state.langage;
+}
+
+final userDataProvider =
+    StateNotifierProvider<UserDataNotifier, UserData>((ref) {
+  return UserDataNotifier();
+});
+
+final rankingDataProvider = StateProvider<List<String>>((ref) => []);

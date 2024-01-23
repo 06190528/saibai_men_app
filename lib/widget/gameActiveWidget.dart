@@ -37,7 +37,7 @@ class IsGameActiveTrueWidget extends ConsumerWidget {
         Positioned(
             top: screenSize.height * 0.05,
             child: FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 if (onGamePause != null) {
                   onGamePause!(); // nullチェック後に関数を呼び出す
                 }

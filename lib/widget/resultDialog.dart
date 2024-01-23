@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saibai_men_app/common/firebase/firebaseSave.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
@@ -36,12 +37,12 @@ class Result extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min, // 子ウィジェットのサイズに合わせる
                   children: [
                     const DoubleText(
-                      text: '結果',
+                      text: 'result',
                       fontSize: 30,
                       insideColor: Color.fromARGB(255, 255, 192, 1),
                     ),
                     ScoreWidget(
-                        text: 'スコア',
+                        text: 'score',
                         width: screenWidth,
                         fontSize: 30,
                         score: '${ref.watch(enemyCounterProvider)}',
@@ -51,11 +52,14 @@ class Result extends ConsumerWidget {
                           topRight: Radius.circular(5),
                         )),
                     ScoreWidget(
-                      text: 'ベストスコア',
+                      text: 'best score',
                       width: screenWidth,
                       fontSize: 20,
-                      score: "0",
-                      // score: '${sortScoreList(ref.watch(userDataProvider))[1]}',
+                      score: ref
+                          .watch(userDataProvider)
+                          .scoreList
+                          .reduce(max)
+                          .toString(),
                       color: const Color.fromARGB(255, 162, 160, 160),
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(5),
@@ -72,7 +76,7 @@ class Result extends ConsumerWidget {
             child: Column(
               children: [
                 BannerButton(
-                  text: 'リスタート',
+                  text: 'restart',
                   onPressed: () {
                     ref.read(dinoGameProvider.notifier).reset();
                     ref.read(showResultDialog.state).state = false;
@@ -87,9 +91,10 @@ class Result extends ConsumerWidget {
                   width: screenWidth * 0.6,
                   icon: Icons.replay,
                 ),
+                SizedBox(height: 10),
                 if (!ref.watch(usedContinueProvider.state).state)
                   BannerButton(
-                    text: 'コンティニュー',
+                    text: 'continue',
                     onPressed: () {
                       RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
                     },

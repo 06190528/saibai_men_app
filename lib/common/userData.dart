@@ -16,7 +16,7 @@ class UserData {
     return UserData(
       name: map['name'] ?? '',
       langage: LangageList.values.firstWhere(
-        (e) => e.toString() == 'LangageList.' + (map['langage'] ?? 'Japan'),
+        (e) => e.toString() == 'LangageList.' + (map['langage'] ?? 'USA'),
         orElse: () => LangageList.Japan,
       ),
       scoreList: List<int>.from(map['scoreList'] ?? []),

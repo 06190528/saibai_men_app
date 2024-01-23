@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saibai_men_app/common/ad_helper.dart';
-import 'package:saibai_men_app/common/firebase/firebaseSave.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
-import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/deathBlowWidget.dart';
 import 'package:saibai_men_app/widget/enemyCountTextWIdget.dart';
 import 'package:saibai_men_app/widget/gameWidgetArea.dart';
@@ -15,7 +12,6 @@ class GameScene extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    initialize(ref);
     final size = MediaQuery.of(context).size;
     GameWidgetLogic gameWidgetLogic = GameWidgetLogic(context, ref);
     return Scaffold(
@@ -31,25 +27,32 @@ class GameScene extends ConsumerWidget {
             Positioned(
               top: size.height * 0.05,
               right: size.width * 0.05,
-              child: Column(
+              child: const Column(
                 children: [
                   EnemyCountText(),
-                  if (ref.watch(deathblowCountProvider) >= 1) ...[
-                    DeathBlowWidget(
-                        onActivateSpecialMove:
-                            gameWidgetLogic.activateSpecialMove)
-                  ]
                 ],
               ),
             ),
+            Positioned(
+                top: size.height * 0.6,
+                right: size.width * 0.05,
+                child: Stack(
+                  children: [
+                    if (ref.watch(deathblowCountProvider) >= 1) ...[
+                      DeathBlowWidget(
+                          onActivateSpecialMove:
+                              gameWidgetLogic.activateSpecialMove)
+                    ]
+                  ],
+                ))
           ],
-          Positioned(
-            bottom: 0,
-            child: BannerAdWidget(
-              adUnitId: AdHelper.bannerAdUnitId,
-              width: size.width,
-            ),
-          ),
+          // Positioned(
+          //   bottom: 0,
+          //   child: BannerAdWidget(
+          //     adUnitId: AdHelper.bannerAdUnitId,
+          //     width: size.width,
+          //   ),
+          // ),
         ],
       ),
     );

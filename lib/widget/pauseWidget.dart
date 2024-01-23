@@ -28,13 +28,13 @@ class PauseWidget extends ConsumerWidget {
               elevation: 5,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
-              child: Padding(
+              child: const Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min, // 子ウィジェットのサイズに合わせる
                   children: [
-                    const DoubleText(
-                      text: 'ポーズ',
+                    DoubleText(
+                      text: 'pause',
                       fontSize: 30,
                       insideColor: Color.fromARGB(255, 255, 192, 1),
                     ),
@@ -48,7 +48,7 @@ class PauseWidget extends ConsumerWidget {
               child: Column(
                 children: [
                   BannerButton(
-                    text: 'ゲームに戻る',
+                    text: 'continue',
                     onPressed: () {
                       offGamePause!();
                     },
@@ -59,7 +59,7 @@ class PauseWidget extends ConsumerWidget {
                     height: 15,
                   ),
                   BannerButton(
-                    text: 'リスタート',
+                    text: 'restart',
                     onPressed: () {
                       ref.read(dinoGameProvider.notifier).reset();
                       ref.read(showResultDialog.state).state = false;

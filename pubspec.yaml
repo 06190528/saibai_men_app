@@ -1,7 +1,7 @@
 name: saibai_men_app
 description: A new Flutter project.
 publish_to: "none"
-version: 1.0.2+1
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -24,6 +24,7 @@ dependencies:
   intl: ^0.19.0
   shared_preferences: ^2.0.6
   firebase_auth: ^4.16.0
+  webview_flutter: ^4.4.4
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +33,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       - asset: assets/fonts/custom_font.ttf
   assets:
     - assets/images/background.png
     - assets/images/enemy_transparent_right.png
@@ -42,8 +47,9 @@ flutter:
     - assets/images/energy icon.png
     - assets/images/yamucha_sprit.png
     - assets/images/explosion_sprite.png
+    - assets/images/titleScene.png
     - assets/sounds/explosion.mp3
-    - assets/sounds/bgm.mp3
+    - assets/sounds/bgm.wav
     - assets/sounds/specialMove.mp3
     - assets/sounds/getItemSound.mp3
     - assets/sounds/sub_bgm.mp3

@@ -34,16 +34,31 @@ class GameWidgetArea extends ConsumerWidget {
           game: game,
         ),
         if (ref.read(createStartButtonFlag))
-          Center(
-            child: Align(
-              alignment: const Alignment(0.0, 0.2), // x軸は中央、y軸は少し下に
-              child: BannerButton(
-                width: screenSize.width * 0.6,
-                text: 'スタート',
-                onPressed: () async {
-                  gameWidgetLogic.onPressedStartButton();
-                },
-                icon: Icons.play_arrow, // 再生アイコンを使用
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: screenSize.height * 0.2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  BannerButton(
+                    width: screenSize.width * 0.6,
+                    text: 'start game',
+                    onPressed: () async {
+                      gameWidgetLogic.onPressedStartButton();
+                    },
+                    icon: Icons.play_arrow,
+                  ),
+                  const SizedBox(height: 20),
+                  BannerButton(
+                    width: screenSize.width * 0.6,
+                    text: 'return title',
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    icon: Icons.play_arrow,
+                  ),
+                ],
               ),
             ),
           ),

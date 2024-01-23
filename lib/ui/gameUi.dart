@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/logic/directions.dart';
+import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/attackEnemyUi.dart';
 import 'package:saibai_men_app/ui/deathblowUi.dart';
 import 'package:saibai_men_app/ui/enemyUi.dart';
@@ -93,8 +94,17 @@ class DinoGame extends FlameGame {
     enemies.clear();
   }
 
-  void updateSpeed(double newSpeed) {
-    dinoPlayer.updateSpeed(newSpeed);
+  void updateSpeed(double newSpeed, WidgetRef ref) {
+    ref
+        .read(bgmAudioProvider)
+        .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1.05);
+    if (newSpeed == 0) {
+      ref
+          .read(bgmAudioProvider)
+          .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1);
+    }
+    ;
+    dinoPlayer.updateSpeed(newSpeed * 1.3);
     _dinoWorld.updateSpeed(newSpeed * 0.5);
     for (var enemy in enemies) {
       enemy.updateSpeed(newSpeed);
