@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:saibai_men_app/common/langage.dart';
+import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +58,7 @@ class UserDataService {
   }
 }
 
+//この時点でデーター保存されてない
 Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
   //確定でuserDataがローカルにある。
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -67,7 +68,6 @@ Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
     Map<String, dynamic> userDataMap = json.decode(userDataString);
     // MapをUserDataに変換
     UserData userData = UserData.fromMap(userDataMap);
-    print(userData.scoreList);
     // userDataProviderにデータを設定
     ref.read(userDataProvider.notifier).state = userData;
   }
@@ -85,7 +85,7 @@ Future<void> initializeUserData() async {
       UserData userData = UserData(
         name: '',
         scoreList: [],
-        langage: LangageList.USA,
+        language: LanguageList.USA,
       );
       // ローカルに保存
       await UserDataService().saveUserDataToLocal(userData.toMap());

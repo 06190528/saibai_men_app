@@ -57,7 +57,7 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
     final double deltaPosition = speed * dt;
     Vector2 nextPosition = position.clone();
     Vector2 screenSize = gameRef.size;
-    double radius = (size.length / 2 + dinoPlayer.size.length / 2) / 1.5;
+    double radius = (size.length / 2 + dinoPlayer.size.length / 2) / 2;
     double distance = dinoPlayer.position.distanceTo(position);
     if (distance <= radius) {
       if (onGameOver != null) {

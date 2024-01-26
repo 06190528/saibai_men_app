@@ -1,7 +1,7 @@
 import 'dart:io';
 
 class AdHelper {
-  static bool _isTestMode = true;
+  static bool _isTestMode = false;
 
   static String get bannerAdUnitId {
     if (_isTestMode) {
@@ -12,7 +12,7 @@ class AdHelper {
 
     return Platform.isAndroid
         ? 'ca-app-pub-2847746899486154/6353017056'
-        : 'ca-app-pub-2847746899486154/8704129716';
+        : 'ca-app-pub-2847746899486154/5344180613';
   }
 
   static String get interstitialAdUnitId {
@@ -22,9 +22,7 @@ class AdHelper {
           : 'ca-app-pub-3940256099942544/4411468910';
     }
 
-    return Platform.isAndroid
-        ? 'ca-app-pub-2847746899486154/5875882902'
-        : 'ca-app-pub-2847746899486154/7311171933';
+    return Platform.isAndroid ? '' : 'ca-app-pub-2847746899486154/2836031803';
   }
 
   static String get rewardedAdUnitId {
@@ -38,6 +36,18 @@ class AdHelper {
     return Platform.isAndroid
         ? '<YOUR_ANDROID_REWARDED_AD_UNIT_ID>'
         : 'ca-app-pub-2847746899486154/9551618004';
+  }
+
+  static String get nativeAdUnitId {
+    if (_isTestMode) {
+      return Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/2247696110'
+          : 'ca-app-pub-3940256099942544/3986624511';
+    }
+
+    return Platform.isAndroid
+        ? 'ca-app-pub-2847746899486154/9551618004'
+        : 'ca-app-pub-2847746899486154/2152671377';
   }
 
   static void enableTestMode() {

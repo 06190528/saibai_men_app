@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/ad_helper.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/deathBlowWidget.dart';
 import 'package:saibai_men_app/widget/enemyCountTextWIdget.dart';
 import 'package:saibai_men_app/widget/gameWidgetArea.dart';
@@ -46,13 +48,13 @@ class GameScene extends ConsumerWidget {
                   ],
                 ))
           ],
-          // Positioned(
-          //   bottom: 0,
-          //   child: BannerAdWidget(
-          //     adUnitId: AdHelper.bannerAdUnitId,
-          //     width: size.width,
-          //   ),
-          // ),
+          Positioned(
+            bottom: 0,
+            child: BannerAdWidget(
+              adUnitId: AdHelper.bannerAdUnitId,
+              width: size.width,
+            ),
+          ),
         ],
       ),
     );

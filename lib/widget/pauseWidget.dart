@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/ad_helper.dart';
+import 'package:saibai_men_app/common/language.dart';
+import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 
@@ -12,6 +16,7 @@ class PauseWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    UserData userData = ref.watch(userDataProvider);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -19,6 +24,13 @@ class PauseWidget extends ConsumerWidget {
       child: Stack(
         alignment: Alignment.center, // Stack内の子要素を中央に配置
         children: [
+          Positioned(
+            top: 0,
+            child: BannerAdWidget(
+              adUnitId: AdHelper.bannerAdUnitId,
+              width: screenWidth,
+            ),
+          ),
           Positioned(
             top: screenHeight / 10,
             width: screenWidth * 0.9,
@@ -28,13 +40,13 @@ class PauseWidget extends ConsumerWidget {
               elevation: 5,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),
-              child: const Padding(
+              child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min, // 子ウィジェットのサイズに合わせる
                   children: [
                     DoubleText(
-                      text: 'pause',
+                      text: Language().translationPause(userData.language),
                       fontSize: 30,
                       insideColor: Color.fromARGB(255, 255, 192, 1),
                     ),
@@ -48,7 +60,7 @@ class PauseWidget extends ConsumerWidget {
               child: Column(
                 children: [
                   BannerButton(
-                    text: 'continue',
+                    text: Language().translationContinue(userData.language),
                     onPressed: () {
                       offGamePause!();
                     },
@@ -59,7 +71,7 @@ class PauseWidget extends ConsumerWidget {
                     height: 15,
                   ),
                   BannerButton(
-                    text: 'restart',
+                    text: Language().translationRestart(userData.language),
                     onPressed: () {
                       ref.read(dinoGameProvider.notifier).reset();
                       ref.read(showResultDialog.state).state = false;

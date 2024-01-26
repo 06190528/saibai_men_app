@@ -25,6 +25,7 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
     ref.read(showResultDialog.state).state = true;
+    game.updateTime(ref.read(timeProvider.state).state = 1);
     await ref.read(bgmAudioProvider).stop();
     explosionAudio.play('sounds/explosion.mp3');
     setUserDataToIFirebase(ref.read(userDataProvider));
@@ -34,13 +35,14 @@ class GameWidgetLogic {
 
   Future<void> enemyCount(int id) async {
     ref.read(enemyCounterProvider.state).state++;
-    if (ref.read(enemyCounterProvider.state).state % 30 == 29) {
+    if (ref.read(enemyCounterProvider.state).state % 30 >= 29) {
+      print('game speed up');
       game.updateSpeed(ref.read(speedProvider.state).state *= 1.05, ref);
       ref
           .read(bgmAudioProvider)
           .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1.05);
-      game.updateTime(ref.read(timeProvider.state).state *= 0.9);
-    } else if (ref.read(enemyCounterProvider.state).state % 30 == 10) {
+      game.updateTime(ref.read(timeProvider.state).state *= 0.93);
+    } else if (ref.read(enemyCounterProvider.state).state % 25 == 10) {
       game.addDeathblow();
     }
     game.enemies.removeWhere((e) => e.id == id);

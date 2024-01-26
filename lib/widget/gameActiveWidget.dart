@@ -17,19 +17,22 @@ class IsGameActiveTrueWidget extends ConsumerWidget {
       children: [
         GestureDetector(
           onPanUpdate: (details) {
-            // Handle swipe direction
             final offset = details.delta;
-            if (offset.dx.abs() > offset.dy.abs()) {
-              if (offset.dx > 0) {
-                game.onArrowKeyChanged(Direction.right);
+            final swipeThreshold = 12;
+            if (offset.dx.abs() > swipeThreshold ||
+                offset.dy.abs() > swipeThreshold) {
+              if (offset.dx.abs() > offset.dy.abs()) {
+                if (offset.dx > 0) {
+                  game.onArrowKeyChanged(Direction.right);
+                } else {
+                  game.onArrowKeyChanged(Direction.left);
+                }
               } else {
-                game.onArrowKeyChanged(Direction.left);
-              }
-            } else {
-              if (offset.dy > 0) {
-                game.onArrowKeyChanged(Direction.down);
-              } else {
-                game.onArrowKeyChanged(Direction.up);
+                if (offset.dy > 0) {
+                  game.onArrowKeyChanged(Direction.down);
+                } else {
+                  game.onArrowKeyChanged(Direction.up);
+                }
               }
             }
           },

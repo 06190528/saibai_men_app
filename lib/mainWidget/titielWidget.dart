@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
+import 'package:saibai_men_app/common/language.dart';
+import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/mainWidget/gameScene.dart';
 import 'package:saibai_men_app/mainWidget/rankingWIdget.dart';
+import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/settingDialog.dart';
 
 class TitleScene extends ConsumerWidget {
-  @override
+  TitleScene({Key? key}) : super(key: key);
+
+  // 初回のみ実行するフラグ
+  bool _initialized = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 最初のビルド時に一度だけuserDataFromLocalToProviderを実行
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!_initialized) {
       saveUserDataFromLocalToProvider(ref);
       getAndSaveRankingDataFromIFirebaseToProvider(ref);
-    });
+      _initialized = true; // 初期化が完了したことをマーク
+    }
     final size = MediaQuery.of(context).size;
+    UserData userData = ref.watch(userDataProvider);
     return Scaffold(
       body: Stack(
         children: [
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/titleScene.png'), // 画像のパス
+                image: AssetImage('assets/images/titleScene.png'),
                 fit: BoxFit.cover, // 背景全体に画像を表示
               ),
             ),
@@ -35,7 +42,7 @@ class TitleScene extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 BannerButton(
-                  text: 'start',
+                  text: Language().translationStart(userData.language),
                   onPressed: () {
                     Navigator.push(
                       context,

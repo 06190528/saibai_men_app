@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
-import 'package:saibai_men_app/common/langage.dart';
+import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/provider.dart';
 
@@ -19,10 +19,10 @@ class UserSettingsDialog extends ConsumerWidget {
 
     // 現在選択されている言語をStateProviderで管理
     final selectedLangageProvider =
-        StateProvider<LangageList>((ref) => userData.langage);
+        StateProvider<LanguageList>((ref) => userData.language);
 
     return AlertDialog(
-      title: Text('ユーザー設定'),
+      title: Text(Language().translationUserSetting(userData.language)), // 設定
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -32,19 +32,19 @@ class UserSettingsDialog extends ConsumerWidget {
           ),
           Consumer(
             builder: (context, ref, _) {
-              LangageList selectedLangage = ref.watch(selectedLangageProvider);
-              return DropdownButton<LangageList>(
+              LanguageList selectedLangage = ref.watch(selectedLangageProvider);
+              return DropdownButton<LanguageList>(
                 value: selectedLangage,
-                onChanged: (LangageList? newValue) {
+                onChanged: (LanguageList? newValue) {
                   if (newValue != null) {
                     ref.read(selectedLangageProvider.notifier).state = newValue;
                   }
                 },
-                items: LangageList.values.map((LangageList langage) {
-                  return DropdownMenuItem<LangageList>(
-                    value: langage,
-                    child: Text(langageNames[langage] ??
-                        langage.toString().split('.').last),
+                items: LanguageList.values.map((LanguageList language) {
+                  return DropdownMenuItem<LanguageList>(
+                    value: language,
+                    child: Text(langageNames[language] ??
+                        language.toString().split('.').last),
                   );
                 }).toList(),
               );
@@ -60,12 +60,12 @@ class UserSettingsDialog extends ConsumerWidget {
           },
         ),
         TextButton(
-          child: Text(Langage().translationSave(userData.langage)), //保存
+          child: Text(Language().translationSave(userData.language)), //保存
           onPressed: () async {
             // userDataProviderを更新
             ref.read(userDataProvider.notifier).state = UserData(
               name: nameController.text,
-              langage: ref.read(selectedLangageProvider),
+              language: ref.read(selectedLangageProvider),
               scoreList: userData.scoreList, // 既存のスコアリストを保持
             );
             await UserDataService()
