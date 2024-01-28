@@ -28,7 +28,7 @@ class GameScene extends ConsumerWidget {
           if (ref.watch(isGameActiveProvider)) ...[
             Positioned(
               top: size.height * 0.05,
-              right: size.width * 0.05,
+              right: size.width * 0.01,
               child: const Column(
                 children: [
                   EnemyCountText(),

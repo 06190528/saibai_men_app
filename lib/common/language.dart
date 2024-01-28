@@ -88,7 +88,7 @@ class Language {
       case LanguageList.USA:
         return 'Pause';
       case LanguageList.Japan:
-        return '一時停止';
+        return 'ポーズ';
       case LanguageList.China:
         return '暂停'; // 中国語（簡体字）
       case LanguageList.Germany:
@@ -115,7 +115,7 @@ class Language {
       case LanguageList.USA:
         return 'Continue';
       case LanguageList.Japan:
-        return '続行';
+        return 'コンティニュー';
       case LanguageList.China:
         return '继续'; // 中国語（簡体字）
       case LanguageList.Germany:
@@ -142,7 +142,7 @@ class Language {
       case LanguageList.USA:
         return 'Restart';
       case LanguageList.Japan:
-        return '再起動';
+        return 'リスタート';
       case LanguageList.China:
         return '重新开始'; // 中国語（簡体字）
       case LanguageList.Germany:
@@ -196,7 +196,7 @@ class Language {
       case LanguageList.USA:
         return 'Start';
       case LanguageList.Japan:
-        return '開始';
+        return 'スタート';
       case LanguageList.China:
         return '开始'; // 中国語（簡体字）
       case LanguageList.Germany:
@@ -323,6 +323,168 @@ class Language {
         return 'Настройка пользователя'; // ロシア語
       default:
         return 'User Setting';
+    }
+  }
+
+  String translationNormal(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Normal';
+      case LanguageList.Japan:
+        return 'ノーマル';
+      case LanguageList.China:
+        return '正常'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Normal'; // ドイツ語
+      case LanguageList.France:
+        return 'Normal'; // フランス語
+      case LanguageList.UK:
+        return 'Normal'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Normal'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '일반'; // 韓国語
+      case LanguageList.India:
+        return 'सामान्य'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Нормальный'; // ロシア語
+      default:
+        return 'Normal';
+    }
+  }
+
+  String translationHard(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Hard';
+      case LanguageList.Japan:
+        return 'ハード';
+      case LanguageList.China:
+        return '硬'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Hart'; // ドイツ語
+      case LanguageList.France:
+        return 'Dur'; // フランス語
+      case LanguageList.UK:
+        return 'Hard'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Difícil'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '단단한'; // 韓国語
+      case LanguageList.India:
+        return 'कठिन'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Жесткий'; // ロシア語
+      default:
+        return 'Hard';
+    }
+  }
+
+  String translationSelectMode(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Select Mode';
+      case LanguageList.Japan:
+        return 'モード選択';
+      case LanguageList.China:
+        return '选择模式'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Modus auswählen'; // ドイツ語
+      case LanguageList.France:
+        return 'Sélectionner le mode'; // フランス語
+      case LanguageList.UK:
+        return 'Select Mode'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Selecione o modo'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '모드 선택'; // 韓国語
+      case LanguageList.India:
+        return 'मोड चुनें'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Выберите режим'; // ロシア語
+      default:
+        return 'Select Mode';
+    }
+  }
+
+  String translationYourRank(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Your Rank';
+      case LanguageList.Japan:
+        return 'あなたのランク';
+      case LanguageList.China:
+        return '你的排名'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Dein Rang'; // ドイツ語
+      case LanguageList.France:
+        return 'Votre rang'; // フランス語
+      case LanguageList.UK:
+        return 'Your Rank'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Seu Rank'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '당신의 순위'; // 韓国語
+      case LanguageList.India:
+        return 'आपकी रैंक'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Ваш ранг'; // ロシア語
+      default:
+        return 'Your Rank';
+    }
+  }
+
+  String translationNowScore(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Now Score';
+      case LanguageList.Japan:
+        return '現在のスコア';
+      case LanguageList.China:
+        return '现在得分'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Jetzt Punktzahl'; // ドイツ語
+      case LanguageList.France:
+        return 'Score actuel'; // フランス語
+      case LanguageList.UK:
+        return 'Now Score'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Pontuação atual'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '현재 점수'; // 韓国語
+      case LanguageList.India:
+        return 'अब स्कोर'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Текущий счет'; // ロシア語
+      default:
+        return 'Now Score';
+    }
+  }
+
+  String translationRanking(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Ranking';
+      case LanguageList.Japan:
+        return 'ランキング';
+      case LanguageList.China:
+        return '排行榜'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Rangliste'; // ドイツ語
+      case LanguageList.France:
+        return 'Classement'; // フランス語
+      case LanguageList.UK:
+        return 'Ranking'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Classificação'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '순위'; // 韓国語
+      case LanguageList.India:
+        return 'रैंकिंग'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Рейтинг'; // ロシア語
+      default:
+        return 'Ranking';
     }
   }
 }

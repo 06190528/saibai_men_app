@@ -23,6 +23,7 @@ class UserSettingsDialog extends ConsumerWidget {
 
     return AlertDialog(
       title: Text(Language().translationUserSetting(userData.language)), // 設定
+      backgroundColor: Color.fromARGB(255, 240, 240, 240),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -27,6 +27,10 @@ class CustomIconButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor, // 背景色
         borderRadius: borderRadius, // 角を丸める
+        border: Border.all(
+          color: Colors.black, // 枠線の色
+          width: 1, // 枠線の太さ
+        ),
       ),
       child: InkWell(
         onTap: onPressed, // ボタンが押されたときの処理

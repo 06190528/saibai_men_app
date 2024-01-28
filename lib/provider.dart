@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/language.dart';
+import 'package:saibai_men_app/common/ranking.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/audio.dart';
 import 'package:saibai_men_app/ui/gameUi.dart';
@@ -27,6 +28,7 @@ final timeProvider = StateProvider<double>((ref) => 1);
 final bgmSpeedProvider = StateProvider<double>((ref) => 1);
 final deathblowCountProvider = StateProvider<int>((ref) => 0);
 final playCountProvider = StateProvider<int>((ref) => 0);
+final rankingListProvider = StateProvider<List<Ranking>>((ref) => []);
 
 class UserDataNotifier extends StateNotifier<UserData> {
   UserDataNotifier()
@@ -44,5 +46,3 @@ final userDataProvider =
     StateNotifierProvider<UserDataNotifier, UserData>((ref) {
   return UserDataNotifier();
 });
-
-final rankingDataProvider = StateProvider<List<String>>((ref) => []);

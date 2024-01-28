@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:saibai_men_app/common/language.dart';
+import 'package:saibai_men_app/common/ranking.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/widget/settingDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +35,7 @@ class UserDataService {
     int randomNumber = random.nextInt(1000); // 例: 0から999まで
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyyMMddHHmmss').format(now);
-    String uniqueUserID = "${randomNumber}${formattedDate}";
+    String uniqueUserID = "${formattedDate}${randomNumber}";
     return uniqueUserID;
   }
 
@@ -112,8 +115,41 @@ Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
   for (int i = 0; i < ranking.data()!['ranking'].length; i++) {
     var name = ranking.data()!['ranking'][i]['name'];
     var maxScore = ranking.data()!['ranking'][i]['maxScore'];
-    ref.read(rankingDataProvider.notifier).state.add(
-          '${i + 1}位: $name: $maxScore',
-        );
+    var id = ranking.data()!['ranking'][i]['id'];
+    ref
+        .read(rankingListProvider.notifier)
+        .state
+        .add(Ranking(name: name, score: maxScore, id: id));
+  }
+}
+
+Future<void> showUserSettingsDialog(WidgetRef ref, BuildContext context) async {
+  UserData userData = ref.read(userDataProvider);
+  if (userData.name == '' && userData.scoreList.isNotEmpty) {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return const UserSettingsDialog();
+      },
+    );
+  }
+}
+
+void addUserDataToRankingDataProvider(WidgetRef ref) {
+  UserData userData = ref.read(userDataProvider);
+  if (userData.scoreList.isEmpty) {
+    return;
+  }
+  int userMaxScore = userData.scoreList.reduce(max);
+  final userId = UserDataService().getUserId();
+  final rankingList = ref.read(rankingListProvider.notifier).state;
+  for (int i = 0; i < rankingList.length; i++) {
+    if (userMaxScore > rankingList[i].score) {
+      ref.read(rankingListProvider.notifier).state.insert(
+          i,
+          Ranking(
+              name: userData.name, score: userMaxScore, id: userId.toString()));
+      break;
+    }
   }
 }

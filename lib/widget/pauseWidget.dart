@@ -34,20 +34,23 @@ class PauseWidget extends ConsumerWidget {
           Positioned(
             top: screenHeight / 10,
             width: screenWidth * 0.9,
-            child: Dialog(
-              insetPadding: const EdgeInsets.all(0), // Dialogのデフォルトパディングを削除
-              backgroundColor: Color.fromARGB(255, 255, 255, 255),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 222, 222, 222), // ボタンの背景色
+                borderRadius: BorderRadius.circular(20), // 角丸設定
+                border: Border.all(
+                  color: Colors.black, // 枠線の色
+                  width: 1, // 枠線の太さ
+                ),
+              ),
+              // width: screenWidth * 0.3, // 横幅を screenWidth * 0.7 に設定
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(0),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min, // 子ウィジェットのサイズに合わせる
                   children: [
                     DoubleText(
                       text: Language().translationPause(userData.language),
-                      fontSize: 30,
+                      fontSize: screenWidth * 0.1,
                       insideColor: Color.fromARGB(255, 255, 192, 1),
                     ),
                   ],
