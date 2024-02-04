@@ -5,6 +5,7 @@ import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/attackEnemyUi.dart';
 import 'package:saibai_men_app/ui/deathblowUi.dart';
 import 'package:saibai_men_app/ui/enemyUi.dart';
+import 'package:saibai_men_app/ui/kiUi.dart';
 import 'playerUi.dart';
 import 'worldUi.dart';
 
@@ -23,12 +24,14 @@ class DinoGame extends FlameGame {
   double? speed;
   List<Enemy> enemies = [];
   List<Deathblow> deathblows = [];
+  List<AttackEnemy> attackEnemies = [];
   double _timer = 0;
   bool isGameActive = false;
   final DinoPlayer dinoPlayer = DinoPlayer();
   final DinoWorld _dinoWorld = DinoWorld();
+  late KiEffect kiEffect;
 
-  double time = 1;
+  double time = 1.2;
 
   DinoGame(
       {required this.speed,
@@ -41,7 +44,12 @@ class DinoGame extends FlameGame {
     super.onLoad();
     await add(_dinoWorld);
     await add(dinoPlayer);
+    kiEffect = KiEffect(dinoPlayer);
     dinoPlayer.position = _dinoWorld.size * 0.5; // 初期位置を設定
+  }
+
+  void evolution() {
+    add(kiEffect);
   }
 
   @override
@@ -85,13 +93,15 @@ class DinoGame extends FlameGame {
     enemies.clear();
   }
 
-  void attackEnemy() {
+  void attackEnemy() async {
     for (var enemy in enemies) {
       enemy.removeEnemy();
       AttackEnemy attackEnemy = AttackEnemy(enemy.position, _dinoWorld.speed);
       add(attackEnemy);
+      attackEnemies.add(attackEnemy);
     }
     enemies.clear();
+    attackEnemies.clear();
   }
 
   void updateSpeed(double newSpeed, WidgetRef ref) {
@@ -127,5 +137,12 @@ class DinoGame extends FlameGame {
     deathblow.updateSpeed(_dinoWorld.speed);
     add(deathblow);
     deathblows.add(deathblow);
+  }
+
+  void removeDeathblow() {
+    for (var deathblow in deathblows) {
+      deathblow.removeDeathblow();
+    }
+    deathblows.clear();
   }
 }

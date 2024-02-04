@@ -16,15 +16,18 @@ final createStartButtonFlag = StateProvider<bool>((ref) => true);
 final pauseProvider = StateProvider<bool>((ref) => false);
 final loadingRewardAdProvider = StateProvider<bool>((ref) => false);
 final usedContinueProvider = StateProvider<bool>((ref) => false);
+final runAwayTextFlagProvider = StateProvider<bool>((ref) => false);
+final evolutionFlagProvider = StateProvider<bool>((ref) => false);
 
 final bgmAudioProvider = Provider<Audio>((ref) => Audio());
 final explosionAudioProvider = Provider<Audio>((ref) => Audio());
 final attackBgmProvider = Provider<Audio>((ref) => Audio());
 final getItemBgmProvider = Provider<Audio>((ref) => Audio());
+final kiAudioProvider = Provider<Audio>((ref) => Audio());
 
 final enemyCounterProvider = StateProvider<int>((ref) => 0);
 final speedProvider = StateProvider<double>((ref) => 600);
-final timeProvider = StateProvider<double>((ref) => 1);
+final timeProvider = StateProvider<double>((ref) => 1.2);
 final bgmSpeedProvider = StateProvider<double>((ref) => 1);
 final deathblowCountProvider = StateProvider<int>((ref) => 0);
 final playCountProvider = StateProvider<int>((ref) => 0);

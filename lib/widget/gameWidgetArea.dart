@@ -1,4 +1,5 @@
 import 'package:flame/game.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/language.dart';
@@ -19,6 +20,7 @@ class GameWidgetArea extends ConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
     final game = ref.watch(dinoGameProvider);
     final isGameActive = ref.watch(isGameActiveProvider);
+    final showRunAwayTextFlag = ref.watch(runAwayTextFlagProvider);
     UserData userData = ref.watch(userDataProvider);
     game.speed = ref.read(speedProvider.state).state;
     game.EnemyCount = (id) {
@@ -29,6 +31,7 @@ class GameWidgetArea extends ConsumerWidget {
     };
     game.activateSpecialMove = () async {
       ref.read(deathblowCountProvider.state).state++;
+      ref.read(getItemBgmProvider).setVolume(0.7);
       ref.read(getItemBgmProvider).play('sounds/getItemSound.mp3');
     };
     return Stack(
@@ -48,6 +51,7 @@ class GameWidgetArea extends ConsumerWidget {
                     width: screenSize.width * 0.6,
                     text: Language().translationStart(userData.language),
                     onPressed: () async {
+                      ref.read(createStartButtonFlag.state).state = false;
                       gameWidgetLogic.onPressedStartButton();
                     },
                     icon: Icons.play_arrow,
@@ -78,7 +82,30 @@ class GameWidgetArea extends ConsumerWidget {
               gameWidgetLogic.onGameResume();
             },
           )
-        ]
+        ],
+        // if (showRunAwayTextFlag) ...[
+        //   Positioned(
+        //     top: screenSize.height * 0.5,
+        //     left: screenSize.width * 0.2,
+        //     child: AnimatedTextKit(
+        //       animatedTexts: [
+        //         FadeAnimatedText(
+        //           Language().translationRunAway(userData.language),
+        //           textStyle: TextStyle(
+        //             fontSize: screenSize.width * 0.1,
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.red,
+        //           ),
+        //         ),
+        //       ],
+        //       onFinished: () {
+        //         ref.read(runAwayTextFlagProvider.state).state = false;
+        //         gameWidgetLogic.onPressedStartButton();
+        //       },
+        //       totalRepeatCount: 1, // アニメーションを1回だけ表示
+        //     ),
+        //   ),
+        // ],
       ],
     );
   }

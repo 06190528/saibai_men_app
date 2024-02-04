@@ -31,7 +31,6 @@ class DoubleText extends StatelessWidget {
                   ..color = Colors.black),
           ),
           // テキストの内側部分
-          // テキストの内側部分
           Text(
             text,
             textAlign: TextAlign.center,

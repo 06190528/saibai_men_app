@@ -48,7 +48,6 @@ class UserDataService {
       userId = generateUniqueUserID();
       await prefs.setString('user_id', userId);
     }
-
     return userId;
   }
 

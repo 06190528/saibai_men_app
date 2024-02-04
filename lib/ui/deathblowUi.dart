@@ -71,4 +71,8 @@ class Deathblow extends SpriteAnimationComponent with HasGameRef {
       removeFromParent();
     }
   }
+
+  void removeDeathblow() {
+    removeFromParent();
+  }
 }

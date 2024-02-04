@@ -407,7 +407,7 @@ class Language {
     }
   }
 
-  String translationYourRank(LanguageList language) {
+  String translationYourRanking(LanguageList language) {
     switch (language) {
       case LanguageList.USA:
         return 'Your Rank';
@@ -468,7 +468,7 @@ class Language {
       case LanguageList.Japan:
         return 'ランキング';
       case LanguageList.China:
-        return '排行榜'; // 中国語（簡体字）
+        return '排名'; // 中国語（簡体字）
       case LanguageList.Germany:
         return 'Rangliste'; // ドイツ語
       case LanguageList.France:
@@ -485,6 +485,141 @@ class Language {
         return 'Рейтинг'; // ロシア語
       default:
         return 'Ranking';
+    }
+  }
+
+  String translationYes(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Yes';
+      case LanguageList.Japan:
+        return 'はい';
+      case LanguageList.China:
+        return '是'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Ja'; // ドイツ語
+      case LanguageList.France:
+        return 'Oui'; // フランス語
+      case LanguageList.UK:
+        return 'Yes'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Sim'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '예'; // 韓国語
+      case LanguageList.India:
+        return 'हाँ'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Да'; // ロシア語
+      default:
+        return 'Yes';
+    }
+  }
+
+  String translationNo(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'No';
+      case LanguageList.Japan:
+        return 'いいえ';
+      case LanguageList.China:
+        return '没有'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Nein'; // ドイツ語
+      case LanguageList.France:
+        return 'Non'; // フランス語
+      case LanguageList.UK:
+        return 'No'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Não'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '아니'; // 韓国語
+      case LanguageList.India:
+        return 'नहीं'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Нет'; // ロシア語
+      default:
+        return 'No';
+    }
+  }
+
+  String translationWatchAd(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Would you like to watch an ad?';
+      case LanguageList.Japan:
+        return '広告を視聴しますか？';
+      case LanguageList.China:
+        return '你想要观看广告吗？'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Möchten Sie eine Anzeige sehen?'; // ドイツ語
+      case LanguageList.France:
+        return 'Voulez-vous regarder une publicité?'; // フランス語
+      case LanguageList.UK:
+        return 'Would you like to watch an ad?'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Você gostaria de assistir a um anúncio?'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '광고를 시청하시겠습니까?'; // 韓国語
+      case LanguageList.India:
+        return 'क्या आप विज्ञापन देखना चाहेंगे?'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Хотите посмотреть рекламу?'; // ロシア語
+      default:
+        return 'Would you like to watch an ad?';
+    }
+  }
+
+  String translationWatchAdToContinue(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Would you like to watch an ad to continue?';
+      case LanguageList.Japan:
+        return '広告を視聴してコンティニューしますか？';
+      case LanguageList.China:
+        return '你想要观看广告以继续吗？'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Möchten Sie eine Anzeige sehen, um fortzufahren?'; // ドイツ語
+      case LanguageList.France:
+        return 'Voulez-vous regarder une publicité pour continuer?'; // フランス語
+      case LanguageList.UK:
+        return 'Would you like to watch an ad to continue?'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Você gostaria de assistir a um anúncio para continuar?'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '광고를 시청하고 계속하시겠습니까?'; // 韓国語
+      case LanguageList.India:
+        return 'क्या आप जारी रखने के लिए विज्ञापन देखना चाहेंगे?'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Хотите посмотреть рекламу, чтобы продолжить?'; // ロシア語
+      default:
+        return 'Would you like to watch an ad to continue?';
+    }
+  }
+
+  String translationRunAway(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Run Away!!';
+      case LanguageList.Japan:
+        return '逃げろ！！';
+      case LanguageList.China:
+        return '逃跑！！'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Lauf weg!!'; // ドイツ語
+      case LanguageList.France:
+        return 'Fuis!!'; // フランス語
+      case LanguageList.UK:
+        return 'Run Away!!'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Fugir!!'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '도망가!!'; // 韓国語
+      case LanguageList.India:
+        return 'भागो!!'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Беги!!'; // ロシア語
+      default:
+        return 'Run Away!!';
     }
   }
 }

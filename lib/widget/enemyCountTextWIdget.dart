@@ -45,7 +45,7 @@ class EnemyCountText extends ConsumerWidget {
             ),
           ),
           Text(
-            '${Language().translationYourRank(language)} : ${getCurrentRank(rankingList, enemyCounter)}',
+            '${Language().translationYourRanking(language)} : ${getCurrentRank(rankingList, enemyCounter)}',
             style: TextStyle(
               fontFamily: 'CustomFont', // カスタムフォントを使用
               fontSize: size.width * 0.03, // フォントサイズ

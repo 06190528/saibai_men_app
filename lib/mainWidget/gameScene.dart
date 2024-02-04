@@ -37,7 +37,7 @@ class GameScene extends ConsumerWidget {
             ),
             Positioned(
                 top: size.height * 0.6,
-                right: size.width * 0.05,
+                right: size.width * 0.01,
                 child: Stack(
                   children: [
                     if (ref.watch(deathblowCountProvider) >= 1) ...[

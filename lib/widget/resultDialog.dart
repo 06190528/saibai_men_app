@@ -114,8 +114,43 @@ class Result extends ConsumerWidget {
                 if (!ref.watch(usedContinueProvider.state).state)
                   BannerButton(
                     text: Language().translationContinue(userData.language),
-                    onPressed: () {
-                      RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
+                    onPressed: () async {
+                      // 同意ダイアログを表示
+                      final bool isAgreed = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(
+                              Language().translationWatchAdToContinue(
+                                  userData.language),
+                              style: TextStyle(fontSize: screenWidth * 0.05),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text(Language()
+                                    .translationNo(userData.language)),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(false); // ユーザーが同意しない
+                                },
+                              ),
+                              TextButton(
+                                child: Text(Language()
+                                    .translationYes(userData.language)),
+                                onPressed: () {
+                                  Navigator.of(context).pop(true); // ユーザーが同意する
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      // ユーザーが同意した場合にリワード広告をロードして表示
+                      if (isAgreed) {
+                        print('リワード広告をロードして表示');
+                        RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
+                      }
                     },
                     width: screenWidth * 0.6,
                     icon: Icons.refresh_outlined,

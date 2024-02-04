@@ -12,7 +12,8 @@ class RankingWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Ranking> rankingList = ref.watch(rankingListProvider.notifier).state;
-    final userId = UserDataService().getUserId();
+    Future<String> userIdFuture =
+        UserDataService().getUserId(); // Future<String>を取得
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 222, 222, 222),
@@ -28,18 +29,31 @@ class RankingWidget extends ConsumerWidget {
                 insideColor: Color.fromARGB(255, 255, 192, 1),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center, // Row内の要素を中央に配置
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    Language().translationYourRank(
+                    Language().translationYourRanking(
                         ref.read(userDataProvider).language),
                     style: TextStyle(fontSize: 13),
                   ),
-                  const SizedBox(
-                    width: 20,
+                  const SizedBox(width: 20),
+                  FutureBuilder<int>(
+                    future:
+                        getUserRanking(rankingList, userIdFuture), // 非同期関数を呼び出し
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        // Futureが完了し、データがある場合
+                        return Text(
+                          '${snapshot.data}', // getUserRankingの結果を表示
+                          style: TextStyle(fontSize: 13),
+                        );
+                      } else {
+                        // データをロード中またはエラーがある場合
+                        return CircularProgressIndicator();
+                      }
+                    },
                   ),
-                  Text('${getUserRank(rankingList, userId)}',
-                      style: TextStyle(fontSize: 13)),
                 ],
               )
             ],
@@ -54,12 +68,10 @@ class RankingWidget extends ConsumerWidget {
           itemBuilder: (context, index) {
             IconData? medalIcon; // メダルアイコンを格納する変数
             Color? medalColor; // メダルの色を格納する変数
-
-            // ランキングに応じてメダルアイコンと色を設定
             if (index == 0) {
               // 一位
               medalIcon = Icons.emoji_events; // メダルアイコン
-              medalColor = Colors.yellow; // 金色
+              medalColor = Color.fromARGB(255, 253, 240, 2); // 金色
             } else if (index == 1) {
               // 二位
               medalIcon = Icons.emoji_events;
@@ -100,9 +112,11 @@ class RankingWidget extends ConsumerWidget {
   }
 }
 
-int getUserRank(List<Ranking> rankingList, Future<String> id) {
+Future<int> getUserRanking(
+    List<Ranking> rankingList, Future<String> idFuture) async {
+  String userId = await idFuture; // Futureをawaitで待ちます
   for (int i = 0; i < rankingList.length; i++) {
-    if (rankingList[i].id == id) {
+    if (rankingList[i].id == userId) {
       return i + 1;
     }
   }

@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>168631554358-e8c1c5op2p7ajlsgv6b8fpk9lbm54p87.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.168631554358-e8c1c5op2p7ajlsgv6b8fpk9lbm54p87</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAsI_0Vx2TKa_6Lp4cdpX2iRT9kXnh-QgA</string>
+	<string>AIzaSyC85MVvbM1642GnI013ezv_UnumWkeoqLQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>168631554358</string>
+	<string>212231061726</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.smartGeography</string>
+	<string>com.example.explosionGameApp</string>
 	<key>PROJECT_ID</key>
-	<string>smartgrahpy</string>
+	<string>saibai-men</string>
 	<key>STORAGE_BUCKET</key>
-	<string>smartgrahpy.appspot.com</string>
+	<string>saibai-men.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:168631554358:ios:8c7ddcc01473b83b112397</string>
+	<string>1:212231061726:ios:f35f0d2f5a38d35153424f</string>
 </dict>
 </plist>
