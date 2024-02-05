@@ -30,7 +30,7 @@ final speedProvider = StateProvider<double>((ref) => 600);
 final timeProvider = StateProvider<double>((ref) => 1.2);
 final bgmSpeedProvider = StateProvider<double>((ref) => 1);
 final deathblowCountProvider = StateProvider<int>((ref) => 0);
-final playCountProvider = StateProvider<int>((ref) => 0);
+
 final rankingListProvider = StateProvider<List<Ranking>>((ref) => []);
 
 class UserDataNotifier extends StateNotifier<UserData> {

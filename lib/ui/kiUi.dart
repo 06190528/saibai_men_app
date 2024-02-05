@@ -44,7 +44,7 @@ class KiEffect extends SpriteAnimationComponent with HasGameRef<DinoGame> {
 
     // dinoPlayerとKiEffectのアンカーを合わせます。
     anchor = Anchor.bottomCenter;
-    dinoPlayer.anchor = Anchor.bottomCenter;
+    dinoPlayer.anchor = Anchor.center;
   }
 
   @override
@@ -54,6 +54,6 @@ class KiEffect extends SpriteAnimationComponent with HasGameRef<DinoGame> {
   }
 
   void updatePosition(double dt) {
-    position = dinoPlayer.position + Vector2(0, dinoPlayer.height / 2);
+    position = dinoPlayer.position + Vector2(0, dinoPlayer.height);
   }
 }

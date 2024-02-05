@@ -40,21 +40,21 @@ class GameWidgetLogic {
     final bool evolutionFlag = ref.read(evolutionFlagProvider.state).state;
     int enemyCount = ref.read(enemyCounterProvider.state).state;
     ref.read(enemyCounterProvider.state).state++;
-    if (enemyCount % 30 >= 29) {
-      if (ref.read(enemyCounterProvider) % 59 == 0) {
-        for (int i = 0; i < 4; i++) {
-          game.addEnemy();
-        }
+    if (ref.read(enemyCounterProvider) % 59 == 0) {
+      for (int i = 0; i < 4; i++) {
+        game.addEnemy();
       }
+    }
+    if (enemyCount % 30 >= 29) {
       game.updateSpeed(ref.read(speedProvider.state).state *= 1.05, ref);
       game.updateTime(ref.read(timeProvider.state).state *= 0.93);
     } else if (enemyCount % 25 == 10) {
       game.addDeathblow();
     }
-    if (enemyCount / 100 > 1 && evolutionFlag == false) {
-      ref.read(evolutionFlagProvider.state).state = true;
-      evolution();
-    }
+    // if (enemyCount / 1 > 1 && evolutionFlag == false) {
+    //   ref.read(evolutionFlagProvider.state).state = true;
+    //   evolution();
+    // }
     game.enemies.removeWhere((e) => e.id == id);
   }
 
@@ -113,8 +113,26 @@ class GameWidgetLogic {
     game.evolution();
     // 最初のサウンドを再生します。
     ref.read(kiAudioProvider).play('sounds/ki1.1.mp3');
-    await Future.delayed(const Duration(milliseconds: 2100));
+    await Future.delayed(const Duration(milliseconds: 1800));
     ref.read(kiAudioProvider).play('sounds/ki1.2.mp3');
     ref.read(kiAudioProvider).setLoop(true);
+  }
+
+  void resetAllProvider() {
+    ref.read(dinoGameProvider.notifier).reset();
+    ref.read(showResultDialog.state).state = false;
+    ref.read(enemyCounterProvider.state).state = 0;
+    ref.read(isGameActiveProvider.state).state = false;
+    ref.read(createStartButtonFlag.state).state = true;
+    ref.read(pauseProvider.state).state = false;
+    ref.read(bgmAudioProvider).stop();
+    ref.read(usedContinueProvider.state).state = false;
+    ref.read(bgmSpeedProvider.state).state = 1.0;
+    ref.read(speedProvider.state).state = 0;
+    ref.read(timeProvider.state).state = 1.2;
+    ref.read(evolutionFlagProvider.state).state = false;
+    ref.read(deathblowCountProvider.state).state = 0;
+    ref.read(loadingRewardAdProvider.state).state = false;
+    ref.read(kiAudioProvider).stop();
   }
 }

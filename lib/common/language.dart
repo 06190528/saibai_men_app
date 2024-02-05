@@ -410,27 +410,27 @@ class Language {
   String translationYourRanking(LanguageList language) {
     switch (language) {
       case LanguageList.USA:
-        return 'Your Rank';
+        return 'Your Ranking';
       case LanguageList.Japan:
-        return 'あなたのランク';
+        return 'あなたのランキング';
       case LanguageList.China:
-        return '你的排名'; // 中国語（簡体字）
+        return '您的排名'; // 中国語（簡体字）
       case LanguageList.Germany:
-        return 'Dein Rang'; // ドイツ語
+        return 'Ihr Ranking'; // ドイツ語
       case LanguageList.France:
-        return 'Votre rang'; // フランス語
+        return 'Votre classement'; // フランス語
       case LanguageList.UK:
-        return 'Your Rank'; // 英語（イギリス）
+        return 'Your Ranking'; // 英語（イギリス）
       case LanguageList.Brazil:
-        return 'Seu Rank'; // ポルトガル語（ブラジル）
+        return 'Sua classificação'; // ポルトガル語（ブラジル）
       case LanguageList.Korea:
         return '당신의 순위'; // 韓国語
       case LanguageList.India:
-        return 'आपकी रैंक'; // ヒンディー語
+        return 'आपकी रैंकिंग'; // ヒンディー語
       case LanguageList.Russia:
-        return 'Ваш ранг'; // ロシア語
+        return 'Ваш рейтинг'; // ロシア語
       default:
-        return 'Your Rank';
+        return 'Your Ranking';
     }
   }
 

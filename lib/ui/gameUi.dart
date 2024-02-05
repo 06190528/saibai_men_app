@@ -126,7 +126,6 @@ class DinoGame extends FlameGame {
 
   void updateTime(double newTime) {
     time = newTime;
-    print('time: $time');
   }
 
   void addDeathblow() {

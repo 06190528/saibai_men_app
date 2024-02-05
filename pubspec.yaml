@@ -26,6 +26,7 @@ dependencies:
   firebase_auth: ^4.16.0
   webview_flutter: ^4.4.4
   animated_text_kit: ^4.2.2
+  in_app_review: ^2.0.8
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,7 @@ flutter:
     - assets/images/padlock.png
     - assets/images/ki_sprite.png
     - assets/images/sander_sprite.png
+    - assets/images/saiazinn.png
     - assets/sounds/explosion.mp3
     - assets/sounds/bgm.wav
     - assets/sounds/specialMove.mp3

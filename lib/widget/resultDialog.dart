@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
+import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
@@ -12,12 +13,14 @@ import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
+import 'package:saibai_men_app/widget/reviewDialog.dart';
 
 class Result extends ConsumerWidget {
   const Result({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final GameWidgetLogic gameWidgetLogic = GameWidgetLogic(context, ref);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     UserData userData = ref.watch(userDataProvider);
@@ -91,21 +94,18 @@ class Result extends ConsumerWidget {
                 BannerButton(
                   text: Language().translationRestart(userData.language),
                   onPressed: () async {
-                    if (ref.read(playCountProvider.state).state % 5 == 4) {
+                    if (userData.scoreList.length % 5 == 4) {
                       AdInterstitial().createAd();
                       await Future.delayed(const Duration(seconds: 3));
                       //ちゃんと書く
                     }
-                    ref.read(dinoGameProvider.notifier).reset();
-                    ref.read(showResultDialog.state).state = false;
-                    ref.read(enemyCounterProvider.state).state = 0;
-                    ref.read(isGameActiveProvider.state).state = false;
-                    ref.read(createStartButtonFlag.state).state = true;
-                    ref.read(pauseProvider.state).state = false;
-                    ref.read(bgmAudioProvider).stop();
-                    ref.read(usedContinueProvider.state).state = false;
-                    ref.read(bgmSpeedProvider.state).state = 1.0;
-                    ref.read(playCountProvider.state).state++;
+
+                    if (userData.scoreList.length % 50 == 6 &&
+                        ref.read(enemyCounterProvider) >= 100) {
+                      ReviewRequest.requestReview(); // 理解してない
+                      Navigator.of(context).pop();
+                    }
+                    gameWidgetLogic.resetAllProvider();
                   },
                   width: screenWidth * 0.6,
                   icon: Icons.replay,
@@ -148,7 +148,6 @@ class Result extends ConsumerWidget {
 
                       // ユーザーが同意した場合にリワード広告をロードして表示
                       if (isAgreed) {
-                        print('リワード広告をロードして表示');
                         RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
                       }
                     },
