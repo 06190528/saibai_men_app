@@ -73,6 +73,9 @@ Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
     // userDataProviderにデータを設定
     ref.read(userDataProvider.notifier).state = userData;
   }
+  setUserScoreMaxToProvider(ref);
+  getAndSaveRankingDataFromIFirebaseToProvider(ref);
+  addUserDataToRankingDataProvider(ref);
 }
 
 //初回起動時に匿名ユーザーとしてログイン

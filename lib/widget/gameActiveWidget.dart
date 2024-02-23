@@ -18,7 +18,7 @@ class IsGameActiveTrueWidget extends ConsumerWidget {
         GestureDetector(
           onPanUpdate: (details) {
             final offset = details.delta;
-            final swipeThreshold = 12;
+            final swipeThreshold = 8;
             if (offset.dx.abs() > swipeThreshold ||
                 offset.dy.abs() > swipeThreshold) {
               if (offset.dx.abs() > offset.dy.abs()) {
@@ -39,13 +39,17 @@ class IsGameActiveTrueWidget extends ConsumerWidget {
         ),
         Positioned(
             top: screenSize.height * 0.05,
-            child: FloatingActionButton(
-              onPressed: () async {
-                if (onGamePause != null) {
-                  onGamePause!(); // nullチェック後に関数を呼び出す
-                }
-              },
-              child: Icon(Icons.pause), // ボタンのアイコンを切り替える
+            child: SizedBox(
+              width: screenSize.width * 0.08,
+              height: screenSize.width * 0.08,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  if (onGamePause != null) {
+                    onGamePause!(); // nullチェック後に関数を呼び出す
+                  }
+                },
+                child: Icon(Icons.pause), // ボタンのアイコンを切り替える
+              ),
             ))
       ],
     );

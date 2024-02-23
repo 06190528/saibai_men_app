@@ -11,6 +11,8 @@ class DeathBlowWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -43,8 +45,8 @@ class DeathBlowWidget extends ConsumerWidget {
               children: <Widget>[
                 Image.asset(
                   'assets/images/energy icon.png',
-                  width: 30,
-                  height: 30,
+                  width: width * 0.08,
+                  height: width * 0.08,
                   fit: BoxFit.cover, // 画像をボックスにフィットさせる
                 ),
                 Positioned(
@@ -59,7 +61,7 @@ class DeathBlowWidget extends ConsumerWidget {
                     child: Text(
                       ref.watch(deathblowCountProvider).toString(),
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: width * 0.03,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),

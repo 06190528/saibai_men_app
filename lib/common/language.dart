@@ -380,6 +380,33 @@ class Language {
     }
   }
 
+  String translationEasy(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Easy';
+      case LanguageList.Japan:
+        return 'イージー';
+      case LanguageList.China:
+        return '容易'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Einfach'; // ドイツ語
+      case LanguageList.France:
+        return 'Facile'; // フランス語
+      case LanguageList.UK:
+        return 'Easy'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Fácil'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '쉬운'; // 韓国語
+      case LanguageList.India:
+        return 'आसान'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Легко'; // ロシア語
+      default:
+        return 'Easy';
+    }
+  }
+
   String translationSelectMode(LanguageList language) {
     switch (language) {
       case LanguageList.USA:
@@ -620,6 +647,114 @@ class Language {
         return 'Беги!!'; // ロシア語
       default:
         return 'Run Away!!';
+    }
+  }
+
+  String translationName(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Name';
+      case LanguageList.Japan:
+        return '名前';
+      case LanguageList.China:
+        return '名字'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Name'; // ドイツ語
+      case LanguageList.France:
+        return 'Nom'; // フランス語
+      case LanguageList.UK:
+        return 'Name'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Nome'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '이름'; // 韓国語
+      case LanguageList.India:
+        return 'नाम'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Имя'; // ロシア語
+      default:
+        return 'Name';
+    }
+  }
+
+  String translationGameClear(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Game Clear';
+      case LanguageList.Japan:
+        return 'ゲームクリア';
+      case LanguageList.China:
+        return '游戏结束'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Spiel gelöscht'; // ドイツ語
+      case LanguageList.France:
+        return 'Jeu clair'; // フランス語
+      case LanguageList.UK:
+        return 'Game Clear'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Jogo claro'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '게임 클리어'; // 韓国語
+      case LanguageList.India:
+        return 'गेम साफ'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Игра очистки'; // ロシア語
+      default:
+        return 'Game Clear';
+    }
+  }
+
+  String translationGameOver(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Game Over';
+      case LanguageList.Japan:
+        return 'ゲームオーバー';
+      case LanguageList.China:
+        return '游戏结束'; // 中国語（簡体字）
+      case LanguageList.Germany:
+        return 'Spiel vorbei'; // ドイツ語
+      case LanguageList.France:
+        return 'Jeu terminé'; // フランス語
+      case LanguageList.UK:
+        return 'Game Over'; // 英語（イギリス）
+      case LanguageList.Brazil:
+        return 'Jogo acabou'; // ポルトガル語（ブラジル）
+      case LanguageList.Korea:
+        return '게임 오버'; // 韓国語
+      case LanguageList.India:
+        return 'गेम ओवर'; // ヒンディー語
+      case LanguageList.Russia:
+        return 'Игра окончена'; // ロシア語
+      default:
+        return 'Game Over';
+    }
+  }
+
+  String translationGoalScore(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Goal Score';
+      case LanguageList.Japan:
+        return 'ゴールスコア';
+      case LanguageList.China:
+        return '目标分数'; // 中国語（簡体字）で「目標スコア」
+      case LanguageList.Germany:
+        return 'Zielpunktzahl'; // ドイツ語で「目標スコア」
+      case LanguageList.France:
+        return 'Score final'; // フランス語で「最終スコア」
+      case LanguageList.UK:
+        return 'Goal Score'; // 英語（イギリス）で統一
+      case LanguageList.Brazil:
+        return 'Placar Final'; // ポルトガル語（ブラジル）で「最終スコア」
+      case LanguageList.Korea:
+        return '목표 점수'; // 韓国語で「目標スコア」
+      case LanguageList.India:
+        return 'लक्ष्य स्कोर'; // ヒンディー語で「目標スコア」
+      case LanguageList.Russia:
+        return 'Целевой счет'; // ロシア語で「目標スコア」
+      default:
+        return 'Goal Score';
     }
   }
 }

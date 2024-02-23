@@ -26,23 +26,31 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    // ここで画像のサイズを調整します。
+    // double scaleFactor = 2.0;
+    // size = Vector2(gameRef.size.x / 4 * scaleFactor, gameRef.size.y / 4);
 
     Image spriteSheetImage = await Flame.images
         .load('enemy_transparent_${enemyDirection(direction)}.png');
+    final int spriteCount = enemySpriteCount(direction);
+    final double spriteHeight = spriteSheetImage.height.toDouble() / 2 + 10;
+    final double spriteWidth = spriteSheetImage.width.toDouble() / spriteCount;
 
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
-      srcSize: enemySpriteSize(direction),
+      srcSize: Vector2(spriteWidth, spriteHeight),
     );
 
     animation = spriteSheet.createAnimation(
-      row: 0, // 使用する行
-      stepTime: 0.1, // 各フレームの表示時間（秒）
-      from: 0, // 開始フレーム
-      to: 7, // 終了フレーム
+      row: 0,
+      stepTime: 0.1,
+      from: 0,
+      to: spriteCount * 2 - 1,
+      loop: true,
     );
+
     anchor = Anchor.center;
-    double squareSideLength = gameRef.size.x / 6;
+    double squareSideLength = gameRef.size.y / 15;
     size = Vector2.all(squareSideLength);
   }
 
@@ -94,17 +102,17 @@ String enemyDirection(Direction direction) {
   }
 }
 
-Vector2 enemySpriteSize(Direction direction) {
+int enemySpriteCount(Direction direction) {
   switch (direction) {
-    case Direction.left:
-      return Vector2(556.5, 670);
-    case Direction.right:
-      return Vector2(557, 665);
-    case Direction.up:
-      return Vector2(557, 656);
-    case Direction.down:
-      return Vector2(556.5, 652);
+    // case Direction.left:
+    //   return 2;
+    // case Direction.right:
+    //   return 2;
+    // case Direction.up:
+    //   return 3;
+    // case Direction.down:
+    //   return 3;
     default:
-      return Vector2(372, 432);
+      return 4;
   }
 }

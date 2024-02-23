@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
+import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/provider.dart';
@@ -24,13 +25,14 @@ class PauseWidget extends ConsumerWidget {
       child: Stack(
         alignment: Alignment.center, // Stack内の子要素を中央に配置
         children: [
-          Positioned(
-            top: 0,
-            child: BannerAdWidget(
-              adUnitId: AdHelper.bannerAdUnitId,
-              width: screenWidth,
+          if (isReleaseMode)
+            Positioned(
+              top: 0,
+              child: BannerAdWidget(
+                adUnitId: AdHelper.bannerAdUnitId,
+                width: screenWidth,
+              ),
             ),
-          ),
           Positioned(
             top: screenHeight / 10,
             width: screenWidth * 0.9,

@@ -10,6 +10,8 @@ class UserSettingsDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     // ユーザーデータを取得
     UserData userData = ref.watch(userDataProvider);
 
@@ -21,60 +23,67 @@ class UserSettingsDialog extends ConsumerWidget {
     final selectedLangageProvider =
         StateProvider<LanguageList>((ref) => userData.language);
 
-    return AlertDialog(
-      title: Text(Language().translationUserSetting(userData.language)), // 設定
-      backgroundColor: Color.fromARGB(255, 240, 240, 240),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: nameController,
-            decoration: const InputDecoration(labelText: '名前'),
+    return SizedBox(
+      width: width * 0.7,
+      height: height * 0.7,
+      child: AlertDialog(
+        title: Text(Language().translationUserSetting(userData.language)), // 設定
+        backgroundColor: Color.fromARGB(255, 240, 240, 240),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                  labelText: Language().translationName(userData.language)),
+            ),
+            Consumer(
+              builder: (context, ref, _) {
+                LanguageList selectedLangage =
+                    ref.watch(selectedLangageProvider);
+                return DropdownButton<LanguageList>(
+                  value: selectedLangage,
+                  onChanged: (LanguageList? newValue) {
+                    if (newValue != null) {
+                      ref.read(selectedLangageProvider.notifier).state =
+                          newValue;
+                    }
+                  },
+                  items: LanguageList.values.map((LanguageList language) {
+                    return DropdownMenuItem<LanguageList>(
+                      value: language,
+                      child: Text(langageNames[language] ??
+                          language.toString().split('.').last),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: const Text('キャンセル'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          Consumer(
-            builder: (context, ref, _) {
-              LanguageList selectedLangage = ref.watch(selectedLangageProvider);
-              return DropdownButton<LanguageList>(
-                value: selectedLangage,
-                onChanged: (LanguageList? newValue) {
-                  if (newValue != null) {
-                    ref.read(selectedLangageProvider.notifier).state = newValue;
-                  }
-                },
-                items: LanguageList.values.map((LanguageList language) {
-                  return DropdownMenuItem<LanguageList>(
-                    value: language,
-                    child: Text(langageNames[language] ??
-                        language.toString().split('.').last),
-                  );
-                }).toList(),
+          TextButton(
+            child: Text(Language().translationSave(userData.language)), //保存
+            onPressed: () async {
+              // userDataProviderを更新
+              ref.read(userDataProvider.notifier).state = UserData(
+                name: nameController.text,
+                language: ref.read(selectedLangageProvider),
+                scoreList: userData.scoreList, // 既存のスコアリストを保持
               );
+              await UserDataService()
+                  .saveUserDataToLocal(ref.read(userDataProvider).toMap());
+              Navigator.of(context).pop();
             },
           ),
         ],
       ),
-      actions: [
-        TextButton(
-          child: const Text('キャンセル'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        TextButton(
-          child: Text(Language().translationSave(userData.language)), //保存
-          onPressed: () async {
-            // userDataProviderを更新
-            ref.read(userDataProvider.notifier).state = UserData(
-              name: nameController.text,
-              language: ref.read(selectedLangageProvider),
-              scoreList: userData.scoreList, // 既存のスコアリストを保持
-            );
-            await UserDataService()
-                .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
     );
   }
 }

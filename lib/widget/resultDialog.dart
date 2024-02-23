@@ -3,13 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
+import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
+import 'package:saibai_men_app/mainWidget/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
 import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
+import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
@@ -24,6 +27,7 @@ class Result extends ConsumerWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     UserData userData = ref.watch(userDataProvider);
+    String resultText = Language().translationResult(userData.language);
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -31,13 +35,14 @@ class Result extends ConsumerWidget {
       child: Stack(
         alignment: Alignment.center, // Stack内の子要素を中央に配置
         children: [
-          Positioned(
-            top: 0,
-            child: BannerAdWidget(
-              adUnitId: AdHelper.bannerAdUnitId,
-              width: screenWidth,
+          if (isReleaseMode)
+            Positioned(
+              top: 0,
+              child: BannerAdWidget(
+                adUnitId: AdHelper.bannerAdUnitId,
+                width: screenWidth,
+              ),
             ),
-          ),
           Positioned(
             top: screenHeight / 10, // 上から50の位置に配置
             width: screenWidth * 0.9, // 幅を画面幅に設定
@@ -52,10 +57,34 @@ class Result extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min, // 子ウィジェットのサイズに合わせる
                   children: [
-                    DoubleText(
-                      text: Language().translationResult(userData.language),
-                      fontSize: 30,
-                      insideColor: Color.fromARGB(255, 255, 192, 1),
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.center, // Rowのアイテムを中央揃えにする
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: DoubleText(
+                              text: resultText,
+                              fontSize: 30,
+                              insideColor: Color.fromARGB(255, 255, 192, 1),
+                            ),
+                          ),
+                        ),
+                        CustomIconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RankingWidget()),
+                            );
+                          },
+                          icon: Icons.leaderboard, // IconDataを直接渡す
+                          iconSize: screenWidth * 0.045,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ],
                     ),
                     ScoreWidget(
                         text: Language().translationScore(userData.language),
@@ -96,10 +125,8 @@ class Result extends ConsumerWidget {
                   onPressed: () async {
                     if (userData.scoreList.length % 5 == 4) {
                       AdInterstitial().createAd();
-                      await Future.delayed(const Duration(seconds: 3));
-                      //ちゃんと書く
+                      await Future.delayed(const Duration(seconds: 1));
                     }
-
                     if (userData.scoreList.length % 50 == 6 &&
                         ref.read(enemyCounterProvider) >= 100) {
                       ReviewRequest.requestReview(); // 理解してない

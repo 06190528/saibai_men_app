@@ -20,7 +20,7 @@ class GameWidgetArea extends ConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
     final game = ref.watch(dinoGameProvider);
     final isGameActive = ref.watch(isGameActiveProvider);
-    final showRunAwayTextFlag = ref.watch(runAwayTextFlagProvider);
+    final showRunAwayTextFlag = ref.watch(swipeFlagProvider);
     UserData userData = ref.watch(userDataProvider);
     game.speed = ref.read(speedProvider.state).state;
     game.EnemyCount = (id) {

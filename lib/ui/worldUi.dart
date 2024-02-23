@@ -20,13 +20,15 @@ class DinoWorld extends SpriteComponent with HasGameRef {
     background1 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
       ..size = gameRef.size
-      ..position = Vector2(0, 0); // 背景1の直後
+      ..position = Vector2(0, 0) // 背景1の直後
+      ..scale = Vector2(1, 1); // 初期縮小率（変更可能）
 
     // 背景2の設定（背景1の直後に配置）
     background2 = SpriteComponent()
       ..sprite = await gameRef.loadSprite('background.png')
       ..size = gameRef.size
-      ..position = Vector2(0, -gameRef.size.y); // 背景1の直後
+      ..position = Vector2(0, -gameRef.size.y)
+      ..scale = Vector2(1, 1); // 背景1の直後
 
     add(background1);
     add(background2);

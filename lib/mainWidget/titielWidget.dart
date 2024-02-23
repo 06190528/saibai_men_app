@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/mainWidget/gameScene.dart';
 import 'package:saibai_men_app/mainWidget/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/widget/bannerAndpPadlockWidget.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/padlockWIdget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
@@ -21,12 +23,11 @@ class TitleScene extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (!_initialized) {
       saveUserDataFromLocalToProvider(ref);
-      getAndSaveRankingDataFromIFirebaseToProvider(ref);
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // buildメソッドの完了後に実行される
         showUserSettingsDialog(ref, context);
       });
-      addUserDataToRankingDataProvider(ref);
       _initialized = true; // 初期化が完了したことをマーク
     }
     final size = MediaQuery.of(context).size;
@@ -45,7 +46,7 @@ class TitleScene extends ConsumerWidget {
           ),
           Positioned(
             top: size.height * 0.3, // 上から50の位置に配置
-            width: size.width * 0.9, // 幅を画面幅に設定
+            width: size.width * 0.7, // 幅を画面幅に設定
             child: Dialog(
               insetPadding: const EdgeInsets.all(0), // Dialogのデフォルトパディングを削除
               backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -64,28 +65,21 @@ class TitleScene extends ConsumerWidget {
                         fontSize: size.width * 0.07,
                         insideColor: Color.fromARGB(255, 255, 192, 1),
                       ),
-                      BannerButton(
+                      BannerAndPadlockWidget(
                         text: Language().translationHard(userData.language),
-                        onPressed: () {
-                          // BannerButtonのクリック時の処理を追加することができます
-                        },
-                        width: size.width * 0.8,
-                        icon: Icons.play_arrow,
+                        padlockScore: modeScore1,
                       ),
-                      SizedBox(height: 20),
-                      BannerButton(
+                      SizedBox(height: size.height * 0.03),
+                      BannerAndPadlockWidget(
                         text: Language().translationNormal(userData.language),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => GameScene()),
-                          );
-                        },
-                        width: size.width * 0.8,
-                        icon: Icons.play_arrow,
+                        padlockScore: modeScore0,
                       ),
-                      const SizedBox(width: 20),
+                      SizedBox(height: size.height * 0.03),
+                      BannerAndPadlockWidget(
+                        text: Language().translationEasy(userData.language),
+                        padlockScore: 0,
+                      ),
+                      SizedBox(height: size.height * 0.03),
                       Row(
                         mainAxisAlignment:
                             MainAxisAlignment.center, // Rowを中央に寄せる
@@ -98,7 +92,7 @@ class TitleScene extends ConsumerWidget {
                                 horizontal: 20, vertical: 10),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          SizedBox(width: size.width * 0.3),
+                          SizedBox(width: size.width * 0.15),
                           CustomIconButton(
                             onPressed: () {
                               Navigator.push(
@@ -118,10 +112,6 @@ class TitleScene extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  Positioned(
-                      top: -size.height * 0.05, // 画像の上にテキストを配置するための調整値を設定します
-                      left: size.width * 0.01, // 左詰にするための調整値を設定します
-                      child: PadlockWidget()),
                 ]),
               ),
             ),

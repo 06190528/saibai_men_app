@@ -1,8 +1,9 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
+import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/audio.dart';
+import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/explosionUi.dart';
 import 'package:saibai_men_app/ui/gameUi.dart';
@@ -15,7 +16,27 @@ class GameWidgetLogic {
   late DinoGame game = ref.read(dinoGameProvider);
   late Audio explosionAudio = ref.read(explosionAudioProvider);
   late Size screenSize = MediaQuery.of(context).size;
-  bool evolutionSound1Flag = false;
+  final bool evolutionSound1Flag = false;
+
+  Future<void> gameClear() async {
+    game.removeEnemys();
+    game.updateSpeed(0, ref);
+    game.stopGame();
+    ref.read(bgmAudioProvider).setLoop(false);
+    ref.read(isGameActiveProvider.state).state = false;
+    ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
+    ref.read(showResultDialog.state).state = true;
+    ref.read(kiAudioProvider).stop();
+    await ref.read(bgmAudioProvider).stop();
+    ref.read(bgmAudioProvider).play('sounds/game_clear.mp3');
+    ref.read(gameClearFlagProvider.state).state = true;
+    setUserDataToIFirebase(ref.read(userDataProvider));
+    await UserDataService()
+        .saveUserDataToLocal(ref.read(userDataProvider).toMap());
+    addUserDataToRankingDataProvider(ref);
+    setUserScoreMaxToProvider(ref);
+  }
+
   Future<void> onGameOver() async {
     final gameOverSprite = GameOverSprite(game.dinoPlayer.position);
     game.removeEnemys();
@@ -27,34 +48,38 @@ class GameWidgetLogic {
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
     ref.read(showResultDialog.state).state = true;
     ref.read(kiAudioProvider).stop();
-    game.updateTime(ref.read(timeProvider.state).state = 1.2);
     await ref.read(bgmAudioProvider).stop();
     explosionAudio.play('sounds/explosion.mp3');
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
     addUserDataToRankingDataProvider(ref);
+    setUserScoreMaxToProvider(ref);
   }
 
   Future<void> enemyCount(int id) async {
-    final bool evolutionFlag = ref.read(evolutionFlagProvider.state).state;
     int enemyCount = ref.read(enemyCounterProvider.state).state;
+    int gameMode = ref.read(gameModeProvider);
     ref.read(enemyCounterProvider.state).state++;
     if (ref.read(enemyCounterProvider) % 59 == 0) {
       for (int i = 0; i < 4; i++) {
         game.addEnemy();
       }
     }
-    if (enemyCount % 30 >= 29) {
-      game.updateSpeed(ref.read(speedProvider.state).state *= 1.05, ref);
-      game.updateTime(ref.read(timeProvider.state).state *= 0.93);
-    } else if (enemyCount % 25 == 10) {
+    if (enemyCount % modeCreateEnemiesTime(ref) >=
+        modeCreateEnemiesTime(ref) - 1) {
+      game.updateSpeed(
+          ref.read(speedProvider.state).state *= modeSpeedTime(ref), ref);
+      game.updateTime(
+          ref.read(enemyCreateTimeProvider.state).state *= modeUpdateTime(ref));
+    } else if (enemyCount % 15 == 5) {
       game.addDeathblow();
     }
-    // if (enemyCount / 1 > 1 && evolutionFlag == false) {
-    //   ref.read(evolutionFlagProvider.state).state = true;
-    //   evolution();
-    // }
+    if (gameMode != 2) {
+      if (enemyCount >= modeGoal(ref)) {
+        gameClear();
+      }
+    }
     game.enemies.removeWhere((e) => e.id == id);
   }
 
@@ -77,16 +102,18 @@ class GameWidgetLogic {
   }
 
   Future<void> onPressedStartButton() async {
+    if (ref.read(gameModeProvider) == 0) {
+      ref.watch(swipeFlagProvider.state).state = true;
+      await Future.delayed(const Duration(milliseconds: 3000));
+      ref.watch(swipeFlagProvider.state).state = false;
+    }
     ref.read(isGameActiveProvider.state).state = true;
     final dinoGame = game;
     dinoGame.startGame();
     ref.read(bgmAudioProvider).play('sounds/bgm.wav');
     ref.read(bgmAudioProvider).setLoop(true);
     ref.read(bgmAudioProvider).setVolume(0.3);
-    game.updateSpeed(
-        ref.read(speedProvider.state).state =
-            min(screenSize.height, screenSize.width) / 2.8,
-        ref);
+    initializeGameModeProvider(ref, screenSize, dinoGame);
     ref.read(deathblowCountProvider.state).state = 0;
   }
 
@@ -129,10 +156,11 @@ class GameWidgetLogic {
     ref.read(usedContinueProvider.state).state = false;
     ref.read(bgmSpeedProvider.state).state = 1.0;
     ref.read(speedProvider.state).state = 0;
-    ref.read(timeProvider.state).state = 1.2;
+    ref.read(enemyCreateTimeProvider.state).state = 1.2;
     ref.read(evolutionFlagProvider.state).state = false;
     ref.read(deathblowCountProvider.state).state = 0;
     ref.read(loadingRewardAdProvider.state).state = false;
     ref.read(kiAudioProvider).stop();
+    ref.read(gameClearFlagProvider.state).state = false;
   }
 }

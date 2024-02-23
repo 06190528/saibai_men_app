@@ -107,7 +107,7 @@ class DinoGame extends FlameGame {
   void updateSpeed(double newSpeed, WidgetRef ref) {
     ref
         .read(bgmAudioProvider)
-        .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1.05);
+        .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1.03);
     if (newSpeed == 0) {
       ref
           .read(bgmAudioProvider)
@@ -126,6 +126,7 @@ class DinoGame extends FlameGame {
 
   void updateTime(double newTime) {
     time = newTime;
+    print('updateTime: $time');
   }
 
   void addDeathblow() {

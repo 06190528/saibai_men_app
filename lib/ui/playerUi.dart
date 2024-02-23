@@ -17,19 +17,25 @@ class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
     super.onLoad();
 
     Image spriteSheetImage = await Flame.images.load('yamucha_sprit.png');
+    final int spriteCount = 4;
+    final double spriteHeight = spriteSheetImage.height.toDouble() / 2 - 10;
+    final double spriteWidth = spriteSheetImage.width.toDouble() / spriteCount;
+
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
-      srcSize: Vector2(359.5, 607), // 各フレームのサイズ
+      srcSize: Vector2(spriteWidth - 10, spriteHeight),
     );
 
+    // アニメーションの設定。
     animation = spriteSheet.createAnimation(
-      row: 0, // 使用する行
-      stepTime: 0.08, // 各フレームの表示時間（秒）
-      from: 0, // 開始フレーム
-      to: 7, // 終了フレーム
+      row: 0,
+      stepTime: 0.1,
+      from: 0, // 最初のスプライト
+      to: spriteCount * 2 - 1, // 最後のスプライト
+      loop: true,
     );
     anchor = Anchor.center;
-    double squareSideLength = gameRef.size.x / 6;
+    double squareSideLength = gameRef.size.y / 13;
     size = Vector2.all(squareSideLength);
   }
 

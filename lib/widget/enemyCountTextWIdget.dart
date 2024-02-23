@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/ranking.dart';
+import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/evolutionBar.dart';
@@ -17,9 +18,14 @@ class EnemyCountText extends ConsumerWidget {
     final rankingList = ref.watch(rankingListProvider);
     final language = ref.watch(userDataProvider.notifier).state.language;
     final evolutionFlag = ref.watch(evolutionFlagProvider);
-    double maxEnemyCount = 100;
+    final gameMode = ref.watch(gameModeProvider);
+    final double maxEnemyCount = modeEvolutionCount(ref);
+    final rankingOrGoalText = gameMode == 2
+        ? '${Language().translationYourRanking(language)} : ${getCurrentRank(rankingList, enemyCounter)}'
+        : '${Language().translationGoalScore(language)} : ${modeGoal(ref)}';
     // enemyCounterが1以上かつevolutionFlagがfalseの場合、非同期でevolutionを実行
     if (enemyCounter >= maxEnemyCount && evolutionFlag == false) {
+      print(maxEnemyCount);
       Future.microtask(() {
         gameLogic.evolution(); // evolution メソッドを呼び出す
         ref.read(evolutionFlagProvider.state).state = true; // evolutionFlagを更新
@@ -49,7 +55,7 @@ class EnemyCountText extends ConsumerWidget {
                   color: Colors.black, // テキストの色
                   letterSpacing: 1.0, // 文字の間隔
                   wordSpacing: 1.0, // 単語の間隔
-                  shadows: [
+                  shadows: const [
                     Shadow(
                       blurRadius: 1.0,
                       color: Colors.black,
@@ -58,18 +64,17 @@ class EnemyCountText extends ConsumerWidget {
                   ],
                 ),
               ),
-              // Text(
-              //   '${Language().translationYourRanking(language)} : ${getCurrentRank(rankingList, enemyCounter)}',
-              //   style: TextStyle(
-              //     fontFamily: 'CustomFont', // カスタムフォントを使用
-              //     fontSize: size.width * 0.03, // フォントサイズ
-              //     fontWeight: FontWeight.bold, // フォントの太さ
-              //     fontStyle: FontStyle.italic, // フォントスタイルをイタリックに
-              //     color: Colors.black, // テキストの色
-              //     letterSpacing: 1.0, // 文字の間隔
-              //     wordSpacing: 1.0, // 単語の間隔
-              //   ),
-              // ),
+              Text(
+                rankingOrGoalText,
+                style: TextStyle(
+                  fontSize: size.width * 0.03, // フォントサイズ
+                  fontWeight: FontWeight.bold, // フォントの太さ
+                  fontStyle: FontStyle.italic, // フォントスタイルをイタリックに
+                  color: Colors.black, // テキストの色
+                  letterSpacing: 1.0, // 文字の間隔
+                  wordSpacing: 1.0, // 単語の間隔
+                ),
+              ),
               Row(
                 children: [
                   EvolutionBar(
