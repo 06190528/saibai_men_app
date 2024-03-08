@@ -90,7 +90,7 @@ Future<void> initializeUserData() async {
       UserData userData = UserData(
         name: '',
         scoreList: [],
-        language: LanguageList.USA,
+        language: LanguageList.Japan,
       );
       // ローカルに保存
       await UserDataService().saveUserDataToLocal(userData.toMap());

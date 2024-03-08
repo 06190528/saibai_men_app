@@ -43,7 +43,7 @@ class _PadlockWidgetState extends ConsumerState<PadlockWidget> {
               child: Column(
                 children: [
                   DoubleText(
-                    text: widget.text, // ここでtext引数を使用
+                    text: widget.text,
                     fontSize: width * 0.05,
                     insideColor: Colors.white,
                   ),

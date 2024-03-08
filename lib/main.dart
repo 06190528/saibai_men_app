@@ -8,8 +8,6 @@ import 'package:saibai_men_app/mainWidget/titielWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase Appが初期化されていない場合にのみ初期化する
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -17,7 +15,7 @@ void main() async {
   }
 
   MobileAds.instance.initialize();
-  initializeUserData(); // ローカルにユーザーデータがない場合は初期値を設定
+  initializeUserData();
 
   runApp(
     ProviderScope(

@@ -4,13 +4,11 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
-import 'package:saibai_men_app/mainWidget/gameScene.dart';
+import 'package:saibai_men_app/logic/othersLogic.dart';
 import 'package:saibai_men_app/mainWidget/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/bannerAndpPadlockWidget.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
-import 'package:saibai_men_app/widget/padlockWIdget.dart';
-import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/settingDialog.dart';
 
@@ -21,6 +19,7 @@ class TitleScene extends ConsumerWidget {
   bool _initialized = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    requestReview(context);
     if (!_initialized) {
       saveUserDataFromLocalToProvider(ref);
 

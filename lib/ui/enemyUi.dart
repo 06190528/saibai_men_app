@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flame/sprite.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'dart:math' as math;
 import 'package:saibai_men_app/logic/directions.dart';
 import 'package:saibai_men_app/ui/playerUi.dart';
 
@@ -14,9 +15,15 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   Function(int id)? onGameOver;
   Function(int id)? EnemyCount;
   final int id;
+  int enemyKinds;
 
-  Enemy(this.speed, this.dinoPlayer, {this.onGameOver, this.EnemyCount})
-      : id = _enemyIdCounter++,
+  Enemy(
+    this.speed,
+    this.dinoPlayer,
+    this.enemyKinds, {
+    this.onGameOver,
+    this.EnemyCount,
+  })  : id = _enemyIdCounter++,
         super(size: Vector2.all(0));
 
   void updateSpeed(double newSpeed) {
@@ -25,16 +32,14 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
 
   @override
   Future<void> onLoad() async {
+    var random = math.Random();
     super.onLoad();
-    // ここで画像のサイズを調整します。
-    // double scaleFactor = 2.0;
-    // size = Vector2(gameRef.size.x / 4 * scaleFactor, gameRef.size.y / 4);
-
-    Image spriteSheetImage = await Flame.images
-        .load('enemy_transparent_${enemyDirection(direction)}.png');
-    final int spriteCount = enemySpriteCount(direction);
-    final double spriteHeight = spriteSheetImage.height.toDouble() / 2 + 10;
-    final double spriteWidth = spriteSheetImage.width.toDouble() / spriteCount;
+    int num = random.nextInt(enemyKinds);
+    Image spriteSheetImage = await Flame.images.load('cats_memes_$num.png');
+    final EnemySpriteDetails enemySpriteDetails =
+        await getEnemySpriteDetails(num, spriteSheetImage);
+    final double spriteHeight = enemySpriteDetails.spriteHeight;
+    final double spriteWidth = enemySpriteDetails.spriteWidth;
 
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
@@ -43,9 +48,9 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
 
     animation = spriteSheet.createAnimation(
       row: 0,
-      stepTime: 0.1,
+      stepTime: enemySpriteDetails.stepTime,
       from: 0,
-      to: spriteCount * 2 - 1,
+      to: enemySpriteDetails.to,
       loop: true,
     );
 
@@ -70,6 +75,7 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
     if (distance <= radius) {
       if (onGameOver != null) {
         onGameOver!(id);
+        removeEnemy();
       }
     }
 
@@ -87,32 +93,121 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   }
 }
 
-String enemyDirection(Direction direction) {
-  switch (direction) {
-    case Direction.left:
-      return 'left';
-    case Direction.right:
-      return 'right';
-    case Direction.up:
-      return 'up';
-    case Direction.down:
-      return 'down';
-    default:
-      return 'left';
+Future<EnemySpriteDetails> getEnemySpriteDetails(
+    int num, Image spriteSheetImage) async {
+  final EnemySpriteDetails enemySpriteDetails =
+      EnemySpriteDetails(0, 0, 0, 0, 0, 0);
+  double spriteHeight = 0;
+  double spriteWidth = 0;
+  double stepTime = 0;
+  int to = 0;
+  int columnCount = 0;
+  int rowCount = 0;
+
+  switch (num) {
+    case 0:
+      columnCount = 4;
+      rowCount = 2;
+      stepTime = 0.08;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 1;
+      break;
+    case 1:
+      columnCount = 50;
+      rowCount = 9;
+      stepTime = 0.02;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 43;
+      break;
+    case 2:
+      columnCount = 50;
+      rowCount = 6;
+      stepTime = 0.01;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 12;
+      break;
+    case 3:
+      columnCount = 50;
+      rowCount = 8;
+      stepTime = 0.03;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 17;
+      break;
+    case 4:
+      columnCount = 3;
+      rowCount = 3;
+      stepTime = 0.08;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 1;
+      break;
+    case 5:
+      columnCount = 50;
+      rowCount = 5;
+      stepTime = 0.03;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 50;
+      break;
+    case 6:
+      columnCount = 50;
+      rowCount = 9;
+      stepTime = 0.03;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 34;
+      break;
+    case 7:
+      columnCount = 50;
+      rowCount = 4;
+      stepTime = 0.03;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 46;
+      break;
+    case 8:
+      columnCount = 50;
+      rowCount = 4;
+      stepTime = 0.03;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 40;
+      break;
+    case 9:
+      columnCount = 50;
+      rowCount = 9;
+      stepTime = 0.02;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 23;
+      break;
+    case 10:
+      columnCount = 50;
+      rowCount = 6;
+      stepTime = 0.02;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+      to = columnCount * rowCount - 15;
+      break;
   }
+  enemySpriteDetails.spriteHeight = spriteHeight;
+  enemySpriteDetails.spriteWidth = spriteWidth;
+  enemySpriteDetails.stepTime = stepTime;
+  enemySpriteDetails.to = to;
+  return enemySpriteDetails;
 }
 
-int enemySpriteCount(Direction direction) {
-  switch (direction) {
-    // case Direction.left:
-    //   return 2;
-    // case Direction.right:
-    //   return 2;
-    // case Direction.up:
-    //   return 3;
-    // case Direction.down:
-    //   return 3;
-    default:
-      return 4;
-  }
+class EnemySpriteDetails {
+  double stepTime;
+  int to;
+  int columnCount;
+  int rowCount;
+  double spriteHeight;
+  double spriteWidth;
+  EnemySpriteDetails(this.stepTime, this.to, this.columnCount, this.rowCount,
+      this.spriteHeight, this.spriteWidth);
 }

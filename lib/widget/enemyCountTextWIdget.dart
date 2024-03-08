@@ -14,21 +14,20 @@ class EnemyCountText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     final gameLogic = GameWidgetLogic(context, ref);
-    final enemyCounter = ref.watch(enemyCounterProvider);
+    final evolutionCounter = ref.watch(evolutionCountProvider);
     final rankingList = ref.watch(rankingListProvider);
     final language = ref.watch(userDataProvider.notifier).state.language;
     final evolutionFlag = ref.watch(evolutionFlagProvider);
+    int enemyCount = ref.watch(enemyCounterProvider);
     final gameMode = ref.watch(gameModeProvider);
-    final double maxEnemyCount = modeEvolutionCount(ref);
+    final double maxEnemyCount = 50;
     final rankingOrGoalText = gameMode == 2
-        ? '${Language().translationYourRanking(language)} : ${getCurrentRank(rankingList, enemyCounter)}'
+        ? '${Language().translationYourRanking(language)} : ${getCurrentRank(rankingList, evolutionCounter)}'
         : '${Language().translationGoalScore(language)} : ${modeGoal(ref)}';
     // enemyCounterが1以上かつevolutionFlagがfalseの場合、非同期でevolutionを実行
-    if (enemyCounter >= maxEnemyCount && evolutionFlag == false) {
-      print(maxEnemyCount);
+    if (evolutionCounter >= maxEnemyCount && evolutionFlag == false) {
       Future.microtask(() {
-        gameLogic.evolution(); // evolution メソッドを呼び出す
-        ref.read(evolutionFlagProvider.state).state = true; // evolutionFlagを更新
+        gameLogic.evolution();
       });
     }
     return Column(
@@ -46,7 +45,7 @@ class EnemyCountText extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min, // 子ウィジェットに合わせてサイズを調整
             children: [
               Text(
-                '${enemyCounter}',
+                '${enemyCount}',
                 style: TextStyle(
                   fontFamily: 'CustomFont', // カスタムフォントを使用
                   fontSize: size.width * 0.05, // フォントサイズ
@@ -80,7 +79,7 @@ class EnemyCountText extends ConsumerWidget {
                   EvolutionBar(
                     width: size.width * 0.3, // ゲージの全体の幅
                     height: size.width * 0.03, // ゲージの高さ
-                    currentEnemyCount: enemyCounter.toDouble(), // 現在のHP
+                    currentEnemyCount: evolutionCounter.toDouble(), // 現在のHP
                     maxEnemyCount: maxEnemyCount, // 最大HP
                   ),
                   Image.asset(

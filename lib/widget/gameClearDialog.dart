@@ -7,6 +7,7 @@ import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
+import 'package:saibai_men_app/logic/othersLogic.dart';
 import 'package:saibai_men_app/mainWidget/titielWidget.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
@@ -15,7 +16,6 @@ import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
-import 'package:saibai_men_app/widget/reviewDialog.dart';
 
 class GameClearOrOverDialog extends ConsumerWidget {
   const GameClearOrOverDialog({super.key});
@@ -108,7 +108,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                       }
                       if (userData.scoreList.length % 50 == 6 &&
                           ref.read(enemyCounterProvider) >= 100) {
-                        ReviewRequest.requestReview(); // 理解してない
+                        requestReview(context);
                         Navigator.of(context).pop();
                       }
                       gameWidgetLogic.resetAllProvider();
@@ -152,7 +152,6 @@ class GameClearOrOverDialog extends ConsumerWidget {
                             );
                           },
                         );
-
                         // ユーザーが同意した場合にリワード広告をロードして表示
                         if (isAgreed) {
                           RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
@@ -179,7 +178,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                       }
                       if (userData.scoreList.length % 50 == 6 &&
                           ref.read(enemyCounterProvider) >= 100) {
-                        ReviewRequest.requestReview(); // 理解してない
+                        requestReview(context);
                       }
                       // ignore: use_build_context_synchronously
                       Navigator.pushReplacement(

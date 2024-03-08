@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
@@ -22,6 +24,7 @@ class GameWidgetLogic {
     game.removeEnemys();
     game.updateSpeed(0, ref);
     game.stopGame();
+    ref.read(bgmSpeedProvider.state).state = 1.0;
     ref.read(bgmAudioProvider).setLoop(false);
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
@@ -61,6 +64,7 @@ class GameWidgetLogic {
     int enemyCount = ref.read(enemyCounterProvider.state).state;
     int gameMode = ref.read(gameModeProvider);
     ref.read(enemyCounterProvider.state).state++;
+    ref.read(evolutionCountProvider.state).state++;
     if (ref.read(enemyCounterProvider) % 59 == 0) {
       for (int i = 0; i < 4; i++) {
         game.addEnemy();
@@ -73,7 +77,9 @@ class GameWidgetLogic {
       game.updateTime(
           ref.read(enemyCreateTimeProvider.state).state *= modeUpdateTime(ref));
     } else if (enemyCount % 15 == 5) {
+      //アイテムを出現させる
       game.addDeathblow();
+      game.enemyKindsIncrement();
     }
     if (gameMode != 2) {
       if (enemyCount >= modeGoal(ref)) {
@@ -110,17 +116,19 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = true;
     final dinoGame = game;
     dinoGame.startGame();
-    ref.read(bgmAudioProvider).play('sounds/bgm.wav');
+    ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
     ref.read(bgmAudioProvider).setLoop(true);
     ref.read(bgmAudioProvider).setVolume(0.3);
     initializeGameModeProvider(ref, screenSize, dinoGame);
-    ref.read(deathblowCountProvider.state).state = 0;
+    ref.read(deathblowCountProvider.state).state = 1;
+    ref.read(evolutionCountProvider.state).state = 0;
   }
 
   Future<void> activateSpecialMove() async {
     ref.read(enemyCounterProvider.state).state += game.enemies.length;
     game.attackEnemy();
     ref.read(attackBgmProvider).play('sounds/specialMove.mp3');
+    ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
     ref.read(deathblowCountProvider.state).state--;
   }
 
@@ -132,17 +140,31 @@ class GameWidgetLogic {
     ref.read(showResultDialog.state).state = false;
     game.updateSpeed(ref.read(speedProvider), ref);
     ref.read(bgmAudioProvider).setLoop(true);
-    await ref.read(bgmAudioProvider).play('sounds/bgm.wav');
+    await ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
     ref.read(pauseProvider.state).state = false;
   }
 
   void evolution() async {
+    print('evolution');
+    ref.read(evolutionFlagProvider.state).state = true; // evolutionFlagを更新
     game.evolution();
-    // 最初のサウンドを再生します。
-    ref.read(kiAudioProvider).play('sounds/ki1.1.mp3');
-    await Future.delayed(const Duration(milliseconds: 1800));
-    ref.read(kiAudioProvider).play('sounds/ki1.2.mp3');
-    ref.read(kiAudioProvider).setLoop(true);
+    // Timer(const Duration(seconds: 3), () {
+    //   ref.read(kiAudioProvider).play('sounds/ki1.2.mp3');
+    //   ref.read(kiAudioProvider).setLoop(true);
+    // });
+    ref.read(evolutionBgmProvider).play('sounds/evolution_bgm.mp3');
+    ref.read(evolutionBgmProvider).setLoop(true);
+    print(
+        'evolutionFlagProvider.state: ${ref.read(evolutionFlagProvider.state)}');
+  }
+
+  void deEvolution() {
+    print('deEvolution');
+    ref.read(kiAudioProvider).stop();
+    ref.read(evolutionCountProvider.state).state = 0;
+    ref.read(evolutionFlagProvider.state).state = false;
+    ref.read(evolutionBgmProvider).stop();
+    game.deEvolution();
   }
 
   void resetAllProvider() {
@@ -158,9 +180,10 @@ class GameWidgetLogic {
     ref.read(speedProvider.state).state = 0;
     ref.read(enemyCreateTimeProvider.state).state = 1.2;
     ref.read(evolutionFlagProvider.state).state = false;
-    ref.read(deathblowCountProvider.state).state = 0;
+    ref.read(deathblowCountProvider.state).state = 1;
     ref.read(loadingRewardAdProvider.state).state = false;
     ref.read(kiAudioProvider).stop();
     ref.read(gameClearFlagProvider.state).state = false;
+    ref.read(evolutionCountProvider.state).state = 0;
   }
 }

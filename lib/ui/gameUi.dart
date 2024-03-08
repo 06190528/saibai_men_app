@@ -30,6 +30,7 @@ class DinoGame extends FlameGame {
   final DinoPlayer dinoPlayer = DinoPlayer();
   final DinoWorld _dinoWorld = DinoWorld();
   late KiEffect kiEffect;
+  int enemyKinds = 3;
 
   double time = 1.2;
 
@@ -52,6 +53,10 @@ class DinoGame extends FlameGame {
     add(kiEffect);
   }
 
+  void deEvolution() {
+    kiEffect.removeKiEffect();
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
@@ -70,7 +75,7 @@ class DinoGame extends FlameGame {
   }
 
   Future<void> addEnemy() async {
-    Enemy enemy = Enemy(speed!, dinoPlayer,
+    Enemy enemy = Enemy(speed!, dinoPlayer, enemyKinds,
         onGameOver: onGameOver, EnemyCount: EnemyCount);
     enemy.position = initialPosition(_dinoWorld.size, 'enemy');
     enemy.direction = enemyInitialDirection(enemy.position, _dinoWorld.size);
@@ -144,5 +149,9 @@ class DinoGame extends FlameGame {
       deathblow.removeDeathblow();
     }
     deathblows.clear();
+  }
+
+  void enemyKindsIncrement() {
+    if (enemyKinds < 11) enemyKinds++;
   }
 }

@@ -21,7 +21,8 @@ class UserData {
       language: map['language'] != null
           ? LanguageList.values.firstWhere(
               (e) =>
-                  e.toString() == 'LanguageList.' + (map['language'] ?? 'USA'),
+                  e.toString() ==
+                  'LanguageList.' + (map['language'] ?? 'Japan'),
               orElse: () => LanguageList.Japan,
             )
           : LanguageList.Japan,

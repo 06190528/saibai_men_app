@@ -40,7 +40,7 @@ int modeCreateEnemiesTime(WidgetRef ref) {
   final gameMode = ref.read(gameModeProvider);
   int goal = 0;
   if (gameMode == 0) {
-    goal = 10;
+    goal = 5;
   } else if (gameMode == 1) {
     goal = 20;
   } else if (gameMode == 2) {
@@ -54,7 +54,7 @@ double modeUpdateTime(WidgetRef ref) {
   double updateTime = 0.93;
   final gameMode = ref.read(gameModeProvider);
   if (gameMode == 0) {
-    updateTime = 0.9;
+    updateTime = 0.95;
   }
   return updateTime;
 }
@@ -63,21 +63,7 @@ double modeSpeedTime(WidgetRef ref) {
   double updateTime = 1.05;
   final gameMode = ref.read(gameModeProvider);
   if (gameMode == 0) {
-    updateTime = 1.15;
+    updateTime = 1.08;
   }
   return updateTime;
-}
-
-double modeEvolutionCount(WidgetRef ref) {
-  double evolutionCount = 0;
-  final gameMode = ref.read(gameModeProvider);
-  if (gameMode == 0) {
-    evolutionCount = (modeScore0 / 2) as double;
-  } else if (gameMode == 1) {
-    evolutionCount = (modeScore1 / 2) as double;
-  } else if (gameMode == 2) {
-    evolutionCount = (modeScore2 / 2) as double;
-    print("evolutionCount: $evolutionCount");
-  }
-  return evolutionCount;
 }

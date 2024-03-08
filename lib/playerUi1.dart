@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
@@ -15,23 +16,22 @@ class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
   Future<void> onLoad() async {
     super.onLoad();
 
-    Image spriteSheetImage = await Flame.images.load('goat.png');
-    final int columnCount = 50;
-    final int rowCount = 5;
-    final double spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
-    final double spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+    Image spriteSheetImage = await Flame.images.load('yamucha_sprit.png');
+    final int spriteCount = 4;
+    final double spriteHeight = spriteSheetImage.height.toDouble() / 2 - 10;
+    final double spriteWidth = spriteSheetImage.width.toDouble() / spriteCount;
 
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
-      srcSize: Vector2(spriteWidth, spriteHeight),
+      srcSize: Vector2(spriteWidth - 10, spriteHeight),
     );
 
     // アニメーションの設定。
     animation = spriteSheet.createAnimation(
       row: 0,
-      stepTime: 0.05,
+      stepTime: 0.1,
       from: 0, // 最初のスプライト
-      to: columnCount * rowCount, // 最後のスプライト
+      to: spriteCount * 2 - 1, // 最後のスプライト
       loop: true,
     );
     anchor = Anchor.center;

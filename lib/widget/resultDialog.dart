@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
@@ -16,7 +15,6 @@ import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
-import 'package:saibai_men_app/widget/reviewDialog.dart';
 
 class Result extends ConsumerWidget {
   const Result({super.key});
@@ -129,7 +127,6 @@ class Result extends ConsumerWidget {
                     }
                     if (userData.scoreList.length % 50 == 6 &&
                         ref.read(enemyCounterProvider) >= 100) {
-                      ReviewRequest.requestReview(); // 理解してない
                       Navigator.of(context).pop();
                     }
                     gameWidgetLogic.resetAllProvider();

@@ -56,4 +56,8 @@ class KiEffect extends SpriteAnimationComponent with HasGameRef<DinoGame> {
   void updatePosition(double dt) {
     position = dinoPlayer.position + Vector2(0, dinoPlayer.height);
   }
+
+  void removeKiEffect() {
+    removeFromParent();
+  }
 }
