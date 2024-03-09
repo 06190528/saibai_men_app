@@ -67,3 +67,16 @@ double modeSpeedTime(WidgetRef ref) {
   }
   return updateTime;
 }
+
+double modeFeverCount(WidgetRef ref) {
+  final gameMode = ref.read(gameModeProvider);
+  double feverCount = 50;
+  if (gameMode == 0) {
+    feverCount = 20;
+  } else if (gameMode == 1) {
+    feverCount = 40;
+  } else if (gameMode == 2) {
+    feverCount = 50;
+  }
+  return feverCount;
+}

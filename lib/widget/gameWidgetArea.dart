@@ -19,28 +19,25 @@ class GameWidgetArea extends ConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
     final game = ref.watch(dinoGameProvider);
     final isGameActive = ref.watch(isGameActiveProvider);
-    final evolutionFlag = ref.watch(evolutionFlagProvider);
+    final feverFlag = ref.watch(feverFlagProvider);
     UserData userData = ref.watch(userDataProvider);
     game.speed = ref.read(speedProvider.state).state;
     game.EnemyCount = (id) {
       gameWidgetLogic.enemyCount(id);
     };
-    game.onGameOver = (id) async {
-      print('${evolutionFlag} evolutionFlag');
-      if (!evolutionFlag) {
-        print(evolutionFlag);
+    game.touchEnemy = (id) async {
+      print('${feverFlag} feverFlag');
+      if (!feverFlag) {
+        print(feverFlag);
         print('game over');
         gameWidgetLogic.onGameOver();
       } else {
-        print('deEvolution');
-        gameWidgetLogic.deEvolution();
+        print('defever');
+        gameWidgetLogic.defever();
       }
     };
-    game.activateSpecialMove = () async {
-      ref.read(deathblowCountProvider.state).state++;
-      ref.read(getItemBgmProvider).setVolume(0.7);
-      ref.read(getItemBgmProvider).play('sounds/getItemSound.mp3');
-      ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
+    game.getItem = () async {
+      gameWidgetLogic.getItem();
     };
     return Stack(
       children: [

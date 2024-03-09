@@ -5,7 +5,7 @@ import 'package:saibai_men_app/common/ranking.dart';
 import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
-import 'package:saibai_men_app/widget/evolutionBar.dart';
+import 'package:saibai_men_app/widget/feverBar.dart';
 
 class EnemyCountText extends ConsumerWidget {
   const EnemyCountText({Key? key}) : super(key: key);
@@ -14,20 +14,19 @@ class EnemyCountText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Size size = MediaQuery.of(context).size;
     final gameLogic = GameWidgetLogic(context, ref);
-    final evolutionCounter = ref.watch(evolutionCountProvider);
+    final evolutionCounter = ref.watch(feverCountProvider);
     final rankingList = ref.watch(rankingListProvider);
     final language = ref.watch(userDataProvider.notifier).state.language;
-    final evolutionFlag = ref.watch(evolutionFlagProvider);
+    final evolutionFlag = ref.watch(feverFlagProvider);
     int enemyCount = ref.watch(enemyCounterProvider);
     final gameMode = ref.watch(gameModeProvider);
-    final double maxEnemyCount = 50;
+    final double evolutionCount = modeFeverCount(ref);
     final rankingOrGoalText = gameMode == 2
         ? '${Language().translationYourRanking(language)} : ${getCurrentRank(rankingList, evolutionCounter)}'
         : '${Language().translationGoalScore(language)} : ${modeGoal(ref)}';
-    // enemyCounterが1以上かつevolutionFlagがfalseの場合、非同期でevolutionを実行
-    if (evolutionCounter >= maxEnemyCount && evolutionFlag == false) {
+    if (evolutionCounter >= evolutionCount && evolutionFlag == false) {
       Future.microtask(() {
-        gameLogic.evolution();
+        gameLogic.fever();
       });
     }
     return Column(
@@ -76,11 +75,11 @@ class EnemyCountText extends ConsumerWidget {
               ),
               Row(
                 children: [
-                  EvolutionBar(
+                  FeverBar(
                     width: size.width * 0.3, // ゲージの全体の幅
                     height: size.width * 0.03, // ゲージの高さ
                     currentEnemyCount: evolutionCounter.toDouble(), // 現在のHP
-                    maxEnemyCount: maxEnemyCount, // 最大HP
+                    feverCount: evolutionCount,
                   ),
                   Image.asset(
                     'assets/images/saiazinn.png', // アセットのパス
@@ -103,7 +102,7 @@ int getCurrentRank(List<Ranking> rankingList, int enemyCounter) {
 
   // rankingListをループしてenemyCounterを比較
   for (int i = 0; i < rankingList.length; i++) {
-    if (enemyCounter >= rankingList[i].score) {
+    if (enemyCounter >= rankingList[i].maxScore) {
       currentRank = i + 1; // 順位は1から始まるため、インデックス+1が順位
       break; // 順位を見つけたらループを終了
     }

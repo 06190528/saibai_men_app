@@ -16,7 +16,7 @@ class RewardAdLoader {
     _rewardedAd?.dispose();
 
     // ロード中のインジケータを表示
-    ref.read(loadingRewardAdProvider.state).state = true;
+    ref.read(isLoadingProvider.state).state = true;
 
     RewardedAd.load(
       adUnitId: AdHelper.rewardedAdUnitId,
@@ -29,7 +29,7 @@ class RewardAdLoader {
           ad.show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
             // ユーザーに報酬を与える処理
             GameWidgetLogic(context, ref).continueGame();
-            ref.read(loadingRewardAdProvider.state).state = false;
+            ref.read(isLoadingProvider.state).state = false;
           });
 
           // 広告の表示後のコールバックを設定
@@ -44,7 +44,7 @@ class RewardAdLoader {
         },
         onAdFailedToLoad: (LoadAdError error) {
           // ロードに失敗したので、インジケータを非表示にする
-          ref.read(loadingRewardAdProvider.state).state = false;
+          ref.read(isLoadingProvider.state).state = false;
           print('RewardedAd failed to load: $error');
         },
       ),

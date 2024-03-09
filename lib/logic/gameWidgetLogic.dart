@@ -18,7 +18,7 @@ class GameWidgetLogic {
   late DinoGame game = ref.read(dinoGameProvider);
   late Audio explosionAudio = ref.read(explosionAudioProvider);
   late Size screenSize = MediaQuery.of(context).size;
-  final bool evolutionSound1Flag = false;
+  final bool feverSound1Flag = false;
 
   Future<void> gameClear() async {
     game.removeEnemys();
@@ -36,7 +36,6 @@ class GameWidgetLogic {
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-    addUserDataToRankingDataProvider(ref);
     setUserScoreMaxToProvider(ref);
   }
 
@@ -56,7 +55,6 @@ class GameWidgetLogic {
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-    addUserDataToRankingDataProvider(ref);
     setUserScoreMaxToProvider(ref);
   }
 
@@ -64,7 +62,7 @@ class GameWidgetLogic {
     int enemyCount = ref.read(enemyCounterProvider.state).state;
     int gameMode = ref.read(gameModeProvider);
     ref.read(enemyCounterProvider.state).state++;
-    ref.read(evolutionCountProvider.state).state++;
+    ref.read(feverCountProvider.state).state++;
     if (ref.read(enemyCounterProvider) % 59 == 0) {
       for (int i = 0; i < 4; i++) {
         game.addEnemy();
@@ -121,7 +119,7 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).setVolume(0.3);
     initializeGameModeProvider(ref, screenSize, dinoGame);
     ref.read(deathblowCountProvider.state).state = 1;
-    ref.read(evolutionCountProvider.state).state = 0;
+    ref.read(feverCountProvider.state).state = 0;
   }
 
   Future<void> activateSpecialMove() async {
@@ -133,7 +131,7 @@ class GameWidgetLogic {
   }
 
   Future<void> continueGame() async {
-    ref.read(loadingRewardAdProvider.state).state = false;
+    ref.read(isLoadingProvider.state).state = false;
     ref.read(usedContinueProvider.state).state = true;
     game.startGame();
     ref.read(isGameActiveProvider.state).state = true;
@@ -144,27 +142,28 @@ class GameWidgetLogic {
     ref.read(pauseProvider.state).state = false;
   }
 
-  void evolution() async {
-    print('evolution');
-    ref.read(evolutionFlagProvider.state).state = true; // evolutionFlagを更新
-    game.evolution();
-    // Timer(const Duration(seconds: 3), () {
-    //   ref.read(kiAudioProvider).play('sounds/ki1.2.mp3');
-    //   ref.read(kiAudioProvider).setLoop(true);
-    // });
-    ref.read(evolutionBgmProvider).play('sounds/evolution_bgm.mp3');
-    ref.read(evolutionBgmProvider).setLoop(true);
-    print(
-        'evolutionFlagProvider.state: ${ref.read(evolutionFlagProvider.state)}');
+  void fever() async {
+    ref.read(feverFlagProvider.state).state = true; // feverFlagを更新
+    game.fever();
+    ref.read(feverBgmProvider).play('sounds/fever_bgm.mp3');
+    ref.read(feverBgmProvider).setLoop(true);
+    print('feverFlagProvider.state: ${ref.read(feverFlagProvider.state)}');
   }
 
-  void deEvolution() {
-    print('deEvolution');
+  void defever() {
+    print('defever');
     ref.read(kiAudioProvider).stop();
-    ref.read(evolutionCountProvider.state).state = 0;
-    ref.read(evolutionFlagProvider.state).state = false;
-    ref.read(evolutionBgmProvider).stop();
-    game.deEvolution();
+    ref.read(feverCountProvider.state).state = 0;
+    ref.read(feverFlagProvider.state).state = false;
+    ref.read(feverBgmProvider).stop();
+    game.defever();
+  }
+
+  void getItem() {
+    ref.read(deathblowCountProvider.state).state++;
+    ref.read(getItemBgmProvider).setVolume(0.5);
+    ref.read(getItemBgmProvider).play('sounds/getItemSound.mp3');
+    ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
   }
 
   void resetAllProvider() {
@@ -179,11 +178,11 @@ class GameWidgetLogic {
     ref.read(bgmSpeedProvider.state).state = 1.0;
     ref.read(speedProvider.state).state = 0;
     ref.read(enemyCreateTimeProvider.state).state = 1.2;
-    ref.read(evolutionFlagProvider.state).state = false;
+    ref.read(feverFlagProvider.state).state = false;
     ref.read(deathblowCountProvider.state).state = 1;
-    ref.read(loadingRewardAdProvider.state).state = false;
+    ref.read(isLoadingProvider.state).state = false;
     ref.read(kiAudioProvider).stop();
     ref.read(gameClearFlagProvider.state).state = false;
-    ref.read(evolutionCountProvider.state).state = 0;
+    ref.read(feverCountProvider.state).state = 0;
   }
 }

@@ -18,9 +18,9 @@ class DinoGameNotifier extends StateNotifier<DinoGame> {
 }
 
 class DinoGame extends FlameGame {
-  Function(int id)? onGameOver;
+  Function(int id)? touchEnemy;
   Function(int id)? EnemyCount;
-  Function()? activateSpecialMove;
+  Function()? getItem;
   double? speed;
   List<Enemy> enemies = [];
   List<Deathblow> deathblows = [];
@@ -35,10 +35,7 @@ class DinoGame extends FlameGame {
   double time = 1.2;
 
   DinoGame(
-      {required this.speed,
-      this.onGameOver,
-      this.EnemyCount,
-      this.activateSpecialMove});
+      {required this.speed, this.touchEnemy, this.EnemyCount, this.getItem});
 
   @override
   Future<void> onLoad() async {
@@ -49,11 +46,11 @@ class DinoGame extends FlameGame {
     dinoPlayer.position = _dinoWorld.size * 0.5; // 初期位置を設定
   }
 
-  void evolution() {
+  void fever() {
     add(kiEffect);
   }
 
-  void deEvolution() {
+  void defever() {
     kiEffect.removeKiEffect();
   }
 
@@ -76,7 +73,7 @@ class DinoGame extends FlameGame {
 
   Future<void> addEnemy() async {
     Enemy enemy = Enemy(speed!, dinoPlayer, enemyKinds,
-        onGameOver: onGameOver, EnemyCount: EnemyCount);
+        onGameOver: touchEnemy, EnemyCount: EnemyCount);
     enemy.position = initialPosition(_dinoWorld.size, 'enemy');
     enemy.direction = enemyInitialDirection(enemy.position, _dinoWorld.size);
     add(enemy);
@@ -136,7 +133,7 @@ class DinoGame extends FlameGame {
 
   void addDeathblow() {
     Deathblow deathblow =
-        Deathblow(speed!, dinoPlayer, activateSpecialMove: activateSpecialMove);
+        Deathblow(speed!, dinoPlayer, activateSpecialMove: getItem);
     deathblow.position = initialPosition(_dinoWorld.size, 'deathblow');
     deathblow.direction = Direction.down;
     deathblow.updateSpeed(_dinoWorld.speed);

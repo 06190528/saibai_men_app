@@ -106,8 +106,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         AdInterstitial().createAd();
                         await Future.delayed(const Duration(seconds: 1));
                       }
-                      if (userData.scoreList.length % 50 == 6 &&
-                          ref.read(enemyCounterProvider) >= 100) {
+                      if (ref.read(enemyCounterProvider) >= 100) {
                         requestReview(context);
                         Navigator.of(context).pop();
                       }
@@ -176,8 +175,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         await Future.delayed(const Duration(seconds: 3));
                         //ちゃんと書く
                       }
-                      if (userData.scoreList.length % 50 == 6 &&
-                          ref.read(enemyCounterProvider) >= 100) {
+                      if (ref.read(enemyCounterProvider) >= 100) {
                         requestReview(context);
                       }
                       // ignore: use_build_context_synchronously
@@ -194,7 +192,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                 ],
               ),
             ),
-          if (ref.watch(loadingRewardAdProvider.state).state)
+          if (ref.watch(isLoadingProvider.state).state)
             Positioned(
               bottom: screenHeight * 0.5, // 下から10%の位置に配置
               right: screenWidth * 0.5,

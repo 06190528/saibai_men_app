@@ -317,4 +317,15 @@ class Language {
         return 'Goal Score';
     }
   }
+
+  String translationPlace(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Place';
+      case LanguageList.Japan:
+        return '位';
+      default:
+        return 'Place';
+    }
+  }
 }

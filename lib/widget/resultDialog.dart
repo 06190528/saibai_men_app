@@ -181,7 +181,7 @@ class Result extends ConsumerWidget {
               ],
             ),
           ),
-          if (ref.watch(loadingRewardAdProvider.state).state)
+          if (ref.watch(isLoadingProvider.state).state)
             Positioned(
               bottom: screenHeight * 0.5, // 下から10%の位置に配置
               right: screenWidth * 0.5,

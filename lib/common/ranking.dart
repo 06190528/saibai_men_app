@@ -1,7 +1,7 @@
 class Ranking {
   final String name;
   final String id;
-  final int score;
+  final int maxScore;
 
-  Ranking({required this.id, required this.name, required this.score});
+  Ranking({required this.id, required this.name, required this.maxScore});
 }

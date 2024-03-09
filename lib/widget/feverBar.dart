@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
-class EvolutionBar extends StatelessWidget {
+class FeverBar extends StatelessWidget {
   final double width; // ゲージの全体の幅
   final double height; // ゲージの高さ
   final double currentEnemyCount; // 現在のHP
-  final double maxEnemyCount; // 最大HP
+  final double feverCount; // 最大HP
 
-  const EvolutionBar({
+  const FeverBar({
     Key? key,
     required this.width,
     required this.height,
     required this.currentEnemyCount,
-    required this.maxEnemyCount,
+    required this.feverCount,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final double ratio = currentEnemyCount / maxEnemyCount > 1.0
+    final double ratio = currentEnemyCount / feverCount > 1.0
         ? 1.0
-        : currentEnemyCount / maxEnemyCount;
+        : currentEnemyCount / feverCount;
 
     return Container(
       width: width,

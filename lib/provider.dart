@@ -14,10 +14,10 @@ final showResultDialog = StateProvider<bool>((ref) => false);
 final isGameActiveProvider = StateProvider<bool>((ref) => false);
 final createStartButtonFlag = StateProvider<bool>((ref) => true);
 final pauseProvider = StateProvider<bool>((ref) => false);
-final loadingRewardAdProvider = StateProvider<bool>((ref) => false);
+final isLoadingProvider = StateProvider<bool>((ref) => false);
 final usedContinueProvider = StateProvider<bool>((ref) => false);
 final swipeFlagProvider = StateProvider<bool>((ref) => false);
-final evolutionFlagProvider = StateProvider<bool>((ref) => false);
+final feverFlagProvider = StateProvider<bool>((ref) => false);
 final gameClearFlagProvider = StateProvider<bool>((ref) => false);
 
 final bgmAudioProvider = Provider<Audio>((ref) => Audio());
@@ -26,10 +26,10 @@ final goatSoundsProvider = Provider<Audio>((ref) => Audio());
 final attackBgmProvider = Provider<Audio>((ref) => Audio());
 final getItemBgmProvider = Provider<Audio>((ref) => Audio());
 final kiAudioProvider = Provider<Audio>((ref) => Audio());
-final evolutionBgmProvider = Provider<Audio>((ref) => Audio());
+final feverBgmProvider = Provider<Audio>((ref) => Audio());
 
 final enemyCounterProvider = StateProvider<int>((ref) => 0);
-final evolutionCountProvider = StateProvider<int>((ref) => 0);
+final feverCountProvider = StateProvider<int>((ref) => 0);
 final speedProvider = StateProvider<double>((ref) => 600);
 final enemyCreateTimeProvider = StateProvider<double>((ref) => 1.2);
 final bgmSpeedProvider = StateProvider<double>((ref) => 1);
@@ -38,6 +38,7 @@ final userDifficultyLevelProvider = StateProvider<int>((ref) => 0);
 final userMaxScoreProvider = StateProvider<int>((ref) => 0);
 final userModeProvider = StateProvider<int>((ref) => 0);
 final gameModeProvider = StateProvider<int>((ref) => 0);
+final userRankingProvider = StateProvider<int>((ref) => 0);
 
 final rankingListProvider = StateProvider<List<Ranking>>((ref) => []);
 

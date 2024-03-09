@@ -4,11 +4,11 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
-import 'package:saibai_men_app/logic/othersLogic.dart';
 import 'package:saibai_men_app/mainWidget/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/bannerAndpPadlockWidget.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
+import 'package:saibai_men_app/widget/rankingCircleWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/settingDialog.dart';
 
@@ -19,7 +19,6 @@ class TitleScene extends ConsumerWidget {
   bool _initialized = false;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    requestReview(context);
     if (!_initialized) {
       saveUserDataFromLocalToProvider(ref);
 
@@ -44,8 +43,8 @@ class TitleScene extends ConsumerWidget {
             ),
           ),
           Positioned(
-            top: size.height * 0.3, // 上から50の位置に配置
-            width: size.width * 0.7, // 幅を画面幅に設定
+            top: size.height * 0.3,
+            width: size.width * 0.7,
             child: Dialog(
               insetPadding: const EdgeInsets.all(0), // Dialogのデフォルトパディングを削除
               backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -113,6 +112,13 @@ class TitleScene extends ConsumerWidget {
                   ),
                 ]),
               ),
+            ),
+          ),
+          Positioned(
+            top: size.height * 0.26,
+            left: size.width * 0.1,
+            child: RankingCircle(
+              size: size.width * 0.15,
             ),
           ),
         ],
