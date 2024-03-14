@@ -59,18 +59,18 @@ class RankingWidget extends ConsumerWidget {
     scrollController.addListener(() async {
       if (scrollController.position.pixels <=
           scrollController.position.minScrollExtent - 120) {
-        ref.read(isLoadingProvider.notifier).state = true; // ローディング開始
+        ref.read(isLoadingProvider.notifier).state = true;
         await getAndSaveRankingDataFromIFirebaseToProvider(ref);
-        ref.read(isLoadingProvider.notifier).state = false; // ローディング終了
+        await addUserNewMaxScoreToRankingListProvider(ref);
+        ref.read(isLoadingProvider.notifier).state = false;
       }
     });
     List<Ranking> rankingList = ref.watch(rankingListProvider.notifier).state;
-
     return Container(
       color: Colors.white, // 背景色を白色に設定
       child: ListView.builder(
         controller: scrollController,
-        itemCount: rankingList.length,
+        itemCount: rankingList.length, //100,
         itemBuilder: (context, index) {
           IconData? medalIcon;
           Color? medalColor;
@@ -83,12 +83,11 @@ class RankingWidget extends ConsumerWidget {
             medalIcon = Icons.emoji_events;
             medalColor = rankingColor(index + 1);
             size = 20;
-          } else if (index <= 20) {
+          } else if (index <= 19) {
             medalIcon = Icons.emoji_events_outlined;
             medalColor = rankingColor(index + 1);
             size = 20;
           }
-
           return Column(
             children: <Widget>[
               Material(
@@ -115,7 +114,8 @@ class RankingWidget extends ConsumerWidget {
   }
 }
 
-Future<void> getUserRanking(List<Ranking> rankingList, WidgetRef ref) async {
+Future<void> getUserRanking(WidgetRef ref) async {
+  final rankingList = ref.watch(rankingListProvider.notifier).state;
   String userId = await UserDataService().getUserId(); // Futureをawaitで待ちます
   int userRank = rankingList.length + 1;
   for (int i = 0; i < rankingList.length; i++) {

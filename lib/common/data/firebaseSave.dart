@@ -7,9 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/ranking.dart';
 import 'package:saibai_men_app/common/userData.dart';
-import 'package:saibai_men_app/mainWidget/rankingScene.dart';
+import 'package:saibai_men_app/scene/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
-import 'package:saibai_men_app/widget/settingDialog.dart';
+import 'package:saibai_men_app/widget/dialog/settingDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -61,7 +61,6 @@ class UserDataService {
   }
 }
 
-//この時点でデーター保存されてない
 Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
   //確定でuserDataがローカルにある。
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,29 +71,23 @@ Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
     // MapをUserDataに変換
     UserData userData = UserData.fromMap(userDataMap);
     // userDataProviderにデータを設定
-    ref.read(userDataProvider.notifier).state = userData;
+    ref.read(userDataProvider.notifier).updateUserData(userData, ref);
+    print(ref.read(userDataProvider).scoreList);
   }
-  setUserScoreMaxToProvider(ref);
-  getAndSaveRankingDataFromIFirebaseToProvider(ref);
 }
 
-//初回起動時に匿名ユーザーとしてログイン
 Future<void> initializeUserData() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userDataString = prefs.getString('user_data');
   if (userDataString == null) {
-    // 初回起動時は匿名ユーザーとしてログイン
     User? user = await AuthService().signInAnonymously();
     if (user != null) {
-      // 匿名ユーザーのデータを作成
       UserData userData = UserData(
         name: '',
         scoreList: [],
         language: LanguageList.Japan,
       );
-      // ローカルに保存
       await UserDataService().saveUserDataToLocal(userData.toMap());
-      // Firestoreに保存
       await setUserDataToIFirebase(userData);
     }
   }
@@ -113,26 +106,20 @@ Future<void> setUserDataToIFirebase(UserData? userData) async {
 //ここ
 Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
   ref.read(isLoadingProvider.notifier).state = true; // ローディング開始
+  DocumentSnapshot<Map<String, dynamic>> ranking =
+      await FirebaseFirestore.instance.collection('ranking').doc('1').get();
 
-  QuerySnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('users').get();
-
-  List<Ranking> rankingList = snapshot.docs.map((doc) {
-    Map<String, dynamic> data = doc.data();
-    List<dynamic> scoreList = data['scoreList'] ?? [];
-    int maxScore = scoreList.isNotEmpty
-        ? scoreList.reduce((curr, next) => curr > next ? curr : next)
-        : 0;
-    return Ranking(
-      id: doc.id,
-      name: data['name'],
-      maxScore: maxScore,
-    );
-  }).toList();
-  rankingList.sort((a, b) => b.maxScore.compareTo(a.maxScore));
-  ref.read(rankingListProvider.notifier).state = rankingList;
-  getUserRanking(rankingList, ref);
+  for (int i = 0; i < ranking.data()!['ranking'].length; i++) {
+    var name = ranking.data()!['ranking'][i]['name'];
+    var maxScore = ranking.data()!['ranking'][i]['maxScore'];
+    var id = ranking.data()!['ranking'][i]['id'];
+    ref
+        .read(rankingListProvider.notifier)
+        .state
+        .add(Ranking(name: name, maxScore: maxScore, id: id));
+  }
   ref.read(isLoadingProvider.notifier).state = false; // ローディング終了
+  addUserNewMaxScoreToRankingListProvider(ref);
 }
 
 Future<void> showUserSettingsDialog(WidgetRef ref, BuildContext context) async {
@@ -145,4 +132,21 @@ Future<void> showUserSettingsDialog(WidgetRef ref, BuildContext context) async {
       },
     );
   }
+}
+
+Future<void> addUserNewMaxScoreToRankingListProvider(
+  WidgetRef ref,
+) async {
+  final newMaxScore = ref.read(userMaxScoreProvider);
+  List<Ranking> rankingList = ref.read(rankingListProvider.notifier).state;
+  final userId = await UserDataService().getUserId();
+  final userRank = rankingList.indexWhere((element) => element.id == userId);
+  if (userRank != -1) {
+    if (rankingList[userRank].maxScore < newMaxScore) {
+      rankingList[userRank].maxScore = newMaxScore;
+      rankingList.sort((a, b) => b.maxScore.compareTo(a.maxScore));
+      ref.read(rankingListProvider.notifier).state = rankingList;
+    }
+  }
+  getUserRanking(ref);
 }

@@ -12,7 +12,7 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   double speed;
   Direction direction = Direction.none;
   DinoPlayer dinoPlayer;
-  Function(int id)? onGameOver;
+  Function()? onTouchEnemy;
   Function(int id)? EnemyCount;
   final int id;
   int enemyKinds;
@@ -21,7 +21,7 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
     this.speed,
     this.dinoPlayer,
     this.enemyKinds, {
-    this.onGameOver,
+    this.onTouchEnemy,
     this.EnemyCount,
   })  : id = _enemyIdCounter++,
         super(size: Vector2.all(0));
@@ -73,8 +73,8 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
     double radius = (size.length / 2 + dinoPlayer.size.length / 2) / 2;
     double distance = dinoPlayer.position.distanceTo(position);
     if (distance <= radius) {
-      if (onGameOver != null) {
-        onGameOver!(id);
+      if (onTouchEnemy != null) {
+        onTouchEnemy!();
         removeEnemy();
       }
     }

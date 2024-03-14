@@ -6,7 +6,7 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
-import 'package:saibai_men_app/mainWidget/rankingScene.dart';
+import 'package:saibai_men_app/scene/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';

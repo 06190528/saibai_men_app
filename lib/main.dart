@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/firebase_options.dart';
-import 'package:saibai_men_app/mainWidget/titielWidget.dart';
+import 'package:saibai_men_app/scene/titielWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

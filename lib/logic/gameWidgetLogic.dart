@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
-import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/audio.dart';
 import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/provider.dart';
@@ -21,7 +20,7 @@ class GameWidgetLogic {
   final bool feverSound1Flag = false;
 
   Future<void> gameClear() async {
-    game.removeEnemys();
+    game.removeEnemies();
     game.updateSpeed(0, ref);
     game.stopGame();
     ref.read(bgmSpeedProvider.state).state = 1.0;
@@ -31,17 +30,18 @@ class GameWidgetLogic {
     ref.read(showResultDialog.state).state = true;
     ref.read(kiAudioProvider).stop();
     await ref.read(bgmAudioProvider).stop();
+    ref.read(feverBgmProvider).stop();
     ref.read(bgmAudioProvider).play('sounds/game_clear.mp3');
     ref.read(gameClearFlagProvider.state).state = true;
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-    setUserScoreMaxToProvider(ref);
+    addUserNewMaxScoreToRankingListProvider(ref);
   }
 
   Future<void> onGameOver() async {
     final gameOverSprite = GameOverSprite(game.dinoPlayer.position);
-    game.removeEnemys();
+    game.removeEnemies();
     game.updateSpeed(0, ref);
     game.stopGame();
     game.add(gameOverSprite);
@@ -51,11 +51,14 @@ class GameWidgetLogic {
     ref.read(showResultDialog.state).state = true;
     ref.read(kiAudioProvider).stop();
     await ref.read(bgmAudioProvider).stop();
+    ref.read(feverBgmProvider).stop();
     explosionAudio.play('sounds/explosion.mp3');
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-    setUserScoreMaxToProvider(ref);
+    addUserNewMaxScoreToRankingListProvider(
+      ref,
+    );
   }
 
   Future<void> enemyCount(int id) async {
@@ -63,8 +66,8 @@ class GameWidgetLogic {
     int gameMode = ref.read(gameModeProvider);
     ref.read(enemyCounterProvider.state).state++;
     ref.read(feverCountProvider.state).state++;
-    if (ref.read(enemyCounterProvider) % 59 == 0) {
-      for (int i = 0; i < 4; i++) {
+    if (ref.read(enemyCounterProvider) % 49 == 0) {
+      for (int i = 0; i < 6; i++) {
         game.addEnemy();
       }
     }
@@ -94,6 +97,7 @@ class GameWidgetLogic {
     await ref.read(bgmAudioProvider).stop();
     ref.read(pauseProvider.state).state = true;
     ref.read(kiAudioProvider).stop();
+    ref.read(feverBgmProvider).stop();
   }
 
   Future<void> onGameResume() async {
@@ -103,10 +107,13 @@ class GameWidgetLogic {
     await ref.read(bgmAudioProvider).resume();
     ref.read(pauseProvider.state).state = false;
     ref.read(kiAudioProvider).resume();
+    if (ref.read(feverFlagProvider.state).state)
+      ref.read(feverBgmProvider).resume();
   }
 
   Future<void> onPressedStartButton() async {
-    if (ref.read(gameModeProvider) == 0) {
+    if (ref.read(gameModeProvider) == 1 &&
+        ref.read(userMaxScoreProvider) < 50) {
       ref.watch(swipeFlagProvider.state).state = true;
       await Future.delayed(const Duration(milliseconds: 3000));
       ref.watch(swipeFlagProvider.state).state = false;
@@ -124,6 +131,9 @@ class GameWidgetLogic {
 
   Future<void> activateSpecialMove() async {
     ref.read(enemyCounterProvider.state).state += game.enemies.length;
+    if (!ref.watch(feverFlagProvider)) {
+      ref.read(feverCountProvider.state).state += game.enemies.length;
+    }
     game.attackEnemy();
     ref.read(attackBgmProvider).play('sounds/specialMove.mp3');
     ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
@@ -150,7 +160,10 @@ class GameWidgetLogic {
     print('feverFlagProvider.state: ${ref.read(feverFlagProvider.state)}');
   }
 
-  void defever() {
+  void deFever() {
+    final gameOverSprite = GameOverSprite(game.dinoPlayer.position);
+    game.add(gameOverSprite);
+    explosionAudio.play('sounds/explosion.mp3');
     print('defever');
     ref.read(kiAudioProvider).stop();
     ref.read(feverCountProvider.state).state = 0;
@@ -184,5 +197,6 @@ class GameWidgetLogic {
     ref.read(kiAudioProvider).stop();
     ref.read(gameClearFlagProvider.state).state = false;
     ref.read(feverCountProvider.state).state = 0;
+    ref.read(feverBgmProvider).stop();
   }
 }

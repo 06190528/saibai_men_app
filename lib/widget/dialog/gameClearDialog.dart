@@ -8,11 +8,12 @@ import 'package:saibai_men_app/common/userData.dart';
 import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/logic/othersLogic.dart';
-import 'package:saibai_men_app/mainWidget/titielWidget.dart';
+import 'package:saibai_men_app/scene/titielWidget.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
 import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
+import 'package:saibai_men_app/widget/dialog/modeReleaseAnnounceDialog.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
@@ -30,12 +31,29 @@ class GameClearOrOverDialog extends ConsumerWidget {
     String resultText = isClear
         ? Language().translationGameClear(userData.language)
         : Language().translationGameOver(userData.language);
+    if (isClear) {
+      final userScoreList =
+          ref.watch(userDataProvider.notifier).state.scoreList;
+      final gameGoal = modeGoal(ref);
+      int clearCount = userScoreList.where((e) => e >= gameGoal).length;
+      if (clearCount <= 1) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const ModeReleaseAnnounceDialog();
+            },
+          );
+        });
+      }
+    }
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.transparent,
       ),
       child: Stack(
-        alignment: Alignment.center, // Stack内の子要素を中央に配置
+        alignment: Alignment.center,
         children: [
           if (isReleaseMode)
             Positioned(
@@ -46,10 +64,10 @@ class GameClearOrOverDialog extends ConsumerWidget {
               ),
             ),
           Positioned(
-            top: screenHeight / 10, // 上から50の位置に配置
-            width: screenWidth * 0.9, // 幅を画面幅に設定
+            top: screenHeight / 10,
+            width: screenWidth * 0.9,
             child: Dialog(
-              insetPadding: const EdgeInsets.all(0), // Dialogのデフォルトパディングを削除
+              insetPadding: const EdgeInsets.all(0),
               backgroundColor: Color.fromARGB(255, 255, 255, 255),
               elevation: 5,
               shape: RoundedRectangleBorder(
@@ -57,7 +75,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min, // 子ウィジェットのサイズに合わせる
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     DoubleText(
                       text: resultText,
@@ -96,7 +114,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
           ),
           if (!isClear) ...[
             Positioned(
-              bottom: screenHeight * 0.1, // 下から10%の位置に配置
+              bottom: screenHeight * 0.1,
               child: Column(
                 children: [
                   BannerButton(
@@ -120,7 +138,6 @@ class GameClearOrOverDialog extends ConsumerWidget {
                     BannerButton(
                       text: Language().translationContinue(userData.language),
                       onPressed: () async {
-                        // 同意ダイアログを表示
                         final bool isAgreed = await showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -135,23 +152,20 @@ class GameClearOrOverDialog extends ConsumerWidget {
                                   child: Text(Language()
                                       .translationNo(userData.language)),
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(false); // ユーザーが同意しない
+                                    Navigator.of(context).pop(false);
                                   },
                                 ),
                                 TextButton(
                                   child: Text(Language()
                                       .translationYes(userData.language)),
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(true); // ユーザーが同意する
+                                    Navigator.of(context).pop(true);
                                   },
                                 ),
                               ],
                             );
                           },
                         );
-                        // ユーザーが同意した場合にリワード広告をロードして表示
                         if (isAgreed) {
                           RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
                         }
@@ -172,8 +186,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                     onPressed: () async {
                       if (userData.scoreList.length % 5 == 4) {
                         AdInterstitial().createAd();
-                        await Future.delayed(const Duration(seconds: 3));
-                        //ちゃんと書く
+                        await Future.delayed(const Duration(seconds: 1));
                       }
                       if (ref.read(enemyCounterProvider) >= 100) {
                         requestReview(context);
@@ -194,7 +207,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
             ),
           if (ref.watch(isLoadingProvider.state).state)
             Positioned(
-              bottom: screenHeight * 0.5, // 下から10%の位置に配置
+              bottom: screenHeight * 0.5,
               right: screenWidth * 0.5,
               child: const CircularProgressIndicator(),
             ),

@@ -9,11 +9,8 @@ import 'package:saibai_men_app/ui/gameUi.dart';
 void initializeGameModeProvider(WidgetRef ref, Size size, DinoGame game) {
   final gameMode = ref.read(gameModeProvider);
   double speedTime = 0;
-  if (gameMode == 0) {
-    speedTime = 7;
-    game.updateTime(ref.read(enemyCreateTimeProvider.state).state = 4);
-  } else if (gameMode == 1) {
-    speedTime = 5;
+  if (gameMode == 1) {
+    speedTime = 4;
     game.updateTime(ref.read(enemyCreateTimeProvider.state).state = 2);
   } else if (gameMode == 2) {
     speedTime = 3;
@@ -28,9 +25,7 @@ void initializeGameModeProvider(WidgetRef ref, Size size, DinoGame game) {
 int modeGoal(WidgetRef ref) {
   final gameMode = ref.read(gameModeProvider);
   int goal = 0;
-  if (gameMode == 0) {
-    goal = modeScore0;
-  } else if (gameMode == 1) {
+  if (gameMode == 1) {
     goal = modeScore1;
   }
   return goal;
@@ -39,9 +34,7 @@ int modeGoal(WidgetRef ref) {
 int modeCreateEnemiesTime(WidgetRef ref) {
   final gameMode = ref.read(gameModeProvider);
   int goal = 0;
-  if (gameMode == 0) {
-    goal = 5;
-  } else if (gameMode == 1) {
+  if (gameMode == 1) {
     goal = 20;
   } else if (gameMode == 2) {
     goal = 30;
@@ -52,28 +45,18 @@ int modeCreateEnemiesTime(WidgetRef ref) {
 
 double modeUpdateTime(WidgetRef ref) {
   double updateTime = 0.93;
-  final gameMode = ref.read(gameModeProvider);
-  if (gameMode == 0) {
-    updateTime = 0.95;
-  }
   return updateTime;
 }
 
 double modeSpeedTime(WidgetRef ref) {
   double updateTime = 1.05;
-  final gameMode = ref.read(gameModeProvider);
-  if (gameMode == 0) {
-    updateTime = 1.08;
-  }
   return updateTime;
 }
 
 double modeFeverCount(WidgetRef ref) {
   final gameMode = ref.read(gameModeProvider);
   double feverCount = 50;
-  if (gameMode == 0) {
-    feverCount = 20;
-  } else if (gameMode == 1) {
+  if (gameMode == 1) {
     feverCount = 40;
   } else if (gameMode == 2) {
     feverCount = 50;

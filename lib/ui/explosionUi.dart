@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -30,5 +31,15 @@ class GameOverSprite extends SpriteAnimationComponent
       to: 16, // 終了フレーム
       loop: false,
     );
+
+    // 3秒後にUIを削除する
+    removeUIAfterDelay();
+  }
+
+  // 3秒後にUIを削除するメソッド
+  void removeUIAfterDelay() {
+    Future.delayed(const Duration(seconds: 3), () {
+      removeFromParent();
+    });
   }
 }

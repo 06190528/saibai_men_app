@@ -28,7 +28,7 @@ final getItemBgmProvider = Provider<Audio>((ref) => Audio());
 final kiAudioProvider = Provider<Audio>((ref) => Audio());
 final feverBgmProvider = Provider<Audio>((ref) => Audio());
 
-final enemyCounterProvider = StateProvider<int>((ref) => 0);
+final enemyCounterProvider = StateProvider<int>((ref) => 170);
 final feverCountProvider = StateProvider<int>((ref) => 0);
 final speedProvider = StateProvider<double>((ref) => 600);
 final enemyCreateTimeProvider = StateProvider<double>((ref) => 1.2);
@@ -47,8 +47,14 @@ class UserDataNotifier extends StateNotifier<UserData> {
       : super(UserData(name: '', scoreList: [], language: LanguageList.Japan));
 
   // ユーザーデータを更新するメソッド
-  void updateUserData(UserData newUserData) {
+  void updateUserData(UserData newUserData, WidgetRef ref) {
     state = newUserData;
+    // scoreListからmaxScoreを計算して更新する
+    final maxScore = state.scoreList.isNotEmpty
+        ? state.scoreList.reduce((curr, next) => curr > next ? curr : next)
+        : 0;
+    // refを使用してuserMaxScoreProviderを取得して状態を更新する
+    ref.read(userMaxScoreProvider.state).state = maxScore;
   }
 
   LanguageList get name => state.language;

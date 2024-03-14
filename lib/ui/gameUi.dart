@@ -18,7 +18,7 @@ class DinoGameNotifier extends StateNotifier<DinoGame> {
 }
 
 class DinoGame extends FlameGame {
-  Function(int id)? touchEnemy;
+  Function()? touchEnemy;
   Function(int id)? EnemyCount;
   Function()? getItem;
   double? speed;
@@ -73,7 +73,7 @@ class DinoGame extends FlameGame {
 
   Future<void> addEnemy() async {
     Enemy enemy = Enemy(speed!, dinoPlayer, enemyKinds,
-        onGameOver: touchEnemy, EnemyCount: EnemyCount);
+        onTouchEnemy: touchEnemy, EnemyCount: EnemyCount);
     enemy.position = initialPosition(_dinoWorld.size, 'enemy');
     enemy.direction = enemyInitialDirection(enemy.position, _dinoWorld.size);
     add(enemy);
@@ -88,7 +88,7 @@ class DinoGame extends FlameGame {
     isGameActive = false;
   }
 
-  void removeEnemys() {
+  void removeEnemies() {
     for (var enemy in enemies) {
       enemy.removeEnemy();
     }
@@ -113,7 +113,7 @@ class DinoGame extends FlameGame {
     if (newSpeed == 0) {
       ref
           .read(bgmAudioProvider)
-          .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1);
+          .setSpeed(ref.read(bgmSpeedProvider.state).state = 1);
     }
     ;
     dinoPlayer.updateSpeed(newSpeed * 1.3);

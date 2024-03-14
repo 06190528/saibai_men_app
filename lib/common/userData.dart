@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/provider.dart';
@@ -14,7 +13,6 @@ class UserData {
     required this.language,
   });
 
-  // FirestoreのドキュメントからUserDataオブジェクトを作成するファクトリメソッド
   factory UserData.fromMap(Map<String, dynamic> map) {
     return UserData(
       name: map['name'] ?? '',
@@ -39,15 +37,6 @@ class UserData {
   }
 }
 
-void setUserScoreMaxToProvider(WidgetRef ref) {
-  final userData = ref.read(userDataProvider.notifier).state;
-  ref.read(userMaxScoreProvider.state).state = userData.scoreList.isEmpty
-      ? 0
-      : userData.scoreList.reduce((a, b) => a > b ? a : b);
-  print('userMaxScoreProvider: ${ref.read(userMaxScoreProvider)}');
-  setUserModeToProvider(ref);
-}
-
 void setUserModeToProvider(WidgetRef ref) {
   final userMaxScore = ref.read(userMaxScoreProvider.state).state;
   if (userMaxScore < 100) {
@@ -61,11 +50,10 @@ void setUserModeToProvider(WidgetRef ref) {
 
 void setGameModeToProvider(WidgetRef ref, String text) {
   final userData = ref.read(userDataProvider);
-  if (text == Language().translationEasy(userData.language)) {
-    ref.read(gameModeProvider.state).state = 0;
-  } else if (text == Language().translationNormal(userData.language)) {
+  if (text == Language().translationNormal(userData.language)) {
     ref.read(gameModeProvider.state).state = 1;
   } else if (text == Language().translationHard(userData.language)) {
     ref.read(gameModeProvider.state).state = 2;
   }
+  print('gameModeProvider: ${ref.read(gameModeProvider.state).state}');
 }

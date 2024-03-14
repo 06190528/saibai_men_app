@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/userData.dart';
-import 'package:saibai_men_app/mainWidget/gameScene.dart';
+import 'package:saibai_men_app/scene/gameScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/padlockWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';

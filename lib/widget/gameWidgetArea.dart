@@ -25,7 +25,7 @@ class GameWidgetArea extends ConsumerWidget {
     game.EnemyCount = (id) {
       gameWidgetLogic.enemyCount(id);
     };
-    game.touchEnemy = (id) async {
+    game.touchEnemy = () async {
       print('${feverFlag} feverFlag');
       if (!feverFlag) {
         print(feverFlag);
@@ -33,7 +33,7 @@ class GameWidgetArea extends ConsumerWidget {
         gameWidgetLogic.onGameOver();
       } else {
         print('defever');
-        gameWidgetLogic.defever();
+        gameWidgetLogic.deFever();
       }
     };
     game.getItem = () async {
@@ -66,7 +66,7 @@ class GameWidgetArea extends ConsumerWidget {
                     width: screenSize.width * 0.6,
                     text: Language().translationBack(userData.language),
                     onPressed: () async {
-                      Navigator.pop(context);
+                      Navigator.pop(context, true);
                     },
                     icon: Icons.play_arrow,
                   ),

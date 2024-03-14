@@ -9,9 +9,9 @@ import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/deathBlowWidget.dart';
 import 'package:saibai_men_app/widget/enemyCountTextWIdget.dart';
-import 'package:saibai_men_app/widget/gameClearDialog.dart';
+import 'package:saibai_men_app/widget/dialog/gameClearDialog.dart';
 import 'package:saibai_men_app/widget/gameWidgetArea.dart';
-import 'package:saibai_men_app/widget/resultDialog.dart';
+import 'package:saibai_men_app/widget/dialog/resultDialog.dart';
 
 class GameScene extends ConsumerWidget {
   GameScene({Key? key}) : super(key: key);
@@ -21,6 +21,7 @@ class GameScene extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final gameMode = ref.read(gameModeProvider);
     final userData = ref.watch(userDataProvider);
+    final userMaxScore = ref.watch(userMaxScoreProvider);
     GameWidgetLogic gameWidgetLogic = GameWidgetLogic(context, ref);
     return Scaffold(
       body: Stack(
@@ -63,7 +64,7 @@ class GameScene extends ConsumerWidget {
                                   onActivateSpecialMove:
                                       gameWidgetLogic.activateSpecialMove),
                             ),
-                            if (gameMode == 0)
+                            if (gameMode == 1 && userMaxScore < 50) ...[
                               AnimatedTextKit(
                                 pause: const Duration(milliseconds: 0),
                                 repeatForever: true, // アニメーションを無限に繰り返す
@@ -88,6 +89,7 @@ class GameScene extends ConsumerWidget {
                                   ),
                                 ],
                               ),
+                            ]
                           ],
                         ),
                       ),
