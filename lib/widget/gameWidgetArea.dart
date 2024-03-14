@@ -66,7 +66,7 @@ class GameWidgetArea extends ConsumerWidget {
                     width: screenSize.width * 0.6,
                     text: Language().translationBack(userData.language),
                     onPressed: () async {
-                      Navigator.pop(context, true);
+                      Navigator.pop(context);
                     },
                     icon: Icons.play_arrow,
                   ),

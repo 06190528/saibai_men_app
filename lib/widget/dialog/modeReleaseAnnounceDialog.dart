@@ -7,7 +7,7 @@ class ModeReleaseAnnounceDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: Text('新たなモードが開放されました！'),
+      title: Text('ハードモードが開放されました！'),
       backgroundColor: Color.fromARGB(255, 240, 240, 240),
       actions: <Widget>[
         TextButton(
