@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
 import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
-import 'package:saibai_men_app/common/userData.dart';
+import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/scene/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
@@ -14,6 +14,7 @@ import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
+import 'package:saibai_men_app/widget/resultDialogWidget/getCoinWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
 
 class Result extends ConsumerWidget {
@@ -63,7 +64,7 @@ class Result extends ConsumerWidget {
                           child: Center(
                             child: DoubleText(
                               text: resultText,
-                              fontSize: 30,
+                              fontSize: screenWidth * 0.06,
                               insideColor: Color.fromARGB(255, 255, 192, 1),
                             ),
                           ),
@@ -87,7 +88,7 @@ class Result extends ConsumerWidget {
                     ScoreWidget(
                         text: Language().translationScore(userData.language),
                         width: screenWidth,
-                        fontSize: 30,
+                        fontSize: screenWidth * 0.06,
                         score: '${ref.watch(enemyCounterProvider)}',
                         color: const Color.fromARGB(255, 125, 124, 124),
                         borderRadius: const BorderRadius.only(
@@ -97,7 +98,7 @@ class Result extends ConsumerWidget {
                     ScoreWidget(
                       text: Language().translationBestScore(userData.language),
                       width: screenWidth,
-                      fontSize: 20,
+                      fontSize: screenWidth * 0.04,
                       score: ref
                           .watch(userDataProvider)
                           .scoreList
@@ -108,6 +109,15 @@ class Result extends ConsumerWidget {
                         bottomLeft: Radius.circular(5),
                         bottomRight: Radius.circular(5),
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end, // 右詰めに配置
+                      children: [
+                        GetCoinWidget(
+                          width: screenWidth * 0.2,
+                          height: screenWidth * 0.1,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -169,7 +179,6 @@ class Result extends ConsumerWidget {
                           );
                         },
                       );
-
                       // ユーザーが同意した場合にリワード広告をロードして表示
                       if (isAgreed) {
                         RewardAdLoader(ref: ref).loadAndShowRewardAd(context);

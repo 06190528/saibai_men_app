@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
 import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
-import 'package:saibai_men_app/common/userData.dart';
+import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';

@@ -4,7 +4,7 @@ import 'package:saibai_men_app/logic/directions.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/attackEnemyUi.dart';
 import 'package:saibai_men_app/ui/deathblowUi.dart';
-import 'package:saibai_men_app/ui/enemyUi.dart';
+import 'package:saibai_men_app/ui/gameEnemyUi.dart';
 import 'package:saibai_men_app/ui/kiUi.dart';
 import 'playerUi.dart';
 import 'worldUi.dart';

@@ -28,15 +28,16 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
     ref.read(showResultDialog.state).state = true;
-    ref.read(kiAudioProvider).stop();
     await ref.read(bgmAudioProvider).stop();
     ref.read(feverBgmProvider).stop();
-    ref.read(bgmAudioProvider).play('sounds/game_clear.mp3');
+    await ref.read(bgmAudioProvider).play('sounds/game_clear.mp3');
     ref.read(gameClearFlagProvider.state).state = true;
+    await getCoin();
+    print('gameClear');
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-    addUserNewMaxScoreToRankingListProvider(ref);
+    addUserNewMaxScoreToRankingListProviderAndGetUserRanking(ref);
   }
 
   Future<void> onGameOver() async {
@@ -49,14 +50,14 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
     ref.read(showResultDialog.state).state = true;
-    ref.read(kiAudioProvider).stop();
     await ref.read(bgmAudioProvider).stop();
     ref.read(feverBgmProvider).stop();
-    explosionAudio.play('sounds/explosion.mp3');
+    await explosionAudio.play('sounds/explosion.mp3');
+    await getCoin();
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-    addUserNewMaxScoreToRankingListProvider(
+    addUserNewMaxScoreToRankingListProviderAndGetUserRanking(
       ref,
     );
   }
@@ -96,7 +97,6 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).setLoop(false);
     await ref.read(bgmAudioProvider).stop();
     ref.read(pauseProvider.state).state = true;
-    ref.read(kiAudioProvider).stop();
     ref.read(feverBgmProvider).stop();
   }
 
@@ -106,7 +106,6 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).setLoop(true);
     await ref.read(bgmAudioProvider).resume();
     ref.read(pauseProvider.state).state = false;
-    ref.read(kiAudioProvider).resume();
     if (ref.read(feverFlagProvider.state).state)
       ref.read(feverBgmProvider).resume();
   }
@@ -115,7 +114,7 @@ class GameWidgetLogic {
     if (ref.read(gameModeProvider) == 1 &&
         ref.read(userMaxScoreProvider) < 50) {
       ref.watch(swipeFlagProvider.state).state = true;
-      await Future.delayed(const Duration(milliseconds: 3000));
+      await Future.delayed(const Duration(milliseconds: 2000));
       ref.watch(swipeFlagProvider.state).state = false;
     }
     ref.read(isGameActiveProvider.state).state = true;
@@ -127,6 +126,7 @@ class GameWidgetLogic {
     initializeGameModeProvider(ref, screenSize, dinoGame);
     ref.read(deathblowCountProvider.state).state = 1;
     ref.read(feverCountProvider.state).state = 0;
+    ref.read(enemyCounterProvider.state).state = 1000;
   }
 
   Future<void> activateSpecialMove() async {
@@ -165,7 +165,6 @@ class GameWidgetLogic {
     game.add(gameOverSprite);
     explosionAudio.play('sounds/explosion.mp3');
     print('defever');
-    ref.read(kiAudioProvider).stop();
     ref.read(feverCountProvider.state).state = 0;
     ref.read(feverFlagProvider.state).state = false;
     ref.read(feverBgmProvider).stop();
@@ -174,9 +173,25 @@ class GameWidgetLogic {
 
   void getItem() {
     ref.read(deathblowCountProvider.state).state++;
-    ref.read(getItemBgmProvider).setVolume(0.5);
-    ref.read(getItemBgmProvider).play('sounds/getItemSound.mp3');
     ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
+  }
+
+  Future<void> getCoin() async {
+    final enemyCount = ref.read(enemyCounterProvider);
+    final coin = (enemyCount / 100).floor();
+    ref.read(getCoinCountProvider.state).state =
+        ref.read(userDataProvider).coin;
+    final coinSound = Audio(); // 1つのインスタンスを作成
+
+    for (var i = 0; i < coin; i++) {
+      coinSound.play('sounds/getCoinSound.mp3');
+      await Future.delayed(Duration(milliseconds: 250)); // 0.2秒待つ
+      if (i != coin - 1) coinSound.stop();
+      ref.read(getCoinCountProvider.state).state++;
+    }
+    ref
+        .read(userDataProvider.notifier)
+        .updateUserCoinData(ref.read(getCoinCountProvider));
   }
 
   void resetAllProvider() {
@@ -194,7 +209,6 @@ class GameWidgetLogic {
     ref.read(feverFlagProvider.state).state = false;
     ref.read(deathblowCountProvider.state).state = 1;
     ref.read(isLoadingProvider.state).state = false;
-    ref.read(kiAudioProvider).stop();
     ref.read(gameClearFlagProvider.state).state = false;
     ref.read(feverCountProvider.state).state = 0;
     ref.read(feverBgmProvider).stop();

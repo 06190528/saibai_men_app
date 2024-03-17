@@ -21,7 +21,7 @@ class ScoreWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final actualWidth = width ?? MediaQuery.of(context).size.width;
-    final actualHeight = fontSize! * 2;
+    final actualHeight = fontSize! * 2.2;
     return Container(
       width: actualWidth,
       height: actualHeight,

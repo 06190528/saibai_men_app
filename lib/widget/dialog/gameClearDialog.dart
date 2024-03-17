@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/ad_helper.dart';
 import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
-import 'package:saibai_men_app/common/userData.dart';
+import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/logic/othersLogic.dart';
-import 'package:saibai_men_app/scene/titielWidget.dart';
+import 'package:saibai_men_app/scene/homeScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
@@ -16,6 +16,7 @@ import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/dialog/modeReleaseAnnounceDialog.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
+import 'package:saibai_men_app/widget/resultDialogWidget/getCoinWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
 
 class GameClearOrOverDialog extends ConsumerWidget {
@@ -26,6 +27,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
     final GameWidgetLogic gameWidgetLogic = GameWidgetLogic(context, ref);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    ref.watch(userDataProvider).coin;
     UserData userData = ref.watch(userDataProvider);
     bool isClear = ref.read(enemyCounterProvider) >= modeGoal(ref);
     String resultText = isClear
@@ -65,7 +67,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
             ),
           Positioned(
             top: screenHeight / 10,
-            width: screenWidth * 0.9,
+            width: screenWidth * 0.8,
             child: Dialog(
               insetPadding: const EdgeInsets.all(0),
               backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -79,13 +81,13 @@ class GameClearOrOverDialog extends ConsumerWidget {
                   children: [
                     DoubleText(
                       text: resultText,
-                      fontSize: 30,
+                      fontSize: screenWidth * 0.06,
                       insideColor: Color.fromARGB(255, 255, 192, 1),
                     ),
                     ScoreWidget(
                         text: Language().translationScore(userData.language),
                         width: screenWidth,
-                        fontSize: 30,
+                        fontSize: screenWidth * 0.06,
                         score: '${ref.watch(enemyCounterProvider)}',
                         color: const Color.fromARGB(255, 125, 124, 124),
                         borderRadius: const BorderRadius.only(
@@ -95,7 +97,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                     ScoreWidget(
                       text: Language().translationBestScore(userData.language),
                       width: screenWidth,
-                      fontSize: 20,
+                      fontSize: screenWidth * 0.04,
                       score: ref
                           .watch(userDataProvider)
                           .scoreList
@@ -106,6 +108,15 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         bottomLeft: Radius.circular(5),
                         bottomRight: Radius.circular(5),
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end, // 右詰めに配置
+                      children: [
+                        GetCoinWidget(
+                          width: screenWidth * 0.2,
+                          height: screenWidth * 0.1,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -124,7 +135,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         AdInterstitial().createAd();
                         await Future.delayed(const Duration(seconds: 1));
                       }
-                      if (ref.read(enemyCounterProvider) >= 100) {
+                      if (ref.read(enemyCounterProvider) >= 60) {
                         requestReview(context);
                         Navigator.of(context).pop();
                       }
@@ -188,13 +199,13 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         AdInterstitial().createAd();
                         await Future.delayed(const Duration(seconds: 1));
                       }
-                      if (ref.read(enemyCounterProvider) >= 100) {
+                      if (ref.read(enemyCounterProvider) >= 60) {
                         requestReview(context);
                       }
                       // ignore: use_build_context_synchronously
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => TitleScene()),
+                        MaterialPageRoute(builder: (context) => HomeScene()),
                       );
                       gameWidgetLogic.resetAllProvider();
                     },

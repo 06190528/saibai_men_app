@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/language.dart';
-import 'package:saibai_men_app/common/userData.dart';
+import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/provider.dart';
 
 class UserSettingsDialog extends ConsumerWidget {
@@ -72,11 +72,14 @@ class UserSettingsDialog extends ConsumerWidget {
             child: Text(Language().translationSave(userData.language)), //保存
             onPressed: () async {
               // userDataProviderを更新
-              ref.read(userDataProvider.notifier).state = UserData(
-                name: nameController.text,
-                language: ref.read(selectedLangageProvider),
-                scoreList: userData.scoreList, // 既存のスコアリストを保持
-              );
+              ref.read(userDataProvider.notifier).updateUserData(
+                  UserData(
+                      name: nameController.text,
+                      language: ref.read(selectedLangageProvider),
+                      scoreList: userData.scoreList,
+                      coin: userData.coin),
+                  ref);
+
               await UserDataService()
                   .saveUserDataToLocal(ref.read(userDataProvider).toMap());
               Navigator.of(context).pop();

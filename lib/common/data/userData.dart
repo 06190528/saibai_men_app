@@ -6,11 +6,13 @@ class UserData {
   String name;
   LanguageList language;
   List<int> scoreList;
+  int coin;
 
   UserData({
     required this.name,
     required this.scoreList,
     required this.language,
+    required this.coin,
   });
 
   factory UserData.fromMap(Map<String, dynamic> map) {
@@ -25,6 +27,7 @@ class UserData {
             )
           : LanguageList.Japan,
       scoreList: List<int>.from(map['scoreList'] ?? []),
+      coin: map['coin'] ?? 0,
     );
   }
 
@@ -33,6 +36,7 @@ class UserData {
       'name': name,
       'language': language.toString().split('.').last, // Enumを文字列に変換
       'scoreList': scoreList,
+      'coin': coin,
     };
   }
 }

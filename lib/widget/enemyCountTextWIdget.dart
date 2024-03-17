@@ -75,11 +75,11 @@ class EnemyCountText extends ConsumerWidget {
               ),
               Row(
                 children: [
-                  FeverBar(
+                  GaugeBar(
                     width: size.width * 0.3, // ゲージの全体の幅
                     height: size.width * 0.03, // ゲージの高さ
-                    currentEnemyCount: evolutionCounter.toDouble(), // 現在のHP
-                    feverCount: evolutionCount,
+                    currentGauge: evolutionCounter.toDouble(), // 現在のHP
+                    maxGauge: evolutionCount,
                   ),
                   Image.asset(
                     'assets/images/saiazinn.png', // アセットのパス

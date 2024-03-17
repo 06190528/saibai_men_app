@@ -5,8 +5,8 @@ import 'package:saibai_men_app/widget/dialog/gameModeSelectDialog.dart';
 import 'package:saibai_men_app/widget/dialog/settingDialog.dart';
 import 'package:saibai_men_app/widget/rankingCircleWidget.dart';
 
-class TitleScene extends ConsumerWidget {
-  TitleScene({Key? key}) : super(key: key);
+class HomeScene extends ConsumerWidget {
+  HomeScene({Key? key}) : super(key: key);
 
   // 初回のみ実行するフラグ
   bool _initialized = false;
@@ -18,16 +18,10 @@ class TitleScene extends ConsumerWidget {
     final showGameModeSelectDialog =
         ref.watch(showGameModeSelectDialogProvider);
     if (!_initialized) {
-      saveUserDataFromLocalToProvider(ref);
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        print('buildメソッドの完了後に実行される');
-        // buildメソッドの完了後に実行される
         showUserSettingsDialog(ref, context);
-        getAndSaveRankingDataFromIFirebaseToProvider(ref);
-        addUserNewMaxScoreToRankingListProvider(ref);
       });
-      _initialized = true; // 初期化が完了したことをマーク
+      _initialized = true;
     }
     return Scaffold(
       body: Stack(
@@ -39,13 +33,12 @@ class TitleScene extends ConsumerWidget {
               height: size.height,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/titleScene.png'),
+                  image: AssetImage('assets/images/titleScene.jpg'),
                   fit: BoxFit.cover, // 背景全体に画像を表示
                 ),
               ),
             ),
           ),
-          // if (showGameModeSelectDialog) ...[
           GameModeSelectDialog(),
           Positioned(
             top: size.height * 0.15,

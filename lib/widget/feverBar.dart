@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 
-class FeverBar extends StatelessWidget {
-  final double width; // ゲージの全体の幅
-  final double height; // ゲージの高さ
-  final double currentEnemyCount; // 現在のHP
-  final double feverCount; // 最大HP
+class GaugeBar extends StatelessWidget {
+  final double width;
+  final double height;
+  final double currentGauge;
+  final double maxGauge;
 
-  const FeverBar({
+  const GaugeBar({
     Key? key,
     required this.width,
     required this.height,
-    required this.currentEnemyCount,
-    required this.feverCount,
+    required this.currentGauge,
+    required this.maxGauge,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final double ratio = currentEnemyCount / feverCount > 1.0
-        ? 1.0
-        : currentEnemyCount / feverCount;
+    final double ratio =
+        currentGauge / maxGauge > 1.0 ? 1.0 : currentGauge / maxGauge;
 
     return Container(
       width: width,

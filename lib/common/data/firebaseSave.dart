@@ -6,8 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/ranking.dart';
-import 'package:saibai_men_app/common/userData.dart';
-import 'package:saibai_men_app/scene/rankingScene.dart';
+import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/dialog/settingDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,14 +65,11 @@ Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userDataString = prefs.getString('user_data');
   if (userDataString != null) {
-    // JSON文字列をMapに変換
     Map<String, dynamic> userDataMap = json.decode(userDataString);
-    // MapをUserDataに変換
     UserData userData = UserData.fromMap(userDataMap);
-    // userDataProviderにデータを設定
     ref.read(userDataProvider.notifier).updateUserData(userData, ref);
-    print(ref.read(userDataProvider).scoreList);
   }
+  ref.read(loadingProgressProvider.state).state += 30;
 }
 
 Future<void> initializeUserData() async {
@@ -86,14 +82,16 @@ Future<void> initializeUserData() async {
         name: '',
         scoreList: [],
         language: LanguageList.Japan,
+        coin: 0,
       );
-      await UserDataService().saveUserDataToLocal(userData.toMap());
-      await setUserDataToIFirebase(userData);
+      UserDataService().saveUserDataToLocal(userData.toMap());
+      setUserDataToIFirebase(userData);
     }
   }
 }
 
 Future<void> setUserDataToIFirebase(UserData? userData) async {
+  print('setUserDataToIFirebase');
   String userId = await UserDataService().getUserId();
   if (userData != null) {
     await FirebaseFirestore.instance
@@ -108,8 +106,10 @@ Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
   ref.read(isLoadingProvider.notifier).state = true; // ローディング開始
   DocumentSnapshot<Map<String, dynamic>> ranking =
       await FirebaseFirestore.instance.collection('ranking').doc('1').get();
-
-  for (int i = 0; i < ranking.data()!['ranking'].length; i++) {
+  ref.read(loadingProgressProvider.state).state += 30;
+  final rankingLength = ranking.data()!['ranking'].length;
+  for (int i = 0; i < rankingLength; i++) {
+    await Future.delayed(Duration.zero);
     var name = ranking.data()!['ranking'][i]['name'];
     var maxScore = ranking.data()!['ranking'][i]['maxScore'];
     var id = ranking.data()!['ranking'][i]['id'];
@@ -119,7 +119,8 @@ Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
         .add(Ranking(name: name, maxScore: maxScore, id: id));
   }
   ref.read(isLoadingProvider.notifier).state = false; // ローディング終了
-  addUserNewMaxScoreToRankingListProvider(ref);
+  ref.read(loadingProgressProvider.state).state += 30;
+  await addUserNewMaxScoreToRankingListProviderAndGetUserRanking(ref);
 }
 
 Future<void> showUserSettingsDialog(WidgetRef ref, BuildContext context) async {
@@ -134,13 +135,14 @@ Future<void> showUserSettingsDialog(WidgetRef ref, BuildContext context) async {
   }
 }
 
-Future<void> addUserNewMaxScoreToRankingListProvider(
+Future<void> addUserNewMaxScoreToRankingListProviderAndGetUserRanking(
   WidgetRef ref,
 ) async {
   final newMaxScore = ref.read(userMaxScoreProvider);
   List<Ranking> rankingList = ref.read(rankingListProvider.notifier).state;
   final userId = await UserDataService().getUserId();
   final userRank = rankingList.indexWhere((element) => element.id == userId);
+  ref.read(userRankingProvider.notifier).state = userRank;
   if (userRank != -1) {
     if (rankingList[userRank].maxScore < newMaxScore) {
       rankingList[userRank].maxScore = newMaxScore;
@@ -148,5 +150,5 @@ Future<void> addUserNewMaxScoreToRankingListProvider(
       ref.read(rankingListProvider.notifier).state = rankingList;
     }
   }
-  getUserRanking(ref);
+  ref.read(loadingProgressProvider.state).state += 10;
 }
