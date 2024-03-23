@@ -4,10 +4,10 @@ import 'package:flame/flame.dart' as Flame;
 import 'package:saibai_men_app/ui/gameEnemyUi.dart';
 
 class Character extends SpriteAnimationComponent with HasGameRef {
-  int enemyKind;
+  int catKind;
   double length;
 
-  Character(this.enemyKind, this.length) {
+  Character(this.catKind, this.length) {
     this.size = size;
   }
 
@@ -15,9 +15,9 @@ class Character extends SpriteAnimationComponent with HasGameRef {
   Future<void> onLoad() async {
     super.onLoad();
     final spriteSheetImage =
-        await Flame.Flame.images.load('cats_memes_$enemyKind.png');
+        await Flame.Flame.images.load('characters/cats_memes_$catKind.png');
     final EnemySpriteDetails enemySpriteDetails =
-        await getEnemySpriteDetails(enemyKind, spriteSheetImage);
+        await getEnemySpriteDetails(catKind, spriteSheetImage);
     final double spriteHeight = enemySpriteDetails.spriteHeight;
     final double spriteWidth = enemySpriteDetails.spriteWidth;
 

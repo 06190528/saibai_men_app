@@ -16,7 +16,7 @@ import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/dialog/modeReleaseAnnounceDialog.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
-import 'package:saibai_men_app/widget/resultDialogWidget/getCoinWidget.dart';
+import 'package:saibai_men_app/widget/showCoinWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
 
 class GameClearOrOverDialog extends ConsumerWidget {
@@ -112,7 +112,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end, // 右詰めに配置
                       children: [
-                        GetCoinWidget(
+                        ShowCoinWidget(
                           width: screenWidth * 0.2,
                           height: screenWidth * 0.1,
                         ),
@@ -149,37 +149,10 @@ class GameClearOrOverDialog extends ConsumerWidget {
                     BannerButton(
                       text: Language().translationContinue(userData.language),
                       onPressed: () async {
-                        final bool isAgreed = await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                Language().translationWatchAdToContinue(
-                                    userData.language),
-                                style: TextStyle(fontSize: screenWidth * 0.05),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text(Language()
-                                      .translationNo(userData.language)),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text(Language()
-                                      .translationYes(userData.language)),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
+                        GameWidgetLogic(context, ref).watchRewardAd(
+                          screenWidth,
+                          () => GameWidgetLogic(context, ref).continueGame(),
                         );
-                        if (isAgreed) {
-                          RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
-                        }
                       },
                       width: screenWidth * 0.6,
                       icon: Icons.refresh_outlined,

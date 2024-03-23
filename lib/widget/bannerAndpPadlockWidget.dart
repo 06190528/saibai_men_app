@@ -35,7 +35,6 @@ class BannerAndPadlockWidget extends ConsumerWidget {
                         GameScene(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
-                      // ここでトランジションアニメーションを定義します。
                       return FadeTransition(opacity: animation, child: child);
                     },
                   ),

@@ -10,7 +10,7 @@ final dinoGameProvider =
   return DinoGameNotifier();
 });
 
-final showResultDialog = StateProvider<bool>((ref) => false);
+final showResultDialogProvider = StateProvider<bool>((ref) => false);
 final isGameActiveProvider = StateProvider<bool>((ref) => false);
 final createStartButtonFlag = StateProvider<bool>((ref) => true);
 final pauseProvider = StateProvider<bool>((ref) => false);
@@ -58,13 +58,12 @@ class UserDataNotifier extends StateNotifier<UserData> {
   LanguageList get name => state.language;
 
   void updateUserCoinData(int coin) {
-    print('updateUserCoinData');
+    print('coin: $coin');
     state = UserData(
         name: state.name,
         scoreList: state.scoreList,
         language: state.language,
         coin: coin);
-    print('updateUserCoinData: ${state.coin}');
   }
 }
 

@@ -59,5 +59,4 @@ void setGameModeToProvider(WidgetRef ref, String text) {
   } else if (text == Language().translationHard(userData.language)) {
     ref.read(gameModeProvider.state).state = 2;
   }
-  print('gameModeProvider: ${ref.read(gameModeProvider.state).state}');
 }

@@ -35,7 +35,8 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
     var random = math.Random();
     super.onLoad();
     int num = random.nextInt(enemyKinds);
-    Image spriteSheetImage = await Flame.images.load('cats_memes_$num.png');
+    Image spriteSheetImage =
+        await Flame.images.load('characters/cats_memes_$num.png');
     final EnemySpriteDetails enemySpriteDetails =
         await getEnemySpriteDetails(num, spriteSheetImage);
     final double spriteHeight = enemySpriteDetails.spriteHeight;
@@ -173,7 +174,7 @@ Future<EnemySpriteDetails> getEnemySpriteDetails(
       columnCount = 50;
       rowCount = 4;
       stepTime = 0.03;
-      spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
+      spriteHeight = spriteSheetImage.height.toDouble() / rowCount + 0.0001;
       spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
       to = columnCount * rowCount - 40;
       break;

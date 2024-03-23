@@ -79,7 +79,7 @@ class PauseWidget extends ConsumerWidget {
                     text: Language().translationRestart(userData.language),
                     onPressed: () {
                       ref.read(dinoGameProvider.notifier).reset();
-                      ref.read(showResultDialog.state).state = false;
+                      ref.read(showResultDialogProvider.state).state = false;
                       ref.read(enemyCounterProvider.state).state = 0;
                       ref.read(isGameActiveProvider.state).state = false;
                       ref.read(createStartButtonFlag.state).state = true;

@@ -1,18 +1,13 @@
 import 'package:flame/components.dart';
 
 class CharacterFiledBackGround extends SpriteComponent with HasGameRef {
-  double speed = 0; // 秒速100単位で移動
-  late SpriteComponent background1;
-  late SpriteComponent background2;
+  String backgroundPath;
 
-  void updateSpeed(double newSpeed) {
-    speed = newSpeed;
-  }
-
+  CharacterFiledBackGround({required this.backgroundPath});
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    sprite = await gameRef.loadSprite('titleScene.jpg');
+    sprite = await gameRef.loadSprite('background.png');
     size = sprite!.originalSize;
     size = gameRef.size;
   }

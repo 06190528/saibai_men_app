@@ -10,11 +10,10 @@ import 'package:saibai_men_app/scene/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
-import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
-import 'package:saibai_men_app/widget/resultDialogWidget/getCoinWidget.dart';
+import 'package:saibai_men_app/widget/showCoinWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/scoreWidget.dart';
 
 class Result extends ConsumerWidget {
@@ -113,9 +112,10 @@ class Result extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end, // 右詰めに配置
                       children: [
-                        GetCoinWidget(
+                        ShowCoinWidget(
                           width: screenWidth * 0.2,
                           height: screenWidth * 0.1,
+                          addPlusButton: false,
                         ),
                       ],
                     ),
@@ -149,40 +149,10 @@ class Result extends ConsumerWidget {
                   BannerButton(
                     text: Language().translationContinue(userData.language),
                     onPressed: () async {
-                      // 同意ダイアログを表示
-                      final bool isAgreed = await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              Language().translationWatchAdToContinue(
-                                  userData.language),
-                              style: TextStyle(fontSize: screenWidth * 0.05),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text(Language()
-                                    .translationNo(userData.language)),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(false); // ユーザーが同意しない
-                                },
-                              ),
-                              TextButton(
-                                child: Text(Language()
-                                    .translationYes(userData.language)),
-                                onPressed: () {
-                                  Navigator.of(context).pop(true); // ユーザーが同意する
-                                },
-                              ),
-                            ],
-                          );
-                        },
+                      GameWidgetLogic(context, ref).watchRewardAd(
+                        screenWidth,
+                        () => GameWidgetLogic(context, ref).continueGame(),
                       );
-                      // ユーザーが同意した場合にリワード広告をロードして表示
-                      if (isAgreed) {
-                        RewardAdLoader(ref: ref).loadAndShowRewardAd(context);
-                      }
                     },
                     width: screenWidth * 0.6,
                     icon: Icons.refresh_outlined,

@@ -14,7 +14,7 @@ class CustomIconButton extends StatelessWidget {
     required this.icon,
     this.backgroundColor = const Color.fromARGB(255, 255, 212, 82),
     this.foregroundColor = Colors.white,
-    this.iconSize = 24.0,
+    required this.iconSize,
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     required this.borderRadius,
     Key? key,
@@ -29,14 +29,14 @@ class CustomIconButton extends StatelessWidget {
         borderRadius: borderRadius, // 角を丸める
         border: Border.all(
           color: Colors.black, // 枠線の色
-          width: 1, // 枠線の太さ
+          width: iconSize * 0.1, // 枠線の太さ
         ),
       ),
       child: InkWell(
-        onTap: onPressed, // ボタンが押されたときの処理
-        borderRadius: borderRadius, // InkWellの角を丸める
+        onTap: onPressed,
+        borderRadius: borderRadius,
         child: Padding(
-          padding: EdgeInsets.all(iconSize / 4), // 内側の余白
+          padding: EdgeInsets.all(iconSize / 4),
           child: Icon(
             icon,
             color: foregroundColor,

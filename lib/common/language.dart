@@ -257,9 +257,9 @@ class Language {
       case LanguageList.USA:
         return 'Would you like to watch an ad to continue?';
       case LanguageList.Japan:
-        return '広告を視聴してコンティニューしますか？';
+        return '広告を視聴して報酬を受け取りますか？';
       default:
-        return 'Would you like to watch an ad to continue?';
+        return 'Would you like to watch an ad to receive a reward?';
     }
   }
 
@@ -326,6 +326,28 @@ class Language {
         return '位';
       default:
         return 'Place';
+    }
+  }
+
+  String translationTouch(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Touch';
+      case LanguageList.Japan:
+        return 'タッチ';
+      default:
+        return 'Touch';
+    }
+  }
+
+  String translationNotEnoughCoins(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Not enough coins';
+      case LanguageList.Japan:
+        return 'コインが足りません';
+      default:
+        return 'Not enough coins';
     }
   }
 }

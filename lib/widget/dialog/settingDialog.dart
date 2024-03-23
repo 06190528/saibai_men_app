@@ -12,14 +12,11 @@ class UserSettingsDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    // ユーザーデータを取得
     UserData userData = ref.watch(userDataProvider);
 
-    // TextEditingControllerを作成して、初期値を設定
     TextEditingController nameController =
         TextEditingController(text: userData.name);
 
-    // 現在選択されている言語をStateProviderで管理
     final selectedLangageProvider =
         StateProvider<LanguageList>((ref) => userData.language);
 
@@ -63,7 +60,7 @@ class UserSettingsDialog extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            child: const Text('キャンセル'),
+            child: Text(Language().translationCancel(userData.language)),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -71,7 +68,6 @@ class UserSettingsDialog extends ConsumerWidget {
           TextButton(
             child: Text(Language().translationSave(userData.language)), //保存
             onPressed: () async {
-              // userDataProviderを更新
               ref.read(userDataProvider.notifier).updateUserData(
                   UserData(
                       name: nameController.text,

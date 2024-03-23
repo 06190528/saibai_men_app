@@ -27,7 +27,7 @@ class GameScene extends ConsumerWidget {
       body: Stack(
         children: [
           GameWidgetArea(),
-          if (ref.watch(showResultDialog)) ...[
+          if (ref.watch(showResultDialogProvider)) ...[
             if (gameMode == 2) ...[
               Container(
                 child: const Result(),

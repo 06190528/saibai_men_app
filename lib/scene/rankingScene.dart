@@ -12,6 +12,10 @@ class RankingWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Ranking> rankingList = ref.watch(rankingListProvider.notifier).state;
+    if (rankingList.isEmpty) {
+      Navigator.of(context).pop();
+    }
     final userRanking = ref.watch(userRankingProvider);
     final isLoading = ref.watch(isLoadingProvider); // ローディング状態を監視
     return Scaffold(

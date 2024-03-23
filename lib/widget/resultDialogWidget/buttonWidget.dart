@@ -31,7 +31,7 @@ class BannerButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10), // 角丸設定
         border: Border.all(
           color: Colors.black, // 枠線の色
-          width: 2, // 枠線の太さ
+          width: actualHeight * 0.05, // 枠線の太さ
         ),
       ),
       child: ElevatedButton(

@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/firebase_options.dart';
-import 'package:saibai_men_app/scene/titleScene.dart';
+import 'package:saibai_men_app/scene/homeScene.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +18,15 @@ void main() async {
   MobileAds.instance.initialize();
   initializeUserData();
 
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     ProviderScope(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: TitleScene(),
+        home: HomeScene(),
       ),
     ),
   );

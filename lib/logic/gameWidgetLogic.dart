@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
+import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/logic/audio.dart';
 import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/explosionUi.dart';
 import 'package:saibai_men_app/ui/gameUi.dart';
+import 'package:saibai_men_app/widget/adwidget/rewardAdWidget.dart';
 
 class GameWidgetLogic {
   WidgetRef ref;
@@ -27,13 +29,12 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).setLoop(false);
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
-    ref.read(showResultDialog.state).state = true;
+    ref.read(showResultDialogProvider.state).state = true;
     await ref.read(bgmAudioProvider).stop();
     ref.read(feverBgmProvider).stop();
     await ref.read(bgmAudioProvider).play('sounds/game_clear.mp3');
     ref.read(gameClearFlagProvider.state).state = true;
-    await getCoin();
-    print('gameClear');
+    await getCoin((ref.read(enemyCounterProvider) / 100).floor());
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
@@ -49,11 +50,11 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).setLoop(false);
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
-    ref.read(showResultDialog.state).state = true;
+    ref.read(showResultDialogProvider.state).state = true;
     await ref.read(bgmAudioProvider).stop();
     ref.read(feverBgmProvider).stop();
     await explosionAudio.play('sounds/explosion.mp3');
-    await getCoin();
+    await getCoin((ref.read(enemyCounterProvider) / 100).floor());
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
@@ -126,7 +127,7 @@ class GameWidgetLogic {
     initializeGameModeProvider(ref, screenSize, dinoGame);
     ref.read(deathblowCountProvider.state).state = 1;
     ref.read(feverCountProvider.state).state = 0;
-    ref.read(enemyCounterProvider.state).state = 1000;
+    ref.read(enemyCounterProvider.state).state = 500;
   }
 
   Future<void> activateSpecialMove() async {
@@ -145,7 +146,7 @@ class GameWidgetLogic {
     ref.read(usedContinueProvider.state).state = true;
     game.startGame();
     ref.read(isGameActiveProvider.state).state = true;
-    ref.read(showResultDialog.state).state = false;
+    ref.read(showResultDialogProvider.state).state = false;
     game.updateSpeed(ref.read(speedProvider), ref);
     ref.read(bgmAudioProvider).setLoop(true);
     await ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
@@ -157,7 +158,6 @@ class GameWidgetLogic {
     game.fever();
     ref.read(feverBgmProvider).play('sounds/fever_bgm.mp3');
     ref.read(feverBgmProvider).setLoop(true);
-    print('feverFlagProvider.state: ${ref.read(feverFlagProvider.state)}');
   }
 
   void deFever() {
@@ -176,9 +176,7 @@ class GameWidgetLogic {
     ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
   }
 
-  Future<void> getCoin() async {
-    final enemyCount = ref.read(enemyCounterProvider);
-    final coin = (enemyCount / 100).floor();
+  Future<void> getCoin(int coin) async {
     ref.read(getCoinCountProvider.state).state =
         ref.read(userDataProvider).coin;
     final coinSound = Audio(); // 1つのインスタンスを作成
@@ -192,11 +190,13 @@ class GameWidgetLogic {
     ref
         .read(userDataProvider.notifier)
         .updateUserCoinData(ref.read(getCoinCountProvider));
+    await UserDataService()
+        .saveUserDataToLocal(ref.read(userDataProvider).toMap());
   }
 
   void resetAllProvider() {
     ref.read(dinoGameProvider.notifier).reset();
-    ref.read(showResultDialog.state).state = false;
+    ref.read(showResultDialogProvider.state).state = false;
     ref.read(enemyCounterProvider.state).state = 0;
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(createStartButtonFlag.state).state = true;
@@ -212,5 +212,44 @@ class GameWidgetLogic {
     ref.read(gameClearFlagProvider.state).state = false;
     ref.read(feverCountProvider.state).state = 0;
     ref.read(feverBgmProvider).stop();
+  }
+
+  Future<void> watchRewardAd(
+      double screenWidth, Future<void> Function() rewardFunction) async {
+    final userData = ref.watch(userDataProvider);
+    final bool isAgreed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            Language().translationWatchAdToContinue(userData.language),
+            style: TextStyle(fontSize: screenWidth * 0.25),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                Language().translationNo(userData.language),
+                style: TextStyle(fontSize: screenWidth * 0.25),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text(
+                Language().translationYes(userData.language),
+                style: TextStyle(fontSize: screenWidth * 0.25),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    if (isAgreed) {
+      RewardAdLoader(ref: ref).loadAndShowRewardAd(context, rewardFunction);
+    }
   }
 }

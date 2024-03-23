@@ -1,7 +1,7 @@
 name: saibai_men_app
 description: A new Flutter project.
 publish_to: "none"
-version: 2.1.8+10
+version: 2.2.0+10
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -27,7 +27,6 @@ dependencies:
   webview_flutter: ^4.4.4
   animated_text_kit: ^4.2.2
   rate_my_app: ^2.0.0
-  flutter_flame_sandbox: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +41,7 @@ flutter:
   #       - asset: assets/fonts/custom_font.ttf
   assets:
     - assets/images/
+    - assets/images/characters/
     - assets/sounds/
 flutter_launcher_icons:
   image_path: "assets/images/icon.png"
