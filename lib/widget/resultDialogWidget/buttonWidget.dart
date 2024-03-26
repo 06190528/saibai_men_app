@@ -64,12 +64,6 @@ class BannerButton extends StatelessWidget {
                 insideColor: Colors.white,
               ),
             ),
-            // Text(
-            //   'Custom Font Text',
-            //   style: TextStyle(
-            //     fontFamily: 'CustomFont',
-            //   ),
-            // ),
           ],
         ),
       ),

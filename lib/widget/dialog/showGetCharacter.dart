@@ -19,7 +19,7 @@ class ShowGetCharacter extends ConsumerWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.pop(context);
-          ref.read(onTapedProvider.state).state = false;
+          ref.read(onTapedGatyaScreenProvider.state).state = false;
         },
         child: Material(
           type: MaterialType.transparency,

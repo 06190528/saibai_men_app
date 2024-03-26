@@ -113,6 +113,7 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         ShowCoinWidget(
                           width: screenWidth * 0.2,
                           height: screenWidth * 0.1,
+                          canTap: false,
                         ),
                       ],
                     ),

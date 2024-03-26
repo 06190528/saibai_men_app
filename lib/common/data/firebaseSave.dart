@@ -104,6 +104,8 @@ Future<void> setUserDataToIFirebase(UserData? userData) async {
 }
 
 Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
+  print('getAndSaveRankingDataFromIFirebaseToProvider');
+  ref.read(rankingListProvider.notifier).state = [];
   DocumentSnapshot<Map<String, dynamic>> ranking =
       await FirebaseFirestore.instance.collection('ranking').doc('1').get();
   final rankingLength = ranking.data()!['ranking'].length;

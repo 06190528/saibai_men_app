@@ -45,10 +45,11 @@ class HomeScene extends ConsumerWidget {
     if (!_initialized) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await saveUserDataFromLocalToProvider(ref);
+        await showUserSettingsDialog(ref, context);
+        await Future.delayed(const Duration(milliseconds: 1));
         if (isReleaseMode) {
           await getAndSaveRankingDataFromIFirebaseToProvider(ref);
         }
-        showUserSettingsDialog(ref, context);
       });
       _initialized = true;
     }
@@ -159,7 +160,7 @@ class HomeScene extends ConsumerWidget {
                                         const EdgeInsets.all(1), // 適切なパディングを設定
                                     child: DoubleText(
                                       text:
-                                          Language().translationGacha(language),
+                                          Language().translationGatya(language),
                                       fontSize: characterSize * 0.2,
                                       insideColor:
                                           Color.fromARGB(255, 255, 192, 1),

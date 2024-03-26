@@ -6,50 +6,51 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/logic/audio.dart';
+import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/characterFiled.dart';
 import 'package:saibai_men_app/widget/dialog/showGetCharacter.dart';
+import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/showCoinWidget.dart';
 import 'dart:math' as math;
 
-final onTapedProvider = StateProvider<bool>((ref) => false);
+final onTapedGatyaScreenProvider = StateProvider<bool>((ref) => false);
+final onTapedGatyaButtonProvider = StateProvider<bool>((ref) => false);
 
 class GatyaScene extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onTaped = ref.watch(onTapedProvider);
+    final onTaped = ref.watch(onTapedGatyaScreenProvider);
     final size = MediaQuery.of(context).size;
     final language = ref.watch(userDataProvider.notifier).state.language;
     final coinCount = ref.watch(getCoinCountProvider);
-    final touchAvailable = coinCount >= 50;
+    final touchAvailable = coinCount >= gaytaOnceCoin;
     final animetionText = touchAvailable
         ? Language().translationTouch(language)
         : Language().translationNotEnoughCoins(language);
     final left = touchAvailable ? size.width * 0.30 : size.width * 0.05;
+    final onTapedGatyaButton = ref.watch(onTapedGatyaButtonProvider);
     final CharacterField characterField = CharacterField();
     characterField.addBackground('titleScene.jpg');
     characterField.addGatya(
         size.height / 2, Vector2(size.width / 2, size.height / 2), onTaped);
     Audio sound = Audio();
     return Scaffold(
-      body: GestureDetector(
-        onTap: () async {
-          if (!onTaped) {
-            onPressedGatya(context, ref, sound);
-          }
-        },
-        child: Stack(
-          children: [
-            Center(
-              child: GameWidget(
-                game: characterField,
-              ),
+      body: Stack(
+        children: [
+          Center(
+            child: GameWidget(
+              game: characterField,
             ),
-            Positioned(
-                top: size.height * 0.05,
-                right: size.width * 0.05,
-                child: ShowCoinWidget(
-                    width: size.width * 0.2, height: size.height * 0.07)),
+          ),
+          if (onTapedGatyaButton) ...[
+            if (ref.watch(isLoadingProvider)) ...[
+              Positioned(
+                bottom: size.height * 0.5, // 下から10%の位置に配置
+                right: size.width * 0.5,
+                child: const CircularProgressIndicator(),
+              )
+            ],
             if (!onTaped)
               Positioned(
                 top: size.height * 0.5,
@@ -78,15 +79,62 @@ class GatyaScene extends ConsumerWidget {
                   ],
                 ),
               ),
-            if (ref.watch(isLoadingProvider)) ...[
-              Positioned(
-                bottom: size.height * 0.5, // 下から10%の位置に配置
-                right: size.width * 0.5,
-                child: const CircularProgressIndicator(),
-              )
-            ],
+            GestureDetector(
+              onTap: () async {
+                if (!onTaped) {
+                  onPressedGatya(context, ref, sound);
+                }
+              },
+            ),
           ],
-        ),
+          if (!onTapedGatyaButton) ...[
+            Positioned(
+              left: size.width * 0.15,
+              bottom: size.height * 0.1,
+              child: Column(
+                children: [
+                  BannerButton(
+                    text: Language().translationGatyaByCoins(language),
+                    onPressed: () {
+                      ref.read(onTapedGatyaButtonProvider.state).state = true;
+                    },
+                    width: size.width * 0.7,
+                    icon: Icons.monetization_on,
+                  ),
+                  SizedBox(height: size.height * 0.05),
+                  BannerButton(
+                    text: Language().translationGetCoins(language),
+                    onPressed: () {
+                      GameWidgetLogic(context, ref).watchRewardAd(
+                          size.width * 0.05,
+                          () => GameWidgetLogic(context, ref)
+                              .getCoin(gaytaOnceCoin * 2));
+                    },
+                    width: size.width * 0.7,
+                    icon: Icons.ad_units,
+                  ),
+                ],
+              ),
+            ),
+            // Positioned(
+            //   bottom: size.height * 0.05,
+            //   left: size.width * 0.05,
+            //   child: BannerButton(
+            //     text: '',
+            //     onPressed: () {
+            //       Navigator.pop(context);
+            //     },
+            //     width: size.width * 0.1,
+            //     icon: Icons.arrow_back,
+            //   ),
+            // ),
+          ],
+          Positioned(
+              top: size.height * 0.05,
+              right: size.width * 0.05,
+              child: ShowCoinWidget(
+                  width: size.width * 0.2, height: size.height * 0.07)),
+        ],
       ),
     );
   }
@@ -95,14 +143,14 @@ class GatyaScene extends ConsumerWidget {
 Future<void> onPressedGatya(
     BuildContext context, WidgetRef ref, Audio sound) async {
   final coinCount = ref.watch(getCoinCountProvider);
-  if (coinCount < 50) {
+  if (coinCount < gaytaOnceCoin) {
     return;
   }
   sound.play('sounds/gatyaSound.mp3');
-  ref.read(onTapedProvider.state).state = true;
+  ref.read(onTapedGatyaScreenProvider.state).state = true;
   math.Random random = math.Random();
   final randamNumber = random.nextInt(lastCharacterIndex + 1);
-  ref.read(getCoinCountProvider.state).state -= 50;
+  ref.read(getCoinCountProvider.state).state -= gaytaOnceCoin;
   ref
       .read(userDataProvider.notifier)
       .updateUserCoinData(ref.read(getCoinCountProvider.state).state);

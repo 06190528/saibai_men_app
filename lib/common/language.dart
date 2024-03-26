@@ -362,7 +362,7 @@ class Language {
     }
   }
 
-  String translationGacha(LanguageList language) {
+  String translationGatya(LanguageList language) {
     switch (language) {
       case LanguageList.USA:
         return 'Gacha';
@@ -370,6 +370,28 @@ class Language {
         return 'ガチャ';
       default:
         return 'Gacha';
+    }
+  }
+
+  String translationGatyaByCoins(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Gacha by coins';
+      case LanguageList.Japan:
+        return '10コインでガチャ';
+      default:
+        return 'Gacha by 10 coins';
+    }
+  }
+
+  String translationGetCoins(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Get Coins';
+      case LanguageList.Japan:
+        return 'コインを獲得する';
+      default:
+        return 'Get Coins';
     }
   }
 }

@@ -116,7 +116,7 @@ class Result extends ConsumerWidget {
                         ShowCoinWidget(
                           width: screenWidth * 0.2,
                           height: screenWidth * 0.1,
-                          addPlusButton: false,
+                          canTap: false,
                         ),
                       ],
                     ),

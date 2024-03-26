@@ -187,6 +187,10 @@ class GameWidgetLogic {
     ref.read(getCoinCountProvider.state).state =
         ref.read(userDataProvider).coin;
     final coinSound = Audio(); // 1つのインスタンスを作成
+    if (coin > 5) {
+      ref.read(getCoinCountProvider.state).state = coin - 5;
+      coin = 5;
+    }
 
     for (var i = 0; i < coin; i++) {
       coinSound.play('sounds/getCoinSound.mp3');
