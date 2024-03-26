@@ -6,6 +6,7 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
+import 'package:saibai_men_app/logic/othersLogic.dart';
 import 'package:saibai_men_app/scene/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
@@ -127,19 +128,26 @@ class Result extends ConsumerWidget {
           Positioned(
             bottom: screenHeight * 0.1, // 下から10%の位置に配置
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 BannerButton(
                   text: Language().translationRestart(userData.language),
                   onPressed: () async {
                     if (userData.scoreList.length % 5 == 4) {
-                      AdInterstitial().createAd();
-                      await Future.delayed(const Duration(seconds: 1));
+                      ref.read(isLoadingProvider.state).state = true;
+                      await AdInterstitial().createAd(
+                          ref,
+                          () => {
+                                Navigator.of(context).pop(),
+                                gameWidgetLogic.resetAllProvider(),
+                              });
+                    } else {
+                      if (ref.read(enemyCounterProvider) >= 60) {
+                        requestReview(context);
+                        Navigator.of(context).pop();
+                      }
+                      gameWidgetLogic.resetAllProvider();
                     }
-                    if (userData.scoreList.length % 50 == 6 &&
-                        ref.read(enemyCounterProvider) >= 100) {
-                      Navigator.of(context).pop();
-                    }
-                    gameWidgetLogic.resetAllProvider();
                   },
                   width: screenWidth * 0.6,
                   icon: Icons.replay,
@@ -150,7 +158,7 @@ class Result extends ConsumerWidget {
                     text: Language().translationContinue(userData.language),
                     onPressed: () async {
                       GameWidgetLogic(context, ref).watchRewardAd(
-                        screenWidth,
+                        screenWidth * 0.05,
                         () => GameWidgetLogic(context, ref).continueGame(),
                       );
                     },

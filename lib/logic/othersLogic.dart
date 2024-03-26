@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 
 Future<void> requestReview(BuildContext context) async {
-  print('requestReview');
-
   // RateMyAppインスタンスを指定された条件で初期化
   final RateMyApp rateMyApp = RateMyApp(
     preferencesPrefix: 'rateMyApp_',

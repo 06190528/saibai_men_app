@@ -6,6 +6,7 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/ui/gameUi.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/deathBlowWidget.dart';
 import 'package:saibai_men_app/widget/enemyCountTextWIdget.dart';
@@ -54,26 +55,23 @@ class GameScene extends ConsumerWidget {
                 child: Column(
                   children: [
                     if (ref.watch(deathblowCountProvider) >= 1) ...[
-                      SizedBox(
-                        width: size.width * 0.2,
-                        height: size.width * 0.25,
-                        child: Column(
-                          children: [
-                            Center(
-                              child: DeathBlowWidget(
-                                  onActivateSpecialMove:
-                                      gameWidgetLogic.activateSpecialMove),
-                            ),
-                            if (gameMode == 1 && userMaxScore < 50) ...[
+                      if (gameMode == 1 && userMaxScore < 50) ...[
+                        SizedBox(
+                          width: size.width * 0.15,
+                          height: size.width * 0.05,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
                               AnimatedTextKit(
-                                pause: const Duration(milliseconds: 0),
+                                pause: const Duration(milliseconds: 100),
                                 repeatForever: true, // アニメーションを無限に繰り返す
                                 isRepeatingAnimation: true,
                                 animatedTexts: [
                                   ScaleAnimatedText(
-                                    'touch!!',
+                                    Language()
+                                        .translationTouch(userData.language),
                                     textStyle: TextStyle(
-                                      fontSize: size.width * 0.05, // フォントサイズ
+                                      fontSize: size.width * 0.035, // フォントサイズ
                                       fontWeight: FontWeight.bold, // フォントの太さ
                                       fontStyle:
                                           FontStyle.italic, // フォントスタイルをイタリックに
@@ -89,7 +87,21 @@ class GameScene extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                            ]
+                            ],
+                          ),
+                        ),
+                      ],
+                      SizedBox(
+                        width: size.width * 0.2,
+                        height: size.width * 0.15,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Center(
+                              child: DeathBlowWidget(
+                                  onActivateSpecialMove:
+                                      gameWidgetLogic.activateSpecialMove),
+                            ),
                           ],
                         ),
                       ),

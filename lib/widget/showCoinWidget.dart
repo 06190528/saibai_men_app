@@ -75,8 +75,8 @@ class ShowCoinWidget extends ConsumerWidget {
                   Center(
                     child: InkWell(
                       onTap: () async {
-                        GameWidgetLogic(context, ref).watchRewardAd(width,
-                            () => GameWidgetLogic(context, ref).getCoin(5));
+                        GameWidgetLogic(context, ref).watchRewardAd(width * 0.2,
+                            () => GameWidgetLogic(context, ref).getCoin(50));
                       },
                       borderRadius: BorderRadius.circular(
                           circleButtonSize), // InkWellの形を円形に

@@ -57,7 +57,7 @@ double modeFeverCount(WidgetRef ref) {
   final gameMode = ref.read(gameModeProvider);
   double feverCount = 50;
   if (gameMode == 1) {
-    feverCount = 40;
+    feverCount = 20;
   } else if (gameMode == 2) {
     feverCount = 50;
   }

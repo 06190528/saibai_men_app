@@ -21,7 +21,7 @@ class GatyaScene extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final language = ref.watch(userDataProvider.notifier).state.language;
     final coinCount = ref.watch(getCoinCountProvider);
-    final touchAvailable = coinCount >= 5;
+    final touchAvailable = coinCount >= 50;
     final animetionText = touchAvailable
         ? Language().translationTouch(language)
         : Language().translationNotEnoughCoins(language);
@@ -35,31 +35,7 @@ class GatyaScene extends ConsumerWidget {
       body: GestureDetector(
         onTap: () async {
           if (!onTaped) {
-            if (coinCount < 5) {
-              return;
-            }
-            sound.play('sounds/gatyaSound.mp3');
-            ref.read(onTapedProvider.state).state = true;
-            math.Random random = math.Random();
-            ref.read(getCoinCountProvider.state).state -= 5;
-            ref
-                .read(userDataProvider.notifier)
-                .updateUserCoinData(ref.read(getCoinCountProvider.state).state);
-            await UserDataService()
-                .saveUserDataToLocal(ref.read(userDataProvider).toMap());
-            Future.delayed(const Duration(milliseconds: 1600), () {
-              sound.play('sounds/getCharacter.mp3');
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return ShowGetCharacter(
-                      characterIndex: random.nextInt(lastCharacterIndex + 1));
-                },
-              );
-              Future.delayed(const Duration(milliseconds: 1600), () {
-                sound.dispose();
-              });
-            });
+            onPressedGatya(context, ref, sound);
           }
         },
         child: Stack(
@@ -114,4 +90,45 @@ class GatyaScene extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> onPressedGatya(
+    BuildContext context, WidgetRef ref, Audio sound) async {
+  final coinCount = ref.watch(getCoinCountProvider);
+  if (coinCount < 50) {
+    return;
+  }
+  sound.play('sounds/gatyaSound.mp3');
+  ref.read(onTapedProvider.state).state = true;
+  math.Random random = math.Random();
+  final randamNumber = random.nextInt(lastCharacterIndex + 1);
+  ref.read(getCoinCountProvider.state).state -= 50;
+  ref
+      .read(userDataProvider.notifier)
+      .updateUserCoinData(ref.read(getCoinCountProvider.state).state);
+  await UserDataService()
+      .saveUserDataToLocal(ref.read(userDataProvider).toMap());
+  Future.delayed(const Duration(milliseconds: 1600), () {
+    sound.play('sounds/getCharacter.mp3');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ShowGetCharacter(characterIndex: randamNumber);
+      },
+    );
+    Future.delayed(const Duration(milliseconds: 1600), () {
+      sound.dispose();
+    });
+  });
+  adduserCharactersAndSaveToLocal(ref, randamNumber);
+}
+
+Future<void> adduserCharactersAndSaveToLocal(WidgetRef ref, int random) async {
+  final nowuserCharacters = ref.read(userDataProvider).userCharacters;
+  final newuserCharacters = nowuserCharacters | (1 << random);
+  ref
+      .read(userDataProvider.notifier)
+      .updateUserCharactersData(newuserCharacters);
+  await UserDataService()
+      .saveUserDataToLocal(ref.read(userDataProvider).toMap());
 }

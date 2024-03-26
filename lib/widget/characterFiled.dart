@@ -2,14 +2,13 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 import 'package:saibai_men_app/ui/characterFIledBackground.dart';
 import 'package:saibai_men_app/ui/characterUi.dart';
 import 'package:saibai_men_app/ui/gatyaUi.dart';
 
 class CharacterField extends FlameGame {
-  CharacterField() {}
+  CharacterField();
 
   @override
   Future<void> onLoad() async {
@@ -41,7 +40,6 @@ class CharacterField extends FlameGame {
   }
 
   void addGatya(double length, Vector2 position, bool start) {
-    print('addGatya');
     removeGatya();
     final gatya = GatyaUi(length, start);
     gatya.position = position;

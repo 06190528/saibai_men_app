@@ -5,6 +5,7 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/ui/gameUi.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
@@ -78,7 +79,9 @@ class PauseWidget extends ConsumerWidget {
                   BannerButton(
                     text: Language().translationRestart(userData.language),
                     onPressed: () {
-                      ref.read(dinoGameProvider.notifier).reset();
+                      ref.read(dinoGameProvider.state).state = DinoGame(
+                        ref.read(nowUserCharacterProvider),
+                      );
                       ref.read(showResultDialogProvider.state).state = false;
                       ref.read(enemyCounterProvider.state).state = 0;
                       ref.read(isGameActiveProvider.state).state = false;

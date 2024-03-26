@@ -40,8 +40,8 @@ class IsGameActiveTrueWidget extends ConsumerWidget {
         Positioned(
             top: screenSize.height * 0.05,
             child: SizedBox(
-              width: screenSize.width * 0.08,
-              height: screenSize.width * 0.08,
+              width: screenSize.width * 0.1,
+              height: screenSize.width * 0.1,
               child: FloatingActionButton(
                 onPressed: () async {
                   if (onGamePause != null) {

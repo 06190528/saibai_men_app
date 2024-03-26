@@ -350,4 +350,26 @@ class Language {
         return 'Not enough coins';
     }
   }
+
+  String translationSortieCharacter(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Sortie Character';
+      case LanguageList.Japan:
+        return '出撃キャラクター';
+      default:
+        return 'Sortie Character';
+    }
+  }
+
+  String translationGacha(LanguageList language) {
+    switch (language) {
+      case LanguageList.USA:
+        return 'Gacha';
+      case LanguageList.Japan:
+        return 'ガチャ';
+      default:
+        return 'Gacha';
+    }
+  }
 }

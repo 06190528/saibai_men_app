@@ -8,6 +8,7 @@ import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/ranking.dart';
 import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/ui/gameUi.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
 import 'package:saibai_men_app/widget/dialog/settingDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,8 +66,10 @@ Future<void> saveUserDataFromLocalToProvider(WidgetRef ref) async {
     UserData userData = UserData.fromMap(userDataMap);
     ref.read(userDataProvider.notifier).updateUserData(userData, ref);
     ref.read(getCoinCountProvider.state).state = userData.coin;
+    ref.read(nowUserCharacterProvider.state).state = userData.nowUserCharacter;
+    ref.read(dinoGameProvider.state).state =
+        DinoGame(userData.nowUserCharacter);
   }
-  ref.read(loadingProgressProvider.state).state += 30;
 }
 
 Future<void> initializeUserData() async {
@@ -75,12 +78,14 @@ Future<void> initializeUserData() async {
   if (userDataString == null) {
     User? user = await AuthService().signInAnonymously();
     if (user != null) {
-      AdInterstitial().createAd();
+      await AdInterstitial().createAd();
       UserData userData = UserData(
         name: '',
         scoreList: [],
         language: LanguageList.Japan,
         coin: 0,
+        userCharacters: 1,
+        nowUserCharacter: 0,
       );
       UserDataService().saveUserDataToLocal(userData.toMap());
       setUserDataToIFirebase(userData);
@@ -101,7 +106,6 @@ Future<void> setUserDataToIFirebase(UserData? userData) async {
 Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
   DocumentSnapshot<Map<String, dynamic>> ranking =
       await FirebaseFirestore.instance.collection('ranking').doc('1').get();
-  ref.read(loadingProgressProvider.state).state += 30;
   final rankingLength = ranking.data()!['ranking'].length;
   for (int i = 0; i < rankingLength; i++) {
     await Future.delayed(Duration.zero);
@@ -113,7 +117,6 @@ Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
         .state
         .add(Ranking(name: name, maxScore: maxScore, id: id));
   }
-  ref.read(loadingProgressProvider.state).state += 30;
   await addUserNewMaxScoreToRankingListProviderAndGetUserRanking(ref);
 }
 
@@ -135,15 +138,14 @@ Future<void> addUserNewMaxScoreToRankingListProviderAndGetUserRanking(
   final newMaxScore = ref.read(userMaxScoreProvider);
   List<Ranking> rankingList = ref.read(rankingListProvider.notifier).state;
   final userId = await UserDataService().getUserId();
-  var userRank =
-      (rankingList.indexWhere((element) => element.id == userId) + 1);
-  if (userRank == 0) {
-    userRank = rankingList.length + 1;
-  } else if (rankingList[userRank].maxScore < newMaxScore) {
-    rankingList[userRank].maxScore = newMaxScore;
-    rankingList.sort((a, b) => b.maxScore.compareTo(a.maxScore));
-    ref.read(rankingListProvider.notifier).state = rankingList;
-  }
+  final userName = ref.read(userDataProvider).name;
+
+  rankingList.removeWhere((element) => element.id == userId);
+
+  rankingList.add(Ranking(id: userId, name: userName, maxScore: newMaxScore));
+
+  rankingList.sort((a, b) => b.maxScore.compareTo(a.maxScore));
+  ref.read(rankingListProvider.notifier).state = rankingList;
+  var userRank = rankingList.indexWhere((element) => element.id == userId) + 1;
   ref.read(userRankingProvider.notifier).state = userRank;
-  ref.read(loadingProgressProvider.state).state += 10;
 }

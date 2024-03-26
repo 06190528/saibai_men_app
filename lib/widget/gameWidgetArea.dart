@@ -26,13 +26,13 @@ class GameWidgetArea extends ConsumerWidget {
       gameWidgetLogic.enemyCount(id);
     };
     game.touchEnemy = () async {
-      print('${feverFlag} feverFlag');
+      // print('${feverFlag} feverFlag');
       if (!feverFlag) {
-        print(feverFlag);
-        print('game over');
+        // print(feverFlag);
+        // print('game over');
         gameWidgetLogic.onGameOver();
       } else {
-        print('defever');
+        // print('defever');
         gameWidgetLogic.deFever();
       }
     };

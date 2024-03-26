@@ -16,11 +16,13 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   Function(int id)? EnemyCount;
   final int id;
   int enemyKinds;
+  int nowUserCharacter;
 
   Enemy(
     this.speed,
     this.dinoPlayer,
-    this.enemyKinds, {
+    this.enemyKinds,
+    this.nowUserCharacter, {
     this.onTouchEnemy,
     this.EnemyCount,
   })  : id = _enemyIdCounter++,
@@ -34,7 +36,10 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   Future<void> onLoad() async {
     var random = math.Random();
     super.onLoad();
-    int num = random.nextInt(enemyKinds);
+    int num;
+    do {
+      num = random.nextInt(enemyKinds);
+    } while (num == nowUserCharacter);
     Image spriteSheetImage =
         await Flame.images.load('characters/cats_memes_$num.png');
     final EnemySpriteDetails enemySpriteDetails =
@@ -106,7 +111,7 @@ Future<EnemySpriteDetails> getEnemySpriteDetails(
   int rowCount = 0;
 
   switch (num) {
-    case 0:
+    case 8:
       columnCount = 4;
       rowCount = 2;
       stepTime = 0.08;
@@ -170,7 +175,7 @@ Future<EnemySpriteDetails> getEnemySpriteDetails(
       spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
       to = columnCount * rowCount - 46;
       break;
-    case 8:
+    case 0:
       columnCount = 50;
       rowCount = 4;
       stepTime = 0.03;

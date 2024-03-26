@@ -5,10 +5,10 @@ import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/audio.dart';
 import 'package:saibai_men_app/ui/gameUi.dart';
 
-final dinoGameProvider =
-    StateNotifierProvider<DinoGameNotifier, DinoGame>((ref) {
-  return DinoGameNotifier();
-});
+final dinoGameProvider = StateProvider<DinoGame>((ref) => DinoGame(0));
+//     StateNotifierProvider<DinoGameNotifier, DinoGame>((ref) {
+//   return DinoGameNotifier();
+// });
 
 final showResultDialogProvider = StateProvider<bool>((ref) => false);
 final isGameActiveProvider = StateProvider<bool>((ref) => false);
@@ -24,13 +24,11 @@ final bgmAudioProvider = Provider<Audio>((ref) => Audio());
 final explosionAudioProvider = Provider<Audio>((ref) => Audio());
 final goatSoundsProvider = Provider<Audio>((ref) => Audio());
 final attackBgmProvider = Provider<Audio>((ref) => Audio());
-final feverBgmProvider = Provider<Audio>((ref) => Audio());
 
 final enemyCounterProvider = StateProvider<int>((ref) => 0);
 final feverCountProvider = StateProvider<int>((ref) => 0);
 final speedProvider = StateProvider<double>((ref) => 600);
 final enemyCreateTimeProvider = StateProvider<double>((ref) => 1.2);
-final loadingProgressProvider = StateProvider<double>((ref) => 0);
 final bgmSpeedProvider = StateProvider<double>((ref) => 1);
 final deathblowCountProvider = StateProvider<int>((ref) => 1);
 final userDifficultyLevelProvider = StateProvider<int>((ref) => 0);
@@ -39,13 +37,19 @@ final userModeProvider = StateProvider<int>((ref) => 0);
 final gameModeProvider = StateProvider<int>((ref) => 0);
 final userRankingProvider = StateProvider<int>((ref) => 0);
 final getCoinCountProvider = StateProvider<int>((ref) => 0);
+final nowUserCharacterProvider = StateProvider<int>((ref) => 0);
 
 final rankingListProvider = StateProvider<List<Ranking>>((ref) => []);
 
 class UserDataNotifier extends StateNotifier<UserData> {
   UserDataNotifier()
       : super(UserData(
-            name: '', scoreList: [], language: LanguageList.Japan, coin: 0));
+            name: '',
+            scoreList: [],
+            language: LanguageList.Japan,
+            coin: 0,
+            userCharacters: 1,
+            nowUserCharacter: 0));
 
   void updateUserData(UserData newUserData, WidgetRef ref) {
     state = newUserData;
@@ -55,15 +59,37 @@ class UserDataNotifier extends StateNotifier<UserData> {
     ref.read(userMaxScoreProvider.state).state = maxScore;
   }
 
-  LanguageList get name => state.language;
-
   void updateUserCoinData(int coin) {
-    print('coin: $coin');
     state = UserData(
-        name: state.name,
-        scoreList: state.scoreList,
-        language: state.language,
-        coin: coin);
+      name: state.name,
+      scoreList: state.scoreList,
+      language: state.language,
+      coin: coin,
+      userCharacters: state.userCharacters,
+      nowUserCharacter: state.nowUserCharacter,
+    );
+  }
+
+  void updateUserCharactersData(int userCharacters) {
+    state = UserData(
+      name: state.name,
+      scoreList: state.scoreList,
+      language: state.language,
+      coin: state.coin,
+      userCharacters: userCharacters,
+      nowUserCharacter: state.nowUserCharacter,
+    );
+  }
+
+  void updateNowUserCharacter(int nowUserCharacter) {
+    state = UserData(
+      name: state.name,
+      scoreList: state.scoreList,
+      language: state.language,
+      coin: state.coin,
+      userCharacters: state.userCharacters,
+      nowUserCharacter: nowUserCharacter,
+    );
   }
 }
 

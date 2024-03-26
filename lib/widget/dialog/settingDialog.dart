@@ -70,10 +70,13 @@ class UserSettingsDialog extends ConsumerWidget {
             onPressed: () async {
               ref.read(userDataProvider.notifier).updateUserData(
                   UserData(
-                      name: nameController.text,
-                      language: ref.read(selectedLangageProvider),
-                      scoreList: userData.scoreList,
-                      coin: userData.coin),
+                    name: nameController.text,
+                    language: ref.read(selectedLangageProvider),
+                    scoreList: userData.scoreList,
+                    coin: userData.coin,
+                    userCharacters: userData.userCharacters,
+                    nowUserCharacter: userData.nowUserCharacter,
+                  ),
                   ref);
 
               await UserDataService()

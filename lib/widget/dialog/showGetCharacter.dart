@@ -1,11 +1,9 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/scene/gatyaScene.dart';
 import 'package:saibai_men_app/widget/characterFiled.dart';
-import 'dart:math' as math;
 
 class ShowGetCharacter extends ConsumerWidget {
   final int characterIndex;
@@ -20,11 +18,11 @@ class ShowGetCharacter extends ConsumerWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
-          Navigator.pop(context); // ここでダイアログを閉じます
+          Navigator.pop(context);
           ref.read(onTapedProvider.state).state = false;
         },
         child: Material(
-          type: MaterialType.transparency, // ダイアログの背景を透明にします
+          type: MaterialType.transparency,
           child: Stack(children: [
             GameWidget(
               game: characterField,

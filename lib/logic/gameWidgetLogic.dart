@@ -24,17 +24,20 @@ class GameWidgetLogic {
   Future<void> gameClear() async {
     game.removeEnemies();
     game.updateSpeed(0, ref);
+    ref.read(bgmAudioProvider).setSpeed(ref.read(bgmSpeedProvider.state).state);
     game.stopGame();
     ref.read(bgmSpeedProvider.state).state = 1.0;
     ref.read(bgmAudioProvider).setLoop(false);
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
+    ref
+        .read(userDataProvider.notifier)
+        .updateUserData(ref.read(userDataProvider), ref);
     ref.read(showResultDialogProvider.state).state = true;
     await ref.read(bgmAudioProvider).stop();
-    ref.read(feverBgmProvider).stop();
     await ref.read(bgmAudioProvider).play('sounds/game_clear.mp3');
     ref.read(gameClearFlagProvider.state).state = true;
-    await getCoin((ref.read(enemyCounterProvider) / 100).floor());
+    await getCoin((ref.read(enemyCounterProvider) / 10).floor());
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
@@ -42,19 +45,22 @@ class GameWidgetLogic {
   }
 
   Future<void> onGameOver() async {
-    final gameOverSprite = GameOverSprite(game.dinoPlayer.position);
+    final gameOverSprite = GameOverSprite(game.dinoPlayer!.position);
     game.removeEnemies();
     game.updateSpeed(0, ref);
+    ref.read(bgmAudioProvider).setSpeed(ref.read(bgmSpeedProvider.state).state);
     game.stopGame();
     game.add(gameOverSprite);
     ref.read(bgmAudioProvider).setLoop(false);
     ref.read(isGameActiveProvider.state).state = false;
     ref.read(userDataProvider).scoreList.add(ref.read(enemyCounterProvider));
     ref.read(showResultDialogProvider.state).state = true;
+    ref
+        .read(userDataProvider.notifier)
+        .updateUserData(ref.read(userDataProvider), ref);
     await ref.read(bgmAudioProvider).stop();
-    ref.read(feverBgmProvider).stop();
     await explosionAudio.play('sounds/explosion.mp3');
-    await getCoin((ref.read(enemyCounterProvider) / 100).floor());
+    await getCoin((ref.read(enemyCounterProvider) / 10).floor());
     setUserDataToIFirebase(ref.read(userDataProvider));
     await UserDataService()
         .saveUserDataToLocal(ref.read(userDataProvider).toMap());
@@ -96,9 +102,8 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = false;
     game.pauseEngine();
     ref.read(bgmAudioProvider).setLoop(false);
-    await ref.read(bgmAudioProvider).stop();
+    await ref.read(bgmAudioProvider).pause();
     ref.read(pauseProvider.state).state = true;
-    ref.read(feverBgmProvider).stop();
   }
 
   Future<void> onGameResume() async {
@@ -107,8 +112,6 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).setLoop(true);
     await ref.read(bgmAudioProvider).resume();
     ref.read(pauseProvider.state).state = false;
-    if (ref.read(feverFlagProvider.state).state)
-      ref.read(feverBgmProvider).resume();
   }
 
   Future<void> onPressedStartButton() async {
@@ -123,11 +126,11 @@ class GameWidgetLogic {
     dinoGame.startGame();
     ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
     ref.read(bgmAudioProvider).setLoop(true);
-    ref.read(bgmAudioProvider).setVolume(0.3);
+    ref.read(bgmAudioProvider).setVolume(0.6);
     initializeGameModeProvider(ref, screenSize, dinoGame);
     ref.read(deathblowCountProvider.state).state = 1;
     ref.read(feverCountProvider.state).state = 0;
-    ref.read(enemyCounterProvider.state).state = 500;
+    ref.read(enemyCounterProvider.state).state = 0;
   }
 
   Future<void> activateSpecialMove() async {
@@ -137,7 +140,7 @@ class GameWidgetLogic {
     }
     game.attackEnemy();
     ref.read(attackBgmProvider).play('sounds/specialMove.mp3');
-    ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
+    // ref.read(goatSoundsProvider).play('sounds/getItemSound.mp3');
     ref.read(deathblowCountProvider.state).state--;
   }
 
@@ -148,6 +151,7 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = true;
     ref.read(showResultDialogProvider.state).state = false;
     game.updateSpeed(ref.read(speedProvider), ref);
+    ref.read(bgmAudioProvider).setSpeed(ref.read(bgmSpeedProvider.state).state);
     ref.read(bgmAudioProvider).setLoop(true);
     await ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
     ref.read(pauseProvider.state).state = false;
@@ -156,24 +160,27 @@ class GameWidgetLogic {
   void fever() async {
     ref.read(feverFlagProvider.state).state = true; // feverFlagを更新
     game.fever();
-    ref.read(feverBgmProvider).play('sounds/fever_bgm.mp3');
-    ref.read(feverBgmProvider).setLoop(true);
+    ref.read(bgmAudioProvider).play('sounds/fever_bgm.mp3');
+    ref.read(bgmAudioProvider).setSpeed(1.0);
+    ref.read(bgmAudioProvider).setLoop(true);
+    ref.read(bgmAudioProvider).setVolume(1.0);
   }
 
   void deFever() {
-    final gameOverSprite = GameOverSprite(game.dinoPlayer.position);
+    final gameOverSprite = GameOverSprite(game.dinoPlayer!.position);
     game.add(gameOverSprite);
     explosionAudio.play('sounds/explosion.mp3');
-    print('defever');
     ref.read(feverCountProvider.state).state = 0;
     ref.read(feverFlagProvider.state).state = false;
-    ref.read(feverBgmProvider).stop();
+    ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
+    ref.read(bgmAudioProvider).setSpeed(ref.read(bgmSpeedProvider.state).state);
+    ref.read(bgmAudioProvider).setVolume(0.6);
     game.defever();
   }
 
   void getItem() {
     ref.read(deathblowCountProvider.state).state++;
-    ref.read(goatSoundsProvider).play('sounds/goat_sounds2.mp3');
+    ref.read(goatSoundsProvider).play('sounds/getItemSound.mp3');
   }
 
   Future<void> getCoin(int coin) async {
@@ -183,7 +190,7 @@ class GameWidgetLogic {
 
     for (var i = 0; i < coin; i++) {
       coinSound.play('sounds/getCoinSound.mp3');
-      await Future.delayed(Duration(milliseconds: 250)); // 0.2秒待つ
+      await Future.delayed(Duration(milliseconds: 200)); // 0.2秒待つ
       if (i != coin - 1) coinSound.stop();
       ref.read(getCoinCountProvider.state).state++;
     }
@@ -195,7 +202,9 @@ class GameWidgetLogic {
   }
 
   void resetAllProvider() {
-    ref.read(dinoGameProvider.notifier).reset();
+    ref.read(dinoGameProvider.state).state = DinoGame(
+      ref.read(nowUserCharacterProvider),
+    );
     ref.read(showResultDialogProvider.state).state = false;
     ref.read(enemyCounterProvider.state).state = 0;
     ref.read(isGameActiveProvider.state).state = false;
@@ -211,11 +220,10 @@ class GameWidgetLogic {
     ref.read(isLoadingProvider.state).state = false;
     ref.read(gameClearFlagProvider.state).state = false;
     ref.read(feverCountProvider.state).state = 0;
-    ref.read(feverBgmProvider).stop();
   }
 
   Future<void> watchRewardAd(
-      double screenWidth, Future<void> Function() rewardFunction) async {
+      double fontSize, Future<void> Function() rewardFunction) async {
     final userData = ref.watch(userDataProvider);
     final bool isAgreed = await showDialog(
       context: context,
@@ -223,13 +231,13 @@ class GameWidgetLogic {
         return AlertDialog(
           title: Text(
             Language().translationWatchAdToContinue(userData.language),
-            style: TextStyle(fontSize: screenWidth * 0.25),
+            style: TextStyle(fontSize: fontSize),
           ),
           actions: <Widget>[
             TextButton(
               child: Text(
                 Language().translationNo(userData.language),
-                style: TextStyle(fontSize: screenWidth * 0.25),
+                style: TextStyle(fontSize: fontSize),
               ),
               onPressed: () {
                 Navigator.of(context).pop(false);
@@ -238,7 +246,7 @@ class GameWidgetLogic {
             TextButton(
               child: Text(
                 Language().translationYes(userData.language),
-                style: TextStyle(fontSize: screenWidth * 0.25),
+                style: TextStyle(fontSize: fontSize),
               ),
               onPressed: () {
                 Navigator.of(context).pop(true);

@@ -3,9 +3,11 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:saibai_men_app/logic/directions.dart';
+import 'package:saibai_men_app/ui/gameEnemyUi.dart';
 
 class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
-  DinoPlayer() : super(size: Vector2.all(0));
+  int characterKind;
+  DinoPlayer(this.characterKind) : super(size: Vector2.all(0));
   double speed = 0;
   void updateSpeed(double newSpeed) {
     speed = newSpeed;
@@ -15,23 +17,24 @@ class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
   Future<void> onLoad() async {
     super.onLoad();
 
-    Image spriteSheetImage = await Flame.images.load('goat.png');
-    final int columnCount = 50;
-    final int rowCount = 5;
-    final double spriteHeight = spriteSheetImage.height.toDouble() / rowCount;
-    final double spriteWidth = spriteSheetImage.width.toDouble() / columnCount;
+    Image spriteSheetImage =
+        await Flame.images.load('characters/cats_memes_$characterKind.png');
+    EnemySpriteDetails spriteDetails =
+        await getEnemySpriteDetails(characterKind, spriteSheetImage);
+
+    double spriteHeight = spriteDetails.spriteHeight;
+    double spriteWidth = spriteDetails.spriteWidth;
 
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
       srcSize: Vector2(spriteWidth, spriteHeight),
     );
 
-    // アニメーションの設定。
     animation = spriteSheet.createAnimation(
       row: 0,
-      stepTime: 0.05,
-      from: 0, // 最初のスプライト
-      to: columnCount * rowCount, // 最後のスプライト
+      stepTime: spriteDetails.stepTime,
+      from: 0,
+      to: spriteDetails.to,
       loop: true,
     );
     anchor = Anchor.center;
@@ -56,5 +59,9 @@ class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
     if (canGo(nextPosition, screenSize, size, 'player')) {
       position.setFrom(nextPosition); // 位置を更新
     }
+  }
+
+  void removePlayer() {
+    gameRef.remove(this);
   }
 }

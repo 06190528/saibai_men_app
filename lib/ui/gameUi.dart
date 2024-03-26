@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flame/game.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/logic/directions.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/ui/attackEnemyUi.dart';
@@ -10,10 +13,10 @@ import 'playerUi.dart';
 import 'worldUi.dart';
 
 class DinoGameNotifier extends StateNotifier<DinoGame> {
-  DinoGameNotifier() : super(DinoGame(speed: null));
+  DinoGameNotifier() : super(DinoGame(0));
 
   void reset() {
-    state = DinoGame(speed: null);
+    state = DinoGame(0);
   }
 }
 
@@ -27,20 +30,26 @@ class DinoGame extends FlameGame {
   List<AttackEnemy> attackEnemies = [];
   double _timer = 0;
   bool isGameActive = false;
-  final DinoPlayer dinoPlayer = DinoPlayer();
+  int nowUserCharacter;
+  late DinoPlayer dinoPlayer;
   final DinoWorld _dinoWorld = DinoWorld();
   late KiEffect kiEffect;
-  int enemyKinds = 3;
+  int enemyKinds = 3; //初期の敵の種類
 
   double time = 1.2;
-
-  DinoGame(
-      {required this.speed, this.touchEnemy, this.EnemyCount, this.getItem});
+  bool enemyKindsAdditionalIncrement = false;
+  DinoGame(this.nowUserCharacter,
+      {this.speed, this.touchEnemy, this.EnemyCount, this.getItem});
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    if (!enemyKindsAdditionalIncrement && enemyKinds >= nowUserCharacter) {
+      enemyKindsIncrement();
+      enemyKindsAdditionalIncrement = true;
+    }
     await add(_dinoWorld);
+    dinoPlayer = DinoPlayer(nowUserCharacter);
     await add(dinoPlayer);
     kiEffect = KiEffect(dinoPlayer);
     dinoPlayer.position = _dinoWorld.size * 0.5; // 初期位置を設定
@@ -72,7 +81,7 @@ class DinoGame extends FlameGame {
   }
 
   Future<void> addEnemy() async {
-    Enemy enemy = Enemy(speed!, dinoPlayer, enemyKinds,
+    Enemy enemy = Enemy(speed!, dinoPlayer, enemyKinds, nowUserCharacter,
         onTouchEnemy: touchEnemy, EnemyCount: EnemyCount);
     enemy.position = initialPosition(_dinoWorld.size, 'enemy');
     enemy.direction = enemyInitialDirection(enemy.position, _dinoWorld.size);
@@ -107,13 +116,10 @@ class DinoGame extends FlameGame {
   }
 
   void updateSpeed(double newSpeed, WidgetRef ref) {
-    ref
-        .read(bgmAudioProvider)
-        .setSpeed(ref.read(bgmSpeedProvider.state).state *= 1.03);
+    // 気をつけろ
+    ref.read(bgmSpeedProvider.state).state *= 1.03;
     if (newSpeed == 0) {
-      ref
-          .read(bgmAudioProvider)
-          .setSpeed(ref.read(bgmSpeedProvider.state).state = 1);
+      ref.read(bgmSpeedProvider.state).state = 1;
     }
     ;
     dinoPlayer.updateSpeed(newSpeed * 1.3);
@@ -148,6 +154,11 @@ class DinoGame extends FlameGame {
   }
 
   void enemyKindsIncrement() {
-    if (enemyKinds < 11) enemyKinds++;
+    if (enemyKinds < lastCharacterIndex) enemyKinds++;
+    if (!enemyKindsAdditionalIncrement && enemyKinds == nowUserCharacter) {
+      enemyKindsIncrement();
+      enemyKindsAdditionalIncrement = true;
+    }
+    // print('enemyKindsIncrement:$enemyKinds');
   }
 }
