@@ -60,7 +60,7 @@ class BannerButton extends StatelessWidget {
               fit: BoxFit.scaleDown, // 子が小さい場合はそのまま、大きい場合は縮小
               child: DoubleText(
                 text: text,
-                fontSize: actualHeight * 0.35, // 基本サイズ
+                fontSize: actualHeight * 0.32, // 基本サイズ
                 insideColor: Colors.white,
               ),
             ),

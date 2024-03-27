@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flame/game.dart';
+import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/const.dart';
@@ -9,8 +10,10 @@ import 'package:saibai_men_app/logic/audio.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/characterFiled.dart';
+import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/dialog/showGetCharacter.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
+import 'package:saibai_men_app/widget/resultDialogWidget/doubleIcon.dart';
 import 'package:saibai_men_app/widget/showCoinWidget.dart';
 import 'dart:math' as math;
 
@@ -38,19 +41,19 @@ class GatyaScene extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
+          if (ref.watch(isLoadingProvider)) ...[
+            Positioned(
+              bottom: size.height * 0.5, // 下から10%の位置に配置
+              right: size.width * 0.5,
+              child: const CircularProgressIndicator(),
+            )
+          ],
           Center(
             child: GameWidget(
               game: characterField,
             ),
           ),
           if (onTapedGatyaButton) ...[
-            if (ref.watch(isLoadingProvider)) ...[
-              Positioned(
-                bottom: size.height * 0.5, // 下から10%の位置に配置
-                right: size.width * 0.5,
-                child: const CircularProgressIndicator(),
-              )
-            ],
             if (!onTaped)
               Positioned(
                 top: size.height * 0.5,
@@ -90,44 +93,43 @@ class GatyaScene extends ConsumerWidget {
           if (!onTapedGatyaButton) ...[
             Positioned(
               left: size.width * 0.15,
-              bottom: size.height * 0.1,
+              bottom: size.height * 0.15,
               child: Column(
                 children: [
                   BannerButton(
                     text: Language().translationGatyaByCoins(language),
                     onPressed: () {
-                      ref.read(onTapedGatyaButtonProvider.state).state = true;
+                      if (touchAvailable) {
+                        ref.read(onTapedGatyaButtonProvider.state).state = true;
+                      } else {
+                        ref.read(isLoadingProvider.state).state = true;
+                        GameWidgetLogic(context, ref).watchRewardAd(
+                            size.width * 0.05,
+                            () => GameWidgetLogic(context, ref)
+                                .getCoin(gaytaOnceCoin * 2));
+                      }
                     },
                     width: size.width * 0.7,
                     icon: Icons.monetization_on,
                   ),
-                  SizedBox(height: size.height * 0.05),
-                  BannerButton(
-                    text: Language().translationGetCoins(language),
-                    onPressed: () {
-                      GameWidgetLogic(context, ref).watchRewardAd(
-                          size.width * 0.05,
-                          () => GameWidgetLogic(context, ref)
-                              .getCoin(gaytaOnceCoin * 2));
-                    },
-                    width: size.width * 0.7,
-                    icon: Icons.ad_units,
-                  ),
                 ],
               ),
             ),
-            // Positioned(
-            //   bottom: size.height * 0.05,
-            //   left: size.width * 0.05,
-            //   child: BannerButton(
-            //     text: '',
-            //     onPressed: () {
-            //       Navigator.pop(context);
-            //     },
-            //     width: size.width * 0.1,
-            //     icon: Icons.arrow_back,
-            //   ),
-            // ),
+            //戻るボタン
+            Positioned(
+              left: size.width * 0,
+              bottom: size.height * 0,
+              child: CustomIconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icons.arrow_back,
+                iconSize: size.width * 0.06,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ],
           Positioned(
               top: size.height * 0.05,
@@ -164,6 +166,7 @@ Future<void> onPressedGatya(
         return ShowGetCharacter(characterIndex: randamNumber);
       },
     );
+    ref.watch(onTapedGatyaButtonProvider.state).state = false;
     Future.delayed(const Duration(milliseconds: 1600), () {
       sound.dispose();
     });

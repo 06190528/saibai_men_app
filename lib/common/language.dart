@@ -384,14 +384,14 @@ class Language {
     }
   }
 
-  String translationGetCoins(LanguageList language) {
+  String translationWatchAdToGetCoins(LanguageList language) {
     switch (language) {
       case LanguageList.USA:
-        return 'Get Coins';
+        return 'Watch an ad to get 10 coins';
       case LanguageList.Japan:
-        return 'コインを獲得する';
+        return '広告を視聴して20コインをゲット';
       default:
-        return 'Get Coins';
+        return 'Watch an ad to get 20 coins';
     }
   }
 }

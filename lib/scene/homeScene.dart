@@ -14,6 +14,7 @@ import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/dialog/gameModeSelectDialog.dart';
 import 'package:saibai_men_app/widget/dialog/settingDialog.dart';
 import 'package:saibai_men_app/widget/rankingCircleWidget.dart';
+import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/showCoinWidget.dart';
 import 'dart:math' as math;
@@ -33,7 +34,7 @@ class HomeScene extends ConsumerWidget {
     final characterSize = size.width * 0.15;
     final CharacterField characterField = CharacterField();
     final nowUserCharacterPosition =
-        Vector2(size.width / 2, size.height - characterSize * 2);
+        Vector2(size.width / 2, size.height - characterSize * 2.5);
     characterField.addBackground('titleScene.jpg');
     characterField.addCharacter(
         nowUserCharacter, characterSize * 2, nowUserCharacterPosition);
@@ -104,7 +105,8 @@ class HomeScene extends ConsumerWidget {
             Positioned(
               bottom: size.height * 0.05,
               right: size.width * 0.05,
-              child: CustomIconButton(
+              child: BannerButton(
+                text: Language().translationStart(language),
                 onPressed: () => showDialog(
                   context: context,
                   barrierDismissible: true,
@@ -113,10 +115,8 @@ class HomeScene extends ConsumerWidget {
                     return GameModeSelectDialog();
                   },
                 ),
+                width: size.width * 0.4,
                 icon: Icons.play_arrow,
-                iconSize: size.width * 0.06,
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                borderRadius: BorderRadius.circular(10),
               ),
             ),
             Positioned(
@@ -177,13 +177,13 @@ class HomeScene extends ConsumerWidget {
             ),
             if (ref.watch(isLoadingProvider)) ...[
               Positioned(
-                bottom: size.height * 0.5, // 下から10%の位置に配置
+                bottom: size.height * 0.5,
                 right: size.width * 0.5,
                 child: const CircularProgressIndicator(),
               )
             ],
             Positioned(
-              top: size.height * 0.9,
+              bottom: size.height * 0.12,
               left: size.width * 0.5 - characterSize * 0.25 * 4,
               child: IntrinsicWidth(
                 child: IntrinsicHeight(
