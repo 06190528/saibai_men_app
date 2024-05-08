@@ -13,7 +13,6 @@ import 'package:saibai_men_app/widget/characterFiled.dart';
 import 'package:saibai_men_app/widget/customIconButton.dart';
 import 'package:saibai_men_app/widget/dialog/showGetCharacter.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
-import 'package:saibai_men_app/widget/resultDialogWidget/doubleIcon.dart';
 import 'package:saibai_men_app/widget/showCoinWidget.dart';
 import 'dart:math' as math;
 

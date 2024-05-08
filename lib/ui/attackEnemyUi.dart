@@ -1,20 +1,20 @@
 import 'dart:ui';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:saibai_men_app/logic/directions.dart';
 import 'package:saibai_men_app/ui/gameUi.dart';
 
 class AttackEnemy extends SpriteAnimationComponent with HasGameRef<DinoGame> {
   double speed;
+  Image spriteSheetImage;
   // コンストラクタ
-  AttackEnemy(Vector2 position, this.speed) : super(position: position);
+  AttackEnemy(Vector2 position, this.speed, this.spriteSheetImage)
+      : super(position: position);
   @override
   Future<void> onLoad() async {
     super.onLoad();
     anchor = Anchor.center;
     size = gameRef.size / 5;
-    Image spriteSheetImage = await Flame.images.load('explosion_sprite.png');
 
     // スプライトシートからスプライトアニメーションを作成
     final spriteSheet = SpriteSheet(

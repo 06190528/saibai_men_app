@@ -9,6 +9,7 @@ import 'package:saibai_men_app/logic/gameModeLogic.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/logic/othersLogic.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/scene/homeScene.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
 import 'package:saibai_men_app/widget/dialog/modeReleaseAnnounceDialog.dart';
@@ -179,13 +180,21 @@ class GameClearOrOverDialog extends ConsumerWidget {
                         await AdInterstitial().createAd(
                             ref,
                             () => {
-                                  Navigator.of(context).pop(),
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScene()),
+                                  ),
                                   gameWidgetLogic.resetAllProvider(),
                                 });
                       } else {
                         if (ref.read(enemyCounterProvider) >= 60) {
                           requestReview(context);
-                          Navigator.of(context).pop();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScene()),
+                          );
                         }
                         gameWidgetLogic.resetAllProvider();
                       }

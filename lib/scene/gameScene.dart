@@ -6,7 +6,6 @@ import 'package:saibai_men_app/common/const.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
-import 'package:saibai_men_app/ui/gameUi.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
 import 'package:saibai_men_app/widget/deathBlowWidget.dart';
 import 'package:saibai_men_app/widget/enemyCountTextWIdget.dart';
@@ -51,7 +50,7 @@ class GameScene extends ConsumerWidget {
             ),
             Positioned(
                 top: size.height * 0.6,
-                right: size.width * 0.01,
+                left: -size.width * 0.07,
                 child: Column(
                   children: [
                     if (ref.watch(deathblowCountProvider) >= 1) ...[

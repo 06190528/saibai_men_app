@@ -7,6 +7,7 @@ import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/logic/othersLogic.dart';
+import 'package:saibai_men_app/scene/homeScene.dart';
 import 'package:saibai_men_app/scene/rankingScene.dart';
 import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/widget/adwidget/bannerAd.view.dart';
@@ -138,13 +139,20 @@ class Result extends ConsumerWidget {
                       await AdInterstitial().createAd(
                           ref,
                           () => {
-                                Navigator.of(context).pop(),
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScene()),
+                                ),
                                 gameWidgetLogic.resetAllProvider(),
                               });
                     } else {
                       if (ref.read(enemyCounterProvider) >= 60) {
                         requestReview(context);
-                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScene()),
+                        );
                       }
                       gameWidgetLogic.resetAllProvider();
                     }

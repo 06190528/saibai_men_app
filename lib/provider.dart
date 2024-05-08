@@ -1,5 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saibai_men_app/common/language.dart';
+import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/ranking.dart';
 import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/audio.dart';
@@ -40,13 +42,16 @@ final getCoinCountProvider = StateProvider<int>((ref) => 0);
 final nowUserCharacterProvider = StateProvider<int>((ref) => 0);
 
 final rankingListProvider = StateProvider<List<Ranking>>((ref) => []);
+final spriteSheetImagesProvider = StateProvider<List<Image>>((ref) => []);
 
 class UserDataNotifier extends StateNotifier<UserData> {
+  Locale locale = window.locale;
+
   UserDataNotifier()
       : super(UserData(
             name: '',
             scoreList: [],
-            language: LanguageList.Japan,
+            language: getInitializeLanguage(),
             coin: 0,
             userCharacters: 1,
             nowUserCharacter: 0));

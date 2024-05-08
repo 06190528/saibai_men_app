@@ -1,9 +1,9 @@
+import 'dart:ui' as ui;
 import 'dart:ui';
-import 'dart:math' as math;
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
-import 'package:saibai_men_app/ui/characterFIledBackground.dart';
+import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/ui/characterFiledBackground.dart';
 import 'package:saibai_men_app/ui/characterUi.dart';
 import 'package:saibai_men_app/ui/gatyaUi.dart';
 
@@ -33,8 +33,9 @@ class CharacterField extends FlameGame {
     // ここに描画処理を記述
   }
 
-  void addCharacter(int catKind, double length, Vector2 position) {
-    final character = Character(catKind, length);
+  void addCharacter(
+      int catKind, double length, Vector2 position, ui.Image spriteSheetImage) {
+    final character = Character(catKind, length, spriteSheetImage);
     character.position = position;
     add(character);
   }
@@ -61,30 +62,4 @@ class CharacterField extends FlameGame {
       gatya.removeFromParent();
     }
   }
-
-  // void addSparkleEffect(Vector2 position, double radius) {
-  //   final particles = List.generate(12, (i) {
-  //     // 30度ごとに角度を計算
-  //     final double angle = (math.pi / 6) * i;
-  //     // 色を設定（黄色または透明）
-  //     final color = i % 2 == 0 ? Colors.yellow : Colors.transparent;
-  //     // CircleParticleのインスタンスを生成
-  //     return CircleParticle(
-  //       paint: Paint()..color = color,
-  //       radius: radius / 10,
-  //     );
-  //     // )..position =
-  //     //     Vector2(radius * math.cos(angle), radius * math.sin(angle)); // 位置を設定
-  //   });
-
-  //   // ComposedParticleを使ってパーティクルをグループ化
-  //   final composedParticle = ComposedParticle(
-  //     children: particles,
-  //   );
-
-  //   // ParticleSystemComponentにラップしてゲームに追加
-  //   add(ParticleSystemComponent(
-  //     particle: composedParticle,
-  //   )..position = position); // エフェクトの中心位置を設定
-  // }
 }

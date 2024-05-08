@@ -36,7 +36,10 @@ class GameOverSprite extends SpriteAnimationComponent
     removeUIAfterDelay();
   }
 
-  // 3秒後にUIを削除するメソッド
+  void update(double dt) {
+    super.update(dt);
+  }
+
   void removeUIAfterDelay() {
     Future.delayed(const Duration(seconds: 3), () {
       removeFromParent();

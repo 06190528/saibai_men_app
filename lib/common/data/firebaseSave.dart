@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -82,7 +83,7 @@ Future<void> initializeUserData() async {
       UserData userData = UserData(
         name: '',
         scoreList: [],
-        language: LanguageList.Japan,
+        language: getInitializeLanguage(),
         coin: 0,
         userCharacters: 1,
         nowUserCharacter: 0,
@@ -104,7 +105,6 @@ Future<void> setUserDataToIFirebase(UserData? userData) async {
 }
 
 Future<void> getAndSaveRankingDataFromIFirebaseToProvider(WidgetRef ref) async {
-  print('getAndSaveRankingDataFromIFirebaseToProvider');
   ref.read(rankingListProvider.notifier).state = [];
   DocumentSnapshot<Map<String, dynamic>> ranking =
       await FirebaseFirestore.instance.collection('ranking').doc('1').get();
@@ -150,4 +150,15 @@ Future<void> addUserNewMaxScoreToRankingListProviderAndGetUserRanking(
   ref.read(rankingListProvider.notifier).state = rankingList;
   var userRank = rankingList.indexWhere((element) => element.id == userId) + 1;
   ref.read(userRankingProvider.notifier).state = userRank;
+}
+
+LanguageList getInitializeLanguage() {
+  final locale = window.locale;
+  var language = LanguageList.USA;
+  if (locale.languageCode == 'JP' || locale.languageCode == 'ja') {
+    language = LanguageList.Japan;
+  } else if (locale.languageCode == 'CN' || locale.languageCode == 'zh') {
+    language = LanguageList.Chinese;
+  }
+  return language;
 }

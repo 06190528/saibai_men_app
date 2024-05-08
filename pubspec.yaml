@@ -1,7 +1,7 @@
 name: saibai_men_app
 description: A new Flutter project.
 publish_to: "none"
-version: 3.0.1+10
+version: 3.0.7+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"

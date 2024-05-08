@@ -28,7 +28,7 @@ class BannerAndPadlockWidget extends ConsumerWidget {
             text: text,
             onPressed: () {
               if (buttonActiveFlag) {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
@@ -38,7 +38,9 @@ class BannerAndPadlockWidget extends ConsumerWidget {
                       return FadeTransition(opacity: animation, child: child);
                     },
                   ),
+                  (Route<dynamic> route) => route.settings.name == 'HomeScene',
                 );
+
                 setGameModeToProvider(ref, text);
               }
             },
@@ -47,8 +49,8 @@ class BannerAndPadlockWidget extends ConsumerWidget {
           ),
           if (!buttonActiveFlag)
             Positioned(
-              top: -size.height * 0.05, // 例: バナーの上端に配置
-              left: 0, // 例: 右端に配置
+              top: -size.height * 0.05,
+              left: 0,
               child: PadlockWidget(
                 text: padlockScore.toString(),
                 size: size * 0.7,

@@ -10,8 +10,10 @@ class Deathblow extends SpriteAnimationComponent with HasGameRef {
   Direction direction = Direction.none;
   DinoPlayer dinoPlayer;
   Function()? activateSpecialMove;
+  Image spriteSheetImage;
 
-  Deathblow(this.speed, this.dinoPlayer, {this.activateSpecialMove})
+  Deathblow(this.speed, this.dinoPlayer, this.spriteSheetImage,
+      {this.activateSpecialMove})
       : super(size: Vector2.all(0));
 
   void updateSpeed(double newSpeed) {
@@ -21,10 +23,6 @@ class Deathblow extends SpriteAnimationComponent with HasGameRef {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-
-    Image spriteSheetImage = await Flame.images.load('energy bullet.png');
-
-    // スプライトシートからスプライトアニメーションを作成
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
       srcSize: Vector2(274.3, 270),

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/provider.dart';
 
@@ -27,9 +28,9 @@ class UserData {
               (e) =>
                   e.toString() ==
                   'LanguageList.' + (map['language'] ?? 'Japan'),
-              orElse: () => LanguageList.Japan,
+              orElse: () => getInitializeLanguage(),
             )
-          : LanguageList.Japan,
+          : getInitializeLanguage(),
       scoreList: List<int>.from(map['scoreList'] ?? []),
       coin: map['coin'] ?? 0,
       userCharacters: map['userCharacters'] ?? 1,

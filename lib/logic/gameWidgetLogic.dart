@@ -74,6 +74,12 @@ class GameWidgetLogic {
     int gameMode = ref.read(gameModeProvider);
     ref.read(enemyCounterProvider.state).state++;
     ref.read(feverCountProvider.state).state++;
+    var feverFlag = ref.read(feverFlagProvider);
+    if (feverFlag) {
+      if (enemyCount % 4 == 0) {
+        game.addEnemy();
+      }
+    }
     if (ref.read(enemyCounterProvider) % 49 == 0) {
       for (int i = 0; i < 6; i++) {
         game.addEnemy();
@@ -83,7 +89,7 @@ class GameWidgetLogic {
         modeCreateEnemiesTime(ref) - 1) {
       game.updateSpeed(
           ref.read(speedProvider.state).state *= modeSpeedTime(ref), ref);
-      game.updateTime(
+      game.updateEnemyCreateTime(
           ref.read(enemyCreateTimeProvider.state).state *= modeUpdateTime(ref));
     } else if (enemyCount % 15 == 5) {
       //アイテムを出現させる
@@ -124,6 +130,7 @@ class GameWidgetLogic {
     ref.read(isGameActiveProvider.state).state = true;
     final dinoGame = game;
     dinoGame.startGame();
+    dinoGame.spriteSheetImages = ref.read(spriteSheetImagesProvider);
     ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
     ref.read(bgmAudioProvider).setLoop(true);
     ref.read(bgmAudioProvider).setVolume(0.6);
@@ -131,6 +138,7 @@ class GameWidgetLogic {
     ref.read(deathblowCountProvider.state).state = 1;
     ref.read(feverCountProvider.state).state = 0;
     ref.read(enemyCounterProvider.state).state = 0;
+    setSpriteSheetImagesProvider(ref);
   }
 
   Future<void> activateSpecialMove() async {
@@ -158,12 +166,14 @@ class GameWidgetLogic {
   }
 
   void fever() async {
-    ref.read(feverFlagProvider.state).state = true; // feverFlagを更新
+    ref.read(feverFlagProvider.state).state = true;
     game.fever();
     ref.read(bgmAudioProvider).play('sounds/fever_bgm.mp3');
     ref.read(bgmAudioProvider).setSpeed(1.0);
     ref.read(bgmAudioProvider).setLoop(true);
     ref.read(bgmAudioProvider).setVolume(1.0);
+    // game.updateEnemyCreateTime(
+    //     ref.read(enemyCreateTimeProvider.state).state *= 0.5);
   }
 
   void deFever() {
@@ -175,6 +185,8 @@ class GameWidgetLogic {
     ref.read(bgmAudioProvider).play('sounds/bgm.mp3');
     ref.read(bgmAudioProvider).setSpeed(ref.read(bgmSpeedProvider.state).state);
     ref.read(bgmAudioProvider).setVolume(0.6);
+    // game.updateEnemyCreateTime(
+    //     ref.read(enemyCreateTimeProvider.state).state *= 2);
     game.defever();
   }
 

@@ -21,10 +21,8 @@ class DinoPlayer extends SpriteAnimationComponent with HasGameRef {
         await Flame.images.load('characters/cats_memes_$characterKind.png');
     EnemySpriteDetails spriteDetails =
         await getEnemySpriteDetails(characterKind, spriteSheetImage);
-
     double spriteHeight = spriteDetails.spriteHeight;
     double spriteWidth = spriteDetails.spriteWidth;
-
     final spriteSheet = SpriteSheet(
       image: spriteSheetImage,
       srcSize: Vector2(spriteWidth, spriteHeight),

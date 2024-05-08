@@ -5,6 +5,7 @@ import 'package:saibai_men_app/common/language.dart';
 import 'package:saibai_men_app/common/data/userData.dart';
 import 'package:saibai_men_app/logic/gameWidgetLogic.dart';
 import 'package:saibai_men_app/provider.dart';
+import 'package:saibai_men_app/scene/homeScene.dart';
 import 'package:saibai_men_app/widget/gameActiveWidget.dart';
 import 'package:saibai_men_app/widget/pauseWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
@@ -25,14 +26,10 @@ class GameWidgetArea extends ConsumerWidget {
     game.EnemyCount = (id) {
       gameWidgetLogic.enemyCount(id);
     };
-    game.touchEnemy = () async {
-      // print('${feverFlag} feverFlag');
+    game.TouchEnemy = () async {
       if (!feverFlag) {
-        // print(feverFlag);
-        // print('game over');
         gameWidgetLogic.onGameOver();
       } else {
-        // print('defever');
         gameWidgetLogic.deFever();
       }
     };
@@ -66,7 +63,10 @@ class GameWidgetArea extends ConsumerWidget {
                     width: screenSize.width * 0.6,
                     text: Language().translationBack(userData.language),
                     onPressed: () async {
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScene()),
+                      );
                     },
                     icon: Icons.play_arrow,
                   ),

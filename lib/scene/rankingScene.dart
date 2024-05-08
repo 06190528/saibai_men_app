@@ -117,18 +117,3 @@ class RankingWidget extends ConsumerWidget {
     );
   }
 }
-
-// Future<void> getUserRanking(WidgetRef ref) async {
-//   final rankingList = ref.watch(rankingListProvider.notifier).state;
-//   String userId = await UserDataService().getUserId(); // Futureをawaitで待ちます
-//   int userRank = rankingList.length + 1;
-//   for (int i = 0; i < rankingList.length; i++) {
-//     if (rankingList[i].id == userId) {
-//       userRank = i + 1;
-//       break; // マッチしたらループを抜ける
-//     }
-//   }
-//   ref.read(loadingProgressProvider.notifier).state += 10;
-//   // 結果をuserRankingProviderに設定
-//   ref.read(userRankingProvider.notifier).state = userRank;
-// }

@@ -11,10 +11,12 @@ void initializeGameModeProvider(WidgetRef ref, Size size, DinoGame game) {
   double speedTime = 0;
   if (gameMode == 1) {
     speedTime = 4;
-    game.updateTime(ref.read(enemyCreateTimeProvider.state).state = 2);
+    game.updateEnemyCreateTime(
+        ref.read(enemyCreateTimeProvider.state).state = 2);
   } else if (gameMode == 2) {
     speedTime = 3;
-    game.updateTime(ref.read(enemyCreateTimeProvider.state).state = 1.2);
+    game.updateEnemyCreateTime(
+        ref.read(enemyCreateTimeProvider.state).state = 1.2);
   }
   game.updateSpeed(
       ref.read(speedProvider.state).state =

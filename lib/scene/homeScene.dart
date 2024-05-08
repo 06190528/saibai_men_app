@@ -17,7 +17,6 @@ import 'package:saibai_men_app/widget/rankingCircleWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/buttonWidget.dart';
 import 'package:saibai_men_app/widget/resultDialogWidget/doubleText.dart';
 import 'package:saibai_men_app/widget/showCoinWidget.dart';
-import 'dart:math' as math;
 
 class HomeScene extends ConsumerWidget {
   HomeScene({Key? key}) : super(key: key);
@@ -31,25 +30,23 @@ class HomeScene extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final screenSize = Vector2(size.width, size.height);
     final nowUserCharacter = ref.read(nowUserCharacterProvider);
-    final characterSize = size.width * 0.15;
+    final characterSize = size.width * 0.1;
     final CharacterField characterField = CharacterField();
     final nowUserCharacterPosition =
-        Vector2(size.width / 2, size.height - characterSize * 2.5);
+        Vector2(size.width / 2, size.height - characterSize * 3);
     characterField.addBackground('titleScene.jpg');
-    characterField.addCharacter(
-        nowUserCharacter, characterSize * 2, nowUserCharacterPosition);
     _addedCharacterPositions
         .add(characterPositon(nowUserCharacter, nowUserCharacterPosition));
-    final language = ref.watch(userDataProvider.notifier).state.language;
-    addUserCharacters(_addedCharacterPositions, ref, size, screenSize,
-        characterField, characterSize);
+    final language = ref.watch(userDataProvider).language;
+    addUserCharactersToFiled(_addedCharacterPositions, ref, size, screenSize,
+        characterField, characterSize, nowUserCharacterPosition);
     if (!_initialized) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await saveUserDataFromLocalToProvider(ref);
         await showUserSettingsDialog(ref, context);
         await Future.delayed(const Duration(milliseconds: 1));
         if (isReleaseMode) {
-          await getAndSaveRankingDataFromIFirebaseToProvider(ref);
+          // await getAndSaveRankingDataFromIFirebaseToProvider(ref);
         }
       });
       _initialized = true;
@@ -223,47 +220,55 @@ class characterPositon {
   characterPositon(this.characterIndex, this.position);
 }
 
-void addUserCharacters(
+Future<void> addUserCharactersToFiled(
   List<characterPositon> addedCharacterPositions,
   WidgetRef ref,
   Size size,
   Vector2 screenSize,
   CharacterField characterField,
   double characterSize,
-) {
+  Vector2 nowUserCharacterPosition,
+) async {
+  await setSpriteSheetImagesProvider(ref);
   final userCharacters = ref.watch(userDataProvider).userCharacters;
   final nowUserCharacter = ref.watch(userDataProvider).nowUserCharacter;
+  final spriteImages = ref.watch(spriteSheetImagesProvider);
   for (int i = 0; i <= lastCharacterIndex; i++) {
     if ((userCharacters & (1 << i)) != 0) {
       final characterIndex = i;
       if (characterIndex == nowUserCharacter) {
+        characterField.addCharacter(
+          nowUserCharacter,
+          characterSize * 2.5,
+          nowUserCharacterPosition,
+          spriteImages[characterIndex],
+        );
         continue;
       }
-      bool isOverlapping;
+      const int characterNum = 8;
+      var posX = i % characterNum;
+      var posY = (i / characterNum).toInt();
       Vector2 newPosition;
-      final Vector2 offset = Vector2(size.width * 0.15, size.height * 0.15);
+      final Vector2 offset =
+          Vector2(size.width * 0.1, size.height * 0.2); // 画面の端からのオフセット
       final Vector2 adjustedScreenSize = screenSize - offset * 2;
-      do {
-        isOverlapping = false;
-        newPosition = Vector2(
-          math.Random().nextDouble() * adjustedScreenSize.x + offset.x,
-          math.Random().nextDouble() * adjustedScreenSize.y + offset.y,
-        );
+      newPosition = Vector2(
+        posX * (adjustedScreenSize.x) / characterNum +
+            offset.x +
+            characterSize / 2,
+        posY * (adjustedScreenSize.y * 1.2) / characterNum +
+            offset.y +
+            characterSize / 2,
+      );
 
-        for (var i = 0; i < addedCharacterPositions.length; i++) {
-          final position = addedCharacterPositions[i].position;
-          if (position.distanceTo(newPosition) < characterSize * 2) {
-            isOverlapping = true;
-            break;
-          }
-        }
-      } while (isOverlapping);
-      characterField.addCharacter(characterIndex, characterSize, newPosition);
+      characterField.addCharacter(characterIndex, characterSize, newPosition,
+          spriteImages[characterIndex]);
       addedCharacterPositions
           .add(characterPositon(characterIndex, newPosition));
     } else {
       continue;
     }
+    await Future.delayed(Duration.zero);
   }
 }
 
@@ -273,11 +278,9 @@ Future<void> identificatTouchedCharacter(
   double characterSize,
   WidgetRef ref,
 ) async {
-  // タップされた座標を取得
   final tapPosition = details.localPosition;
 
   for (int i = 0; i < addedCharacterPositions.length; i++) {
-    // 各キャラクターの中心座標を取得
     final characterCenter = addedCharacterPositions[i].position;
 
     final distance = (tapPosition.dx - characterCenter.x).abs() +

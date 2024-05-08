@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'dart:ui';
 
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saibai_men_app/common/const.dart';
@@ -21,7 +23,7 @@ class DinoGameNotifier extends StateNotifier<DinoGame> {
 }
 
 class DinoGame extends FlameGame {
-  Function()? touchEnemy;
+  Function()? TouchEnemy;
   Function(int id)? EnemyCount;
   Function()? getItem;
   double? speed;
@@ -35,11 +37,14 @@ class DinoGame extends FlameGame {
   final DinoWorld _dinoWorld = DinoWorld();
   late KiEffect kiEffect;
   int enemyKinds = 3; //初期の敵の種類
+  List<Image>? spriteSheetImages = [];
+  Image? spriteSheetDeathblowImage = null;
+  Image? spriteSheetAttackEnemyImage = null;
 
   double time = 1.2;
   bool enemyKindsAdditionalIncrement = false;
   DinoGame(this.nowUserCharacter,
-      {this.speed, this.touchEnemy, this.EnemyCount, this.getItem});
+      {this.speed, this.TouchEnemy, this.EnemyCount, this.getItem});
 
   @override
   Future<void> onLoad() async {
@@ -81,8 +86,19 @@ class DinoGame extends FlameGame {
   }
 
   Future<void> addEnemy() async {
-    Enemy enemy = Enemy(speed!, dinoPlayer, enemyKinds, nowUserCharacter,
-        onTouchEnemy: touchEnemy, EnemyCount: EnemyCount);
+    int thisEnemyKind = Random().nextInt(enemyKinds);
+    while (thisEnemyKind == nowUserCharacter) {
+      thisEnemyKind = Random().nextInt(enemyKinds);
+    }
+    if (enemies.length >= 10) return;
+    Enemy enemy = Enemy(
+        speed!,
+        dinoPlayer,
+        enemies,
+        spriteSheetImages![thisEnemyKind],
+        thisEnemyKind,
+        TouchEnemy,
+        EnemyCount);
     enemy.position = initialPosition(_dinoWorld.size, 'enemy');
     enemy.direction = enemyInitialDirection(enemy.position, _dinoWorld.size);
     add(enemy);
@@ -98,20 +114,23 @@ class DinoGame extends FlameGame {
   }
 
   void removeEnemies() {
-    for (var enemy in enemies) {
+    for (var enemy in List.from(enemies)) {
       enemy.removeEnemy();
     }
-    enemies.clear();
   }
 
   void attackEnemy() async {
-    for (var enemy in enemies) {
+    if (spriteSheetAttackEnemyImage == null) {
+      spriteSheetAttackEnemyImage =
+          await Flame.images.load('explosion_sprite.png');
+    }
+    for (var enemy in List.from(enemies)) {
       enemy.removeEnemy();
-      AttackEnemy attackEnemy = AttackEnemy(enemy.position, _dinoWorld.speed);
+      AttackEnemy attackEnemy = AttackEnemy(
+          enemy.position, _dinoWorld.speed, spriteSheetAttackEnemyImage!);
       add(attackEnemy);
       attackEnemies.add(attackEnemy);
     }
-    enemies.clear();
     attackEnemies.clear();
   }
 
@@ -132,13 +151,17 @@ class DinoGame extends FlameGame {
     }
   }
 
-  void updateTime(double newTime) {
+  void updateEnemyCreateTime(double newTime) {
     time = newTime;
   }
 
-  void addDeathblow() {
-    Deathblow deathblow =
-        Deathblow(speed!, dinoPlayer, activateSpecialMove: getItem);
+  void addDeathblow() async {
+    if (spriteSheetDeathblowImage == null) {
+      spriteSheetDeathblowImage = await Flame.images.load('energy bullet.png');
+    }
+    Deathblow deathblow = Deathblow(
+        speed!, dinoPlayer, spriteSheetDeathblowImage!,
+        activateSpecialMove: getItem);
     deathblow.position = initialPosition(_dinoWorld.size, 'deathblow');
     deathblow.direction = Direction.down;
     deathblow.updateSpeed(_dinoWorld.speed);
@@ -159,6 +182,20 @@ class DinoGame extends FlameGame {
       enemyKindsIncrement();
       enemyKindsAdditionalIncrement = true;
     }
-    // print('enemyKindsIncrement:$enemyKinds');
   }
+}
+
+Future<void> setSpriteSheetImagesProvider(WidgetRef ref) async {
+  var spriteSheetImages = ref.read(spriteSheetImagesProvider); //コピーするとエラー出る
+  // ref.read(isLoadingProvider.state).state = true;
+  for (int i = 0; i <= lastCharacterIndex; i++) {
+    if (i == spriteSheetImages.length) {
+      print('loading image: $i');
+      var loadedImage = await Flame.images.load('characters/cats_memes_$i.png');
+      spriteSheetImages.add(loadedImage);
+      print(spriteSheetImages.length);
+    }
+  }
+  ref.read(spriteSheetImagesProvider.state).state = spriteSheetImages;
+  // ref.read(isLoadingProvider.state).state = false;
 }

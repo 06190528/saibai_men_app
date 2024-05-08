@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:saibai_men_app/provider.dart';
 import 'package:saibai_men_app/scene/gatyaScene.dart';
 import 'package:saibai_men_app/widget/characterFiled.dart';
 
@@ -13,8 +14,10 @@ class ShowGetCharacter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+    final spriteSheetImage =
+        ref.watch(spriteSheetImagesProvider)[characterIndex];
     characterField.addCharacter(characterIndex, size.height / 2.5,
-        Vector2(size.width / 2, size.height / 2));
+        Vector2(size.width / 2, size.height / 2), spriteSheetImage);
     return Center(
       child: GestureDetector(
         onTap: () {
