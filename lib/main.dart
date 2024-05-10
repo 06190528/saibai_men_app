@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:saibai_men_app/common/data/firebaseSave.dart';
 import 'package:saibai_men_app/firebase_options.dart';
 import 'package:saibai_men_app/scene/homeScene.dart';
+import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ void main() async {
 
   MobileAds.instance.initialize();
   initializeUserData();
-
+  await AdInterstitial().createAd();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

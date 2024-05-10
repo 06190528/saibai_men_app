@@ -37,16 +37,17 @@ class HomeScene extends ConsumerWidget {
     characterField.addBackground('titleScene.jpg');
     _addedCharacterPositions
         .add(characterPositon(nowUserCharacter, nowUserCharacterPosition));
-    final language = ref.watch(userDataProvider).language;
+    final language = ref.watch(userDataProvider.notifier).state.language;
     addUserCharactersToFiled(_addedCharacterPositions, ref, size, screenSize,
         characterField, characterSize, nowUserCharacterPosition);
+    final userCharacterCount = ref.watch(userCharacterCountProvider);
     if (!_initialized) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await saveUserDataFromLocalToProvider(ref);
         await showUserSettingsDialog(ref, context);
         await Future.delayed(const Duration(milliseconds: 1));
         if (isReleaseMode) {
-          // await getAndSaveRankingDataFromIFirebaseToProvider(ref);
+          await getAndSaveRankingDataFromIFirebaseToProvider(ref);
         }
       });
       _initialized = true;
@@ -66,8 +67,30 @@ class HomeScene extends ConsumerWidget {
             Positioned(
               top: size.height * 0.05,
               left: size.width * 0.05,
-              child: RankingCircle(
-                size: size.width * 0.15,
+              child: Column(
+                children: [
+                  RankingCircle(
+                    size: size.width * 0.15,
+                  ),
+                  Center(
+                    child: Card(
+                      color: Colors.white,
+                      child: Container(
+                        width: size.width * 0.15,
+                        height: size.height * 0.04,
+                        child: Center(
+                          child: Text(
+                            '猫数 $userCharacterCount / ${lastCharacterIndex + 1}',
+                            style: TextStyle(
+                              fontSize: size.height * 0.04 * 0.3,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Positioned(
@@ -233,9 +256,11 @@ Future<void> addUserCharactersToFiled(
   final userCharacters = ref.watch(userDataProvider).userCharacters;
   final nowUserCharacter = ref.watch(userDataProvider).nowUserCharacter;
   final spriteImages = ref.watch(spriteSheetImagesProvider);
+  int userCharacterCountCopy = 0;
   for (int i = 0; i <= lastCharacterIndex; i++) {
     if ((userCharacters & (1 << i)) != 0) {
       final characterIndex = i;
+      userCharacterCountCopy++;
       if (characterIndex == nowUserCharacter) {
         characterField.addCharacter(
           nowUserCharacter,
@@ -267,6 +292,9 @@ Future<void> addUserCharactersToFiled(
           .add(characterPositon(characterIndex, newPosition));
     } else {
       continue;
+    }
+    if (ref.read(userCharacterCountProvider) <= userCharacterCountCopy) {
+      ref.read(userCharacterCountProvider.state).state = userCharacterCountCopy;
     }
     await Future.delayed(Duration.zero);
   }

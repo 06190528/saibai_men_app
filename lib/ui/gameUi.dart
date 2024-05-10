@@ -190,10 +190,8 @@ Future<void> setSpriteSheetImagesProvider(WidgetRef ref) async {
   // ref.read(isLoadingProvider.state).state = true;
   for (int i = 0; i <= lastCharacterIndex; i++) {
     if (i == spriteSheetImages.length) {
-      print('loading image: $i');
       var loadedImage = await Flame.images.load('characters/cats_memes_$i.png');
       spriteSheetImages.add(loadedImage);
-      print(spriteSheetImages.length);
     }
   }
   ref.read(spriteSheetImagesProvider.state).state = spriteSheetImages;

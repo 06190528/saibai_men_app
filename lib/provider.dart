@@ -40,6 +40,7 @@ final gameModeProvider = StateProvider<int>((ref) => 0);
 final userRankingProvider = StateProvider<int>((ref) => 0);
 final getCoinCountProvider = StateProvider<int>((ref) => 0);
 final nowUserCharacterProvider = StateProvider<int>((ref) => 0);
+final userCharacterCountProvider = StateProvider<int>((ref) => 0);
 
 final rankingListProvider = StateProvider<List<Ranking>>((ref) => []);
 final spriteSheetImagesProvider = StateProvider<List<Image>>((ref) => []);

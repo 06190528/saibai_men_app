@@ -79,7 +79,6 @@ Future<void> initializeUserData() async {
   if (userDataString == null) {
     User? user = await AuthService().signInAnonymously();
     if (user != null) {
-      await AdInterstitial().createAd();
       UserData userData = UserData(
         name: '',
         scoreList: [],
