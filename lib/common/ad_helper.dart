@@ -11,7 +11,7 @@ class AdHelper {
     }
 
     return Platform.isAndroid
-        ? 'ca-app-pub-2847746899486154/6353017056'
+        ? 'ca-app-pub-2847746899486154/1486063753'
         : 'ca-app-pub-2847746899486154/5344180613';
   }
 
@@ -22,7 +22,9 @@ class AdHelper {
           : 'ca-app-pub-3940256099942544/4411468910';
     }
 
-    return Platform.isAndroid ? '' : 'ca-app-pub-2847746899486154/2836031803';
+    return Platform.isAndroid
+        ? 'ca-app-pub-2847746899486154/7778379057'
+        : 'ca-app-pub-2847746899486154/2836031803';
   }
 
   static String get rewardedAdUnitId {
@@ -34,7 +36,7 @@ class AdHelper {
     }
 
     return Platform.isAndroid
-        ? '<YOUR_ANDROID_REWARDED_AD_UNIT_ID>'
+        ? 'ca-app-pub-2847746899486154/5152215716'
         : 'ca-app-pub-2847746899486154/9551618004';
   }
 
@@ -48,6 +50,18 @@ class AdHelper {
     return Platform.isAndroid
         ? 'ca-app-pub-2847746899486154/9551618004'
         : 'ca-app-pub-2847746899486154/2152671377';
+  }
+
+  static String get startUpAdUnitId {
+    if (_isTestMode) {
+      return Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/1033173712'
+          : 'ca-app-pub-3940256099942544/4411468910';
+    }
+
+    return Platform.isAndroid
+        ? 'ca-app-pub-2847746899486154/9551618004'
+        : 'ca-app-pub-2847746899486154/1771072892';
   }
 
   static void enableTestMode() {

@@ -16,6 +16,7 @@ class AdInterstitial {
       adLoadCallback: InterstitialAdLoadCallback(
         // 広告が正常にロードされたときに呼ばれます。
         onAdLoaded: (InterstitialAd ad) {
+          print('InterstitialAd loadedああああああああ');
           _interstitialAd = ad;
           num_of_attempt_load = 0;
           if (ref != null) {
@@ -25,7 +26,7 @@ class AdInterstitial {
         },
         // 広告のロードが失敗した際に呼ばれます。
         onAdFailedToLoad: (LoadAdError error) async {
-          print('InterstitialAd failed to load: $error');
+          print('InterstitialAd failed to loadああああああああ: $error');
           num_of_attempt_load++;
           _interstitialAd = null;
           if (num_of_attempt_load <= 2) {
