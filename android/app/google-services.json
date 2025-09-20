@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "212231061726",
+    "project_id": "saibai-men",
+    "storage_bucket": "saibai-men.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212231061726:android:e3dfb60497407c6a53424f",
+        "android_client_info": {
+          "package_name": "com.atsuki.saibai_men_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7sCqn2H6U08V7zywrqU3RxOp4zX8QHgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

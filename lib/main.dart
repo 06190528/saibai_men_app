@@ -1,35 +1,34 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:rush_time_app/common/provider.dart';
-import 'package:rush_time_app/view/select.view.dart';
-import 'package:provider/provider.dart';
+import 'package:saibai_men_app/common/data/firebaseSave.dart';
+import 'package:saibai_men_app/firebase_options.dart';
+import 'package:saibai_men_app/scene/homeScene.dart';
+import 'package:saibai_men_app/widget/adwidget/interstitialAdWidget.dart';
 
-void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // MobileAds.instance.initialize();
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => SetTime(),
-      child: Main(),
-    ),
-  );
-  //アプリ全体で広告表示したいならこっち
-  MobileAds.instance.initialize();
-}
-
-class Main extends StatelessWidget {
-  const Main({super.key});
-
-  //アプリの一部の画面で広告を表示したいならこっち
-  // Future<InitializationStatus> _initGoogleMobileAds() {
-  //   // TODO: Initialize Google Mobile Ads SDK
-  //   return MobileAds.instance.initialize();
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MainView(title: 'rush hour'),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+
+  MobileAds.instance.initialize();
+  initializeUserData();
+  await AdInterstitial().createAd();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(
+    ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomeScene(),
+      ),
+    ),
+  );
 }

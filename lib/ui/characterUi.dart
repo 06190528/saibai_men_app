@@ -1,0 +1,50 @@
+import 'dart:ui';
+
+import 'package:flame/sprite.dart';
+import 'package:flame/components.dart';
+import 'package:saibai_men_app/ui/gameEnemyUi.dart';
+
+class Character extends SpriteAnimationComponent with HasGameRef {
+  int catKind;
+  double length;
+  Image spriteSheetImage;
+
+  Character(this.catKind, this.length, this.spriteSheetImage) {
+    this.size = size;
+  }
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+    final EnemySpriteDetails enemySpriteDetails =
+        await getEnemySpriteDetails(catKind, spriteSheetImage);
+    final double spriteHeight = enemySpriteDetails.spriteHeight;
+    final double spriteWidth = enemySpriteDetails.spriteWidth;
+
+    final spriteSheet = SpriteSheet(
+      image: spriteSheetImage,
+      srcSize: Vector2(spriteWidth, spriteHeight),
+    );
+
+    animation = spriteSheet.createAnimation(
+      row: 0,
+      stepTime: enemySpriteDetails.stepTime,
+      from: 0,
+      to: enemySpriteDetails.to,
+      loop: true,
+    );
+
+    anchor = Anchor.center;
+    double squareSideLength = length;
+    size = Vector2.all(squareSideLength);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+  }
+
+  void removeEnemy() {
+    removeFromParent();
+  }
+}
